@@ -7,7 +7,7 @@
              mc:Ignorable="d"
              Width="180px"
              DataContext="{Binding Source={StaticResource Locator}, Path=LeftSidebarViewModel}">
-    <TabControl TabStripPlacement="Left">
+    <TabControl TabStripPlacement="Left" Padding="-1">
         <TabControl.Resources>
             <ResourceDictionary>
                 <ResourceDictionary.MergedDictionaries>
