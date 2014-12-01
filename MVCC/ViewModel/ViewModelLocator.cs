@@ -47,6 +47,7 @@ namespace MVCC.ViewModel
             get
             {
                 return ServiceLocator.Current.GetInstance<MainViewModel>();
+
             }
         }
 
