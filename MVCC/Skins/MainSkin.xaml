@@ -8,7 +8,7 @@
     <Style TargetType="UserControl" x:Key="BaseViewStyle">
         <Setter Property="Background" Value="#2D2D30" />
         <Setter Property="Foreground" Value="#C9C9C9" />
-        <Setter Property="Padding" Value="30 0 0 0" />
+        <Setter Property="Padding" Value="30 0 10 0" />
         <Setter Property="BorderBrush" Value="#3E3E42" />
         <Setter Property="BorderThickness" Value="1, 0, 0, 0" />
     </Style>

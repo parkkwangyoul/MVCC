@@ -31,7 +31,7 @@
                     </MenuItem>
                 </ContextMenu>
             </ContentControl.ContextMenu>
-            <Grid x:Name="Titlebar" Height="42" Background="#FF2D2D30">
+            <Grid x:Name="Titlebar" Height="42" Margin="0, 0, 0, 15" Background="#FF2D2D30">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
@@ -86,8 +86,8 @@
                         Content="{DynamicResource closeWindow}"/>
             </Grid>
         </ContentControl>
-        <Viewbox StretchDirection="UpOnly" Stretch="Uniform">
-            <view:LeftSidebarView Width="1920" Height="1080" />
+        <Viewbox StretchDirection="Both" Stretch="Uniform">
+            <view:LeftSidebarView Width="1280" Height="660" MaxWidth="1920" MaxHeight="1020" MinWidth="750" MinHeight="290" />
         </Viewbox>
     </StackPanel>
 </Window>
