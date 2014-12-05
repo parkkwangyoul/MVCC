@@ -32,6 +32,13 @@
                 Map
             </TextBlock>
             <Border BorderThickness="0, 0, 0, 1" BorderBrush="#78C8FF" />
+
+            <Grid Grid.Row="1">
+                <Border BorderBrush="red" BorderThickness="1" Margin="10">
+                    <Canvas VerticalAlignment="Stretch" HorizontalAlignment="Stretch">                       
+                    </Canvas>
+                </Border>
+            </Grid>
         </Grid>
 
         <Grid Grid.Column="1" Margin="5, 0, 0, 0">
@@ -45,6 +52,5 @@
             </TextBlock>
             <Border BorderThickness="0, 0, 0, 1" BorderBrush="#78C8FF" />
         </Grid>
-
     </Grid>
 </UserControl>

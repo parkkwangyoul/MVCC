@@ -20,6 +20,7 @@ namespace MVCC.View
     /// </summary>
     public partial class MapView : UserControl
     {
+
         public MapView()
         {
             InitializeComponent();

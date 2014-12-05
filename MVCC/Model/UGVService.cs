@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MVCC.Model
 {
-    public interface IDataService
+    class UGVService : IDataService
     {
+
     }
 }
