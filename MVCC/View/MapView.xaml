@@ -4,19 +4,33 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:base="clr-namespace:System.Windows;assembly=PresentationFramework"
+             xmlns:uc="clr-namespace:MVCC.CustomControl"
+             xmlns:model="clr-namespace:MVCC.Model"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" 
+             d:DesignHeight="500" d:DesignWidth="750" 
              DataContext="{Binding Source={StaticResource Locator}, Path=MapViewModel}" >
-    <UserControl.Resources>
+    <UserControl.Resources>        
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Skins/MainSkin.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+
+            <DataTemplate x:Key="DataTemplateUGVControl">
+                <uc:UGVControl></uc:UGVControl>
+            </DataTemplate>
+
+            <DataTemplate x:Key="DataTemplateBuildingControl">
+                <uc:BuildingControl></uc:BuildingControl>
+            </DataTemplate>
+
+            <model:ModelDataTemplateSelector x:Key="MyDataTemplateSeletor" x:Name="MyDataTemplateSeletor" DataTemplateUGVControl="{StaticResource DataTemplateUGVControl}" DataTemplateBuildingControl="{StaticResource DataTemplateBuildingControl}" />
         </ResourceDictionary>
     </UserControl.Resources>
     <UserControl.Style>
         <base:StaticResource ResourceKey="BaseViewStyle" />
     </UserControl.Style>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="8*" />
@@ -28,10 +42,18 @@
                 <RowDefinition Height="95*" />
             </Grid.RowDefinitions>
 
-            <TextBlock HorizontalAlignment="Left" Width="100" Background="#78C8FF" Foreground="#FFF" Padding="37, 5, 0, 5">                
-                Map
-            </TextBlock>
-            <Border BorderThickness="0, 0, 0, 1" BorderBrush="#78C8FF" />
+            <Grid Grid.Row="0">
+                <TextBlock HorizontalAlignment="Left" Width="100" Background="#78C8FF" Foreground="#FFF" Padding="37, 5, 0, 5">                
+                    Map
+                </TextBlock>
+                <Path Fill="#FFF" 
+                      Data="M16.05,8.824c-0.584,0-1.057,0.474-1.057,1.057c0,3.306-2.689,5.994-5.993,5.994                  
+                      c-3.305,0-5.993-2.688-5.993-5.994c0-3.304,2.688-5.992,5.993-5.992h0v1.763l4.231-2.82L9,0.011v1.762h0
+                      c-4.471,0-8.108,3.637-8.108,8.107c0,4.471,3.637,8.11,8.108,8.11c4.47,0,8.108-3.639,8.108-8.11
+                      C17.108,9.298,16.634,8.824,16.05,8.824z" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0, 0, 15, 5" Cursor="Hand">
+                </Path>
+                <Border BorderThickness="0, 0, 0, 1" BorderBrush="#78C8FF" />
+            </Grid>
 
             <Grid Grid.Row="1">
                 <Border BorderBrush="red" BorderThickness="1" Margin="10">
@@ -46,11 +68,19 @@
                 <RowDefinition Height="5*" />
                 <RowDefinition Height="95*" />
             </Grid.RowDefinitions>
-
-            <TextBlock Width="100" HorizontalAlignment="Left" Background="#78C8FF" Foreground="#FFF" Padding="32, 5, 0, 5">
-                State
-            </TextBlock>
-            <Border BorderThickness="0, 0, 0, 1" BorderBrush="#78C8FF" />
+            <Grid Grid.Row="0">
+                <TextBlock Width="100" HorizontalAlignment="Left" Background="#78C8FF" Foreground="#FFF" Padding="32, 5, 0, 5">
+                    State
+                </TextBlock>
+                <Border BorderThickness="0, 0, 0, 1" BorderBrush="#78C8FF" />
+            </Grid>
+            <Grid Grid.Row="1" DataContext="">
+                <StackPanel>
+                    <Grid>
+                        
+                    </Grid>
+                </StackPanel>
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>

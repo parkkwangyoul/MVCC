@@ -11,14 +11,11 @@ namespace MVCC.ViewModel
     /// </summary>
     public class MapViewModel : ViewModelBase
     {
-        private IDataService UGVService;
-
         /// <summary>
         /// Initializes a new instance of the MapViewModel class.
         /// </summary>
-        public MapViewModel(IDataService iDataservice)
+        public MapViewModel()
         {
-            this.UGVService = iDataservice;
         }
     }
 }

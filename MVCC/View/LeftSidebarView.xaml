@@ -17,7 +17,7 @@
         </TabControl.Resources>
         <TabItem Style="{StaticResource SideBarSectionStyle}">
             <TabItem.Header>
-                <TextBlock Style="{StaticResource SideBarClickedTextBox}">                    
+                <TextBlock Style="{StaticResource SideBarClickedTextBox}" Cursor="Hand">                    
                     <Path Margin="0, 0, 25 0" Data="M17.056,9.359h-2v7h-5v-4h-2v4h-5v-7h-2l8-7l3,2.62v-2.62h2v4.38L17.056,9.359z"
                           Fill="#FFF"/>
                     Home
@@ -27,7 +27,7 @@
         </TabItem>
         <TabItem Style="{StaticResource SideBarSectionStyle}">
             <TabItem.Header>
-                <TextBlock Style="{StaticResource SideBarClickedTextBox}">
+                <TextBlock Style="{StaticResource SideBarClickedTextBox}" Cursor="Hand">
                     <Path Margin="0, 0, 35, 0" Data="M6,14.5v-2h6v2H6z M6,11.5v-5h6v5H6z M6,5.5v-2h6v2H6z M5,3.5v2H3
                           v-2H5z M5,6.5v5H3v-5H5z M5,12.5v2H3v-2H5z M13,14.5v-2h2v2H13z M13,11.5v-5h2v5H13z M13,5.5v-2h2v2H13z M17,6.5v-1v-2v-1v-1H1v15
                           h16v-1v-1v-2v-1V6.5z" Fill="#FFF"/>
@@ -38,7 +38,7 @@
         </TabItem>
         <TabItem Style="{StaticResource SideBarSectionStyle}">
             <TabItem.Header>
-                <TextBlock x:Name="TabImage" Style="{StaticResource SideBarClickedTextBox}">                    
+                <TextBlock x:Name="TabImage" Style="{StaticResource SideBarClickedTextBox}" Cursor="Hand">                    
                     <!--Image Width="15pt" VerticalAlignment="Center" Margin="0 0 5 0" Source="../Resource/setting.png" /-->
                         <Path Margin="0, 0, 15, 0" Data="M12.286,10.877V9.322h-1.252c-0.1-0.754-0.373-1.454-0.77-2.06
                               l0.793-0.863L9.792,5.133L8.875,5.878C8.284,5.443,7.599,5.117,6.845,4.969V3.881H5.291V4.93C4.529,5.047,3.821,5.327,3.215,5.738
