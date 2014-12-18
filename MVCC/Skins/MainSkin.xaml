@@ -1,6 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <BitmapImage x:Key="mvccLogo" UriSource="../Resource/mvcc_logo.png" />
     <Image x:Key="minimizeWindow" Source="../Resource/minimize_window.png" />
     <Image x:Key="maximizeWindow" Source="../Resource/maximize_window.png" />
     <Image x:Key="closeWindow" Source="../Resource/close_window.png" />

@@ -10,7 +10,7 @@ namespace MVCC.Model
     {
         public Building() : base() { }
 
-        public Building(double width, double height, double x, double y) : base(width, height, x, y) { }
+        public Building(string id, double width, double height, double x, double y) : base(id, width, height, x, y) { }
 
         public override string ToString() { return "Building"; }
     }

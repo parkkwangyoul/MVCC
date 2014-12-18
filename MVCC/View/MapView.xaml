@@ -15,7 +15,6 @@
                 <ResourceDictionary Source="../Skins/MainSkin.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-
             <DataTemplate x:Key="DataTemplateUGVControl">
                 <uc:UGVControl></uc:UGVControl>
             </DataTemplate>
@@ -24,7 +23,15 @@
                 <uc:BuildingControl></uc:BuildingControl>
             </DataTemplate>
 
-            <model:ModelDataTemplateSelector x:Key="MyDataTemplateSeletor" x:Name="MyDataTemplateSeletor" DataTemplateUGVControl="{StaticResource DataTemplateUGVControl}" DataTemplateBuildingControl="{StaticResource DataTemplateBuildingControl}" />
+            <DataTemplate x:Key="DataTemplateStateControl">
+                <uc:StateControl></uc:StateControl>
+            </DataTemplate>
+
+            <model:ModelDataTemplateSelector x:Key="MyDataTemplateSeletor" 
+                                             x:Name="MyDataTemplateSeletor" 
+                                             DataTemplateUGVControl="{StaticResource DataTemplateUGVControl}" 
+                                             DataTemplateBuildingControl="{StaticResource DataTemplateBuildingControl}" 
+                                             DataTemplateStateControl="{StaticResource DataTemplateStateControl}" />
         </ResourceDictionary>
     </UserControl.Resources>
     <UserControl.Style>
@@ -46,20 +53,32 @@
                 <TextBlock HorizontalAlignment="Left" Width="100" Background="#78C8FF" Foreground="#FFF" Padding="37, 5, 0, 5">                
                     Map
                 </TextBlock>
-                <Path Fill="#FFF" 
-                      Data="M16.05,8.824c-0.584,0-1.057,0.474-1.057,1.057c0,3.306-2.689,5.994-5.993,5.994                  
-                      c-3.305,0-5.993-2.688-5.993-5.994c0-3.304,2.688-5.992,5.993-5.992h0v1.763l4.231-2.82L9,0.011v1.762h0
-                      c-4.471,0-8.108,3.637-8.108,8.107c0,4.471,3.637,8.11,8.108,8.11c4.47,0,8.108-3.639,8.108-8.11
-                      C17.108,9.298,16.634,8.824,16.05,8.824z" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0, 0, 15, 5" Cursor="Hand">
-                </Path>
+                
+                <Button Width="20" HorizontalAlignment="Right" Background="Transparent" BorderThickness="0"  Margin="0, 0, 15, 5" Command="{Binding AddUGVCommand}" Cursor="Hand">
+                    <Button.Triggers>
+                    </Button.Triggers>
+                    <Path Fill="#FFF"
+                          Data="M16.05,8.824c-0.584,0-1.057,0.474-1.057,1.057c0,3.306-2.689,5.994-5.993,5.994                  
+                          c-3.305,0-5.993-2.688-5.993-5.994c0-3.304,2.688-5.992,5.993-5.992h0v1.763l4.231-2.82L9,0.011v1.762h0
+                          c-4.471,0-8.108,3.637-8.108,8.107c0,4.471,3.637,8.11,8.108,8.11c4.47,0,8.108-3.639,8.108-8.11
+                          C17.108,9.298,16.634,8.824,16.05,8.824z" HorizontalAlignment="Center" VerticalAlignment="Center" Cursor="Hand">
+                    </Path>
+                </Button>
                 <Border BorderThickness="0, 0, 0, 1" BorderBrush="#78C8FF" />
+                
             </Grid>
 
             <Grid Grid.Row="1">
-                <Border BorderBrush="red" BorderThickness="1" Margin="10">
-                    <Canvas VerticalAlignment="Stretch" HorizontalAlignment="Stretch">                       
-                    </Canvas>
-                </Border>
+                <ItemsControl
+                    ItemTemplateSelector="{StaticResource MyDataTemplateSeletor}"
+                    ItemsSource="{Binding MVCCItemList}"
+                    Margin="10" BorderBrush="#78C8FF" BorderThickness="1">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas></Canvas>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
             </Grid>
         </Grid>
 
@@ -74,12 +93,26 @@
                 </TextBlock>
                 <Border BorderThickness="0, 0, 0, 1" BorderBrush="#78C8FF" />
             </Grid>
-            <Grid Grid.Row="1" DataContext="">
-                <StackPanel>
-                    <Grid>
-                        
-                    </Grid>
-                </StackPanel>
+            <Grid Grid.Row="1">
+                <ItemsControl
+                    ItemTemplateSelector="{StaticResource MyDataTemplateSeletor}"
+                    ItemsSource="{Binding MVCCItemStateList}" Margin="10"
+                    >
+                    <ItemsControl.Template>
+                        <ControlTemplate TargetType="{x:Type ItemsControl}">
+                            <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
+                                <ItemsPresenter></ItemsPresenter>
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </ItemsControl.Template>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel>
+                                
+                            </StackPanel>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
             </Grid>
         </Grid>
     </Grid>

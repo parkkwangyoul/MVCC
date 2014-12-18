@@ -73,12 +73,16 @@
     <Compile Include="CustomControl\BuildingControl.xaml.cs">
       <DependentUpon>BuildingControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CustomControl\StateControl.xaml.cs">
+      <DependentUpon>StateControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CustomControl\UGVControl.xaml.cs">
       <DependentUpon>UGVControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\ModelDataTemplateSelector.cs" />
     <Compile Include="Model\Building.cs" />
     <Compile Include="Model\ModelBase.cs" />
+    <Compile Include="Model\State.cs" />
     <Compile Include="Model\UGV.cs" />
     <Compile Include="ViewModel\InfomationViewModel.cs" />
     <Compile Include="ViewModel\LeftSidebarViewModel.cs" />
@@ -99,6 +103,10 @@
       <DependentUpon>SettingView.xaml</DependentUpon>
     </Compile>
     <Page Include="CustomControl\BuildingControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomControl\StateControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -174,9 +182,14 @@
     <Resource Include="Resource\close_window.png" />
     <Resource Include="Resource\maximize_window.png" />
     <Resource Include="Resource\minimize_window.png" />
-    <Resource Include="Resource\mvcc_logo.png" />
     <Resource Include="Resource\setting.png" />
     <Resource Include="Resource\setting_seleted.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\UGV.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\Start_Logo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

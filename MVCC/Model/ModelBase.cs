@@ -15,8 +15,9 @@ namespace MVCC.Model
     {
         public MVCCItem(){ }
         
-        public MVCCItem(double width, double height, double x, double y)
+        public MVCCItem(string id, double width, double height, double x, double y)
         {
+            this.Id = id;
             this.Width = width;
             this.Height = height;
             this.X = x;

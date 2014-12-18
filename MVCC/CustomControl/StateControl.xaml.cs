@@ -16,19 +16,13 @@ using System.Windows.Shapes;
 namespace MVCC.CustomControl
 {
     /// <summary>
-    /// UGVControl.xaml에 대한 상호 작용 논리
+    /// StateControl.xaml에 대한 상호 작용 논리
     /// </summary>
-    public partial class UGVControl : UserControl
+    public partial class StateControl : UserControl
     {
-        public UGVControl()
+        public StateControl()
         {
             InitializeComponent();
-        }
-
-        private void ellipse_ManipulationDelta(object sender, ManipulationDeltaEventArgs e)
-        {
-           // Canvas.SetLeft(ellipse, Canvas.GetLeft(ellipse) + e.DeltaManipulation.Translation.X);
-            //Canvas.SetTop(ellipse, Canvas.GetTop(ellipse) + e.DeltaManipulation.Translation.Y);
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System.Windows;
 using MVCC.ViewModel;
 
+using System.Threading;
+
 namespace MVCC
 {
     /// <summary>
@@ -13,6 +15,9 @@ namespace MVCC
         /// </summary>
         public MainWindow()
         {
+            // 로고시간 길게
+            Thread.Sleep(1000);
+
             InitializeComponent();
             Closing += (s, e) => ViewModelLocator.Cleanup();
         }

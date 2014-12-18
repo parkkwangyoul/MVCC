@@ -17,6 +17,8 @@ namespace MVCC.Model
 
         public DataTemplate DataTemplateBuildingControl { get; set; }
 
+        public DataTemplate DataTemplateStateControl { get; set; }
+
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
             var dataItem = item as ModelBase;
@@ -29,6 +31,9 @@ namespace MVCC.Model
 
                 case "Building" :
                     return DataTemplateBuildingControl;
+
+                case "State" :
+                    return DataTemplateStateControl;
 
                 default:
                     return new DataTemplate();
