@@ -23,6 +23,7 @@ namespace MVCC.CustomControl
         public StateControl()
         {
             InitializeComponent();
+            Console.WriteLine("test");
         }
     }
 }
