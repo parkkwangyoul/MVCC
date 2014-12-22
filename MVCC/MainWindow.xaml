@@ -23,12 +23,15 @@
     </Window.Resources>
     <StackPanel Background="#FF2D2D30" Orientation="Vertical">
         <!-- Title Bar -->
-        <ContentControl PreviewMouseDoubleClick="OnMaximizeWindow">
-            <ContentControl.ContextMenu>
+        <ContentControl PreviewMouseDoubleClick="OnMaximizeWindow">            
+            <ContentControl.ContextMenu>                                
                 <ContextMenu Background="#FF2D2D30">
-                    <MenuItem Header="test" BorderBrush="#2D2D30" Background="#FF2D2D30" Foreground="#fff">
-
+                    <MenuItem>
+                        <MenuItem.Header>
+                            text
+                        </MenuItem.Header>
                     </MenuItem>
+                    
                 </ContextMenu>
             </ContentControl.ContextMenu>
             <Grid x:Name="Titlebar" Height="42" Margin="0, 0, 0, 15" Background="#FF2D2D30">

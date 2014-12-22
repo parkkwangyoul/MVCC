@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:base="clr-namespace:System.Windows;assembly=PresentationFramework"
+             xmlns:view="clr-namespace:MVCC.View"
              xmlns:uc="clr-namespace:MVCC.CustomControl"
              xmlns:model="clr-namespace:MVCC.Model"
              mc:Ignorable="d" 
@@ -81,39 +82,8 @@
                 </ItemsControl>
             </Grid>
         </Grid>
-
-        <Grid Grid.Column="1" Margin="5, 0, 0, 0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="5*" />
-                <RowDefinition Height="95*" />
-            </Grid.RowDefinitions>
-            <Grid Grid.Row="0">
-                <TextBlock Width="100" HorizontalAlignment="Left" Background="#78C8FF" Foreground="#FFF" Padding="32, 5, 0, 5">
-                    State
-                </TextBlock>
-                <Border BorderThickness="0, 0, 0, 1" BorderBrush="#78C8FF" />
-            </Grid>
-            <Grid Grid.Row="1">
-                <ItemsControl
-                    ItemTemplateSelector="{StaticResource MyDataTemplateSeletor}"
-                    ItemsSource="{Binding MVCCItemStateList}" Margin="10"
-                    >
-                    <ItemsControl.Template>
-                        <ControlTemplate TargetType="{x:Type ItemsControl}">
-                            <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
-                                <ItemsPresenter></ItemsPresenter>
-                            </ScrollViewer>
-                        </ControlTemplate>
-                    </ItemsControl.Template>
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel>
-                                
-                            </StackPanel>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
-            </Grid>
+        <Grid Grid.Column="1">
+            <view:MapStateTabView />
         </Grid>
     </Grid>
 </UserControl>

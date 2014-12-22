@@ -45,12 +45,12 @@ namespace MVCC.ViewModel
 
             set
             {
-                Set<ObservableCollection<ModelBase>>(ref _MVCCItemList, value);
+                Set<ObservableCollection<ModelBase>>(ref _MVCCItemList, value); 
             }
         }
         #endregion MVCCItemList
 
-        #region MVCCItemStateList
+        #region MVCCItemStateList 
 
         public ObservableCollection<ModelBase> MVCCItemStateList
         {

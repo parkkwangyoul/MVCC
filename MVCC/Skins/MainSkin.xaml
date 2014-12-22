@@ -12,16 +12,22 @@
         <Setter Property="BorderThickness" Value="1, 0, 0, 0" />
     </Style>
 
+    <!-- Side Bar Brush -->
     <SolidColorBrush x:Key="SeletedBackgroundBrush" Color="#78C8FF" />
     <SolidColorBrush x:Key="SeletedForegroundBrush" Color="#FFF" />
     <SolidColorBrush x:Key="HoveredBackgroundBrush" Color="#3E3E42" />
     <SolidColorBrush x:Key="NormalBackgroundBrush" Color="#2D2D30" />
     <SolidColorBrush x:Key="NormalForegroundBrush" Color="#FFF" />
+    
+    <!-- ContextMenu Brush-->
+    <SolidColorBrush x:Key="HoverContextMenuBackgroundBrush" Color="#333334" />
 
     <Style x:Name="TabImage" TargetType="TextBlock" x:Key="SideBarClickedTextBox">
         <Setter Property="Padding" Value="20 10 50 10" />
     </Style>
 
+    
+    <!-- Side Bar Style -->
     <Style TargetType="{x:Type TabItem}" x:Key="SideBarSectionStyle">
         <Setter Property="Template">
             <Setter.Value>
@@ -58,6 +64,69 @@
                             <Setter Property="FontSize" Value="13pt" />
                         </Trigger>
                     </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Map State Tab Style -->
+    <Style TargetType="{x:Type TabItem}" x:Key="MapStateTabSectionStyle">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TabItem}">
+                    <Grid>
+                        <Border Name="Border"   
+                                BorderThickness="1"
+                                HorizontalAlignment="Left" Width="100" Padding="0, 5, 0, 3" Cursor="Hand">
+                            <ContentPresenter x:Name="ContentSite"       
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"
+                                              ContentSource="Header"    
+                                              RecognizesAccessKey="True">
+                            </ContentPresenter>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="False">
+                            <Setter TargetName="Border" Property="Background" Value="Transparent" />
+                            <Setter Property="Foreground" Value="{StaticResource NormalForegroundBrush}" />
+                            <Setter Property="FontFamily" Value="../Resource/font/#Marvel" />
+                            <Setter Property="FontSize" Value="13pt" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Panel.ZIndex" Value="100" />
+                            <Setter TargetName="Border" Property="Background" Value="{StaticResource HoveredBackgroundBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource NormalForegroundBrush}" />
+                            <Setter Property="FontFamily" Value="../Resource/font/#Marvel" />
+                            <Setter Property="FontSize" Value="13pt" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Panel.ZIndex" Value="100" />
+                            <Setter TargetName="Border" Property="Background" Value="{StaticResource SeletedBackgroundBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource SeletedForegroundBrush}" />
+                            <Setter Property="FontFamily" Value="../Resource/font/#Marvel" />
+                            <Setter Property="FontSize" Value="13pt" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ContextMenu Style -->
+    <Style x:Key="{x:Type ContextMenu}" TargetType="{x:Type ContextMenu}">
+
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+
+        <Setter Property="SnapsToDevicePixels" Value="True"/>  
+        
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ContextMenu}">
+                    <Border Background="#333337" BorderThickness="1">
+                        <StackPanel ClipToBounds="True" Orientation="Vertical" IsItemsHost="True" Margin="1" Background="#1B1B1C">                           
+                        </StackPanel>
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

@@ -33,6 +33,7 @@ namespace MVCC.ViewModel
             SimpleIoc.Default.Register<LeftSidebarViewModel>();
             SimpleIoc.Default.Register<InfomationViewModel>();
             SimpleIoc.Default.Register<MapViewModel>();
+            SimpleIoc.Default.Register<MapStateTabViewModel>();
             SimpleIoc.Default.Register<SettingViewModel>();
         }
 
@@ -72,6 +73,14 @@ namespace MVCC.ViewModel
             get
             {
                 return ServiceLocator.Current.GetInstance<MapViewModel>();
+            }
+        }
+
+        public MapStateTabViewModel MapStateTabViewModel
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<MapStateTabViewModel>();
             }
         }
 
