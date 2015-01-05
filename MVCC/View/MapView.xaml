@@ -16,7 +16,7 @@
                 <ResourceDictionary Source="../Skins/MainSkin.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <DataTemplate x:Key="DataTemplateUGVControl">
+            <DataTemplate x:Key="DataTemplateUGVControl">                
                 <uc:UGVControl></uc:UGVControl>
             </DataTemplate>
 
@@ -33,8 +33,12 @@
                                              DataTemplateUGVControl="{StaticResource DataTemplateUGVControl}" 
                                              DataTemplateBuildingControl="{StaticResource DataTemplateBuildingControl}" 
                                              DataTemplateStateControl="{StaticResource DataTemplateStateControl}" />
+            
+            <CollectionViewSource x:Key="UGVItemSrc" />
+            <CollectionViewSource x:Key="UGVStateSrc" />
         </ResourceDictionary>
     </UserControl.Resources>
+    
     <UserControl.Style>
         <base:StaticResource ResourceKey="BaseViewStyle" />
     </UserControl.Style>
@@ -72,18 +76,63 @@
             <Grid Grid.Row="1">
                 <ItemsControl
                     ItemTemplateSelector="{StaticResource MyDataTemplateSeletor}"
-                    ItemsSource="{Binding MVCCItemList}"
+                    ItemsSource="{Binding Source={StaticResource UGVItemSrc}}"
                     Margin="10" BorderBrush="#78C8FF" BorderThickness="1">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <Canvas></Canvas>
+                            <Canvas MouseLeftButtonDown="SelectUGV" Background="Transparent"  MouseRightButtonDown="EndPointUGV">
+                            </Canvas>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>
             </Grid>
         </Grid>
+        
         <Grid Grid.Column="1">
-            <view:MapStateTabView />
+            <Grid Margin="5, 0, 0, 0">
+                <TabControl Background="#2D2D30" BorderThickness="0">
+                    <TabItem Style="{StaticResource MapStateTabSectionStyle}" >
+                        <TabItem.Header>
+                            <TextBlock Cursor="Hand">                                        
+                        Individual
+                            </TextBlock>
+                        </TabItem.Header>
+                        <Grid>
+                            <Border BorderThickness="0, 1, 0, 0" Margin="1, -3, 1, 0" BorderBrush="#78C8FF" />
+
+                            <ItemsControl
+                                ItemTemplateSelector="{StaticResource MyDataTemplateSeletor}"
+                                ItemsSource="{Binding Source={StaticResource UGVStateSrc}}" Margin="10"
+                                >
+                                <ItemsControl.Template>
+                                    <ControlTemplate TargetType="{x:Type ItemsControl}">
+                                        <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
+                                            <ItemsPresenter></ItemsPresenter>
+                                        </ScrollViewer>
+                                    </ControlTemplate>
+                                </ItemsControl.Template>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel>
+                                        </StackPanel>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </Grid>
+                    </TabItem>
+                    <TabItem Style="{StaticResource MapStateTabSectionStyle}">
+                        <TabItem.Header>
+                            <TextBlock Cursor="Hand">        
+                                Group
+                            </TextBlock>
+                        </TabItem.Header>
+                        <Grid>
+                            <Border BorderThickness="0, 1, 0, 0" Margin="1, -3, 1, 0" BorderBrush="#78C8FF" />
+                            <TextBlock Text="GroupStateView" />
+                        </Grid>
+                    </TabItem>
+                </TabControl>
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>

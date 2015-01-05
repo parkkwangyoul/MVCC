@@ -79,6 +79,7 @@
     <Compile Include="CustomControl\UGVControl.xaml.cs">
       <DependentUpon>UGVControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Globals.cs" />
     <Compile Include="Model\ModelDataTemplateSelector.cs" />
     <Compile Include="Model\Building.cs" />
     <Compile Include="Model\ModelBase.cs" />
@@ -87,7 +88,6 @@
     <Compile Include="ViewModel\InfomationViewModel.cs" />
     <Compile Include="ViewModel\LeftSidebarViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="ViewModel\MapStateTabViewModel.cs" />
     <Compile Include="ViewModel\MapViewModel.cs" />
     <Compile Include="ViewModel\SettingViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
@@ -97,20 +97,11 @@
     <Compile Include="View\LeftSidebarView.xaml.cs">
       <DependentUpon>LeftSidebarView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\MapStateTabView.xaml.cs">
-      <DependentUpon>MapStateTabView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\MapView.xaml.cs">
       <DependentUpon>MapView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SettingView.xaml.cs">
       <DependentUpon>SettingView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\StateView\GroupStateView.xaml.cs">
-      <DependentUpon>GroupStateView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\StateView\IndividualStateView.xaml.cs">
-      <DependentUpon>IndividualStateView.xaml</DependentUpon>
     </Compile>
     <Page Include="CustomControl\BuildingControl.xaml">
       <SubType>Designer</SubType>
@@ -148,23 +139,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\MapStateTabView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="View\MapView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\SettingView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\StateView\GroupStateView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\StateView\IndividualStateView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

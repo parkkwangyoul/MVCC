@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Media;
+using System.Diagnostics;
+using System.Linq;
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -22,49 +25,52 @@ namespace MVCC.ViewModel
         /// </summary>
         public MapViewModel()
         {
-
+            
         }
+
+        private Globals globals = Globals.Instance;
 
         #region MVCCItemList
 
         /* *
          * MVCC Building, UGV 객체를 보관하는 MVCCItemList
          * */
-        private ObservableCollection<ModelBase> _MVCCItemList;
-        private ObservableCollection<ModelBase> _MVCCItemStateList;
+        private ObservableCollection<UGV> _MVCCItemList;
+        private ObservableCollection<State> _MVCCItemStateList;
 
-        public ObservableCollection<ModelBase> MVCCItemList
+
+        public ObservableCollection<UGV> MVCCItemList
         {
             get
             {
                 if (_MVCCItemList == null)
-                    _MVCCItemList = new ObservableCollection<ModelBase>();
+                    _MVCCItemList = new ObservableCollection<UGV>();
 
                 return _MVCCItemList;
             }
 
             set
             {
-                Set<ObservableCollection<ModelBase>>(ref _MVCCItemList, value); 
+                Set<ObservableCollection<UGV>>(ref _MVCCItemList, value); 
             }
         }
         #endregion MVCCItemList
 
         #region MVCCItemStateList 
 
-        public ObservableCollection<ModelBase> MVCCItemStateList
+        public ObservableCollection<State> MVCCItemStateList
         {
             get
             {
                 if (_MVCCItemStateList == null)
-                    _MVCCItemStateList = new ObservableCollection<ModelBase>();
+                    _MVCCItemStateList = new ObservableCollection<State>();
 
                 return _MVCCItemStateList;
             }
 
             set
             {
-                Set<ObservableCollection<ModelBase>>(ref _MVCCItemStateList, value);
+                Set<ObservableCollection<State>>(ref _MVCCItemStateList, value);
             }
         }
         #endregion MVCCItemStateList
@@ -72,6 +78,8 @@ namespace MVCC.ViewModel
         private RelayCommand _AddUGVCommand;
 
         private RelayCommand _AddBuildingCommand;
+
+        private List<Point> mainTouchPoint = new List<Point>();
 
         
         /* *
@@ -99,9 +107,8 @@ namespace MVCC.ViewModel
                 UGV ugv = new UGV(id, 50, 50, 0 + i * 100, 0 + i * 100);
 
                 MVCCItemList.Add(ugv);
-                MVCCItemStateList.Add(new State(ugv));
+                MVCCItemStateList.Add(new State(ugv));                            
             }
         }
-
     }
 }

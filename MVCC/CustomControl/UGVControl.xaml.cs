@@ -12,6 +12,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Diagnostics;
+
+using MVCC.ViewModel;
+using MVCC.Model;
 
 namespace MVCC.CustomControl
 {
@@ -23,12 +27,8 @@ namespace MVCC.CustomControl
         public UGVControl()
         {
             InitializeComponent();
-        }
 
-        private void ellipse_ManipulationDelta(object sender, ManipulationDeltaEventArgs e)
-        {
-           // Canvas.SetLeft(ellipse, Canvas.GetLeft(ellipse) + e.DeltaManipulation.Translation.X);
-            //Canvas.SetTop(ellipse, Canvas.GetTop(ellipse) + e.DeltaManipulation.Translation.Y);
+            
         }
     }
 }

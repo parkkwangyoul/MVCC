@@ -4,24 +4,27 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300" >
     
     <UserControl.RenderTransform>
         <TranslateTransform  X="{Binding X}" Y="{Binding Y}"/>
     </UserControl.RenderTransform>
 
-    <Ellipse Width="{Binding Width}" Height="{Binding Height}" Fill="SkyBlue">
-        <Ellipse.ContextMenu>
-            <ContextMenu>
-                <MenuItem Header="{Binding Id}" />
-                <Separator />
-                <MenuItem Header="그룹 선택" />
-                <MenuItem Header="Menu item 2" />
-                <Separator />
-                <MenuItem Header="Menu item 3" />
-            </ContextMenu>
-        </Ellipse.ContextMenu>
-    </Ellipse>
+    <Grid>
+        <Ellipse Width="{Binding Width}" Height="{Binding Height}" Fill="{Binding UGVColor}" StrokeDashArray="5 5" Stroke="{Binding UGVStroke}" StrokeThickness="{Binding UGVStrokeThickness}" Cursor="Hand"> 
+            <!--Ellipse.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="{Binding Id}" />
+                    <Separator />
+                    <MenuItem Header="그룹 선택"></MenuItem>
+                    <MenuItem Header="Menu item 2" />
+                    <Separator />
+                    <MenuItem Header="Menu item 3" />
+                </ContextMenu>
+            </Ellipse.ContextMenu -->                          
+        </Ellipse>
+        <TextBlock TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Id}" />
+    </Grid>
 
     <!--Image Width="{Binding Width}" Height="{Binding Height}" Source="../Resource/UGV.png" VerticalAlignment="Center" HorizontalAlignment="Center" /-->
 </UserControl>
