@@ -29,6 +29,18 @@ namespace MVCC.Model
             }
         }
 
+        // 그룹에 포함되기 전에 선택된 UGV를 의미
+        private bool isClickedReadyBelongToGroup = false;
+        public bool IsClickedReadyBelongToGroup
+        {
+            get { return isClickedReadyBelongToGroup; }
+            set
+            {
+                isClickedReadyBelongToGroup = value;
+            }
+        }
+
+        // 그룹에 포함 되어있는지 아닌지
         private bool isBelongToGroup = false;
         public bool IsBelongToGroup
         {
@@ -39,13 +51,25 @@ namespace MVCC.Model
             }
         }
 
-        private int groupNum;
-        public int GroupNum
+        // 그룹에 포함되어 있다면, 그 그룹의 이름
+        private string groupName;
+        public string GroupName
         {
-            get { return groupNum; }
+            get { return groupName; }
             set
             {
-                groupNum = value;
+                groupName = value;
+            }
+        }
+
+        // 그룹에 속해있는 UGV가 선택 되었을때, 그룹 전체가 선택되며, 이 속성이 true로 바뀜.
+        private bool isGroupClicked = false;
+        public bool IsGroupClicked
+        {
+            get { return isGroupClicked; }
+            set
+            {
+                isGroupClicked = value;
             }
         }
 

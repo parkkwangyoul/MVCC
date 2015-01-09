@@ -28,22 +28,28 @@
                 <uc:StateControl></uc:StateControl>
             </DataTemplate>
 
+            <DataTemplate x:Key="DatatTemplateGroupControl">
+                <uc:GroupControl></uc:GroupControl>
+            </DataTemplate>
+
             <model:ModelDataTemplateSelector x:Key="MyDataTemplateSeletor" 
                                              x:Name="MyDataTemplateSeletor" 
                                              DataTemplateUGVControl="{StaticResource DataTemplateUGVControl}" 
                                              DataTemplateBuildingControl="{StaticResource DataTemplateBuildingControl}" 
-                                             DataTemplateStateControl="{StaticResource DataTemplateStateControl}" />
+                                             DataTemplateStateControl="{StaticResource DataTemplateStateControl}"
+                                             DataTemplateGroupControl="{StaticResource DatatTemplateGroupControl}"/>
             
             <CollectionViewSource x:Key="UGVItemSrc" />
             <CollectionViewSource x:Key="UGVStateSrc" />
+            <CollectionViewSource x:Key="UGVGroupSrc" />
         </ResourceDictionary>
     </UserControl.Resources>
     
     <UserControl.Style>
         <base:StaticResource ResourceKey="BaseViewStyle" />
     </UserControl.Style>
-    
-    <Grid>
+
+    <Grid KeyDown="MakeGroup">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="8*" />
             <ColumnDefinition Width="2*" />
@@ -73,14 +79,14 @@
                 
             </Grid>
 
-            <Grid Grid.Row="1">
+            <Grid Grid.Row="1" x:Name="MapGrid">
                 <ItemsControl
                     ItemTemplateSelector="{StaticResource MyDataTemplateSeletor}"
                     ItemsSource="{Binding Source={StaticResource UGVItemSrc}}"
                     Margin="10" BorderBrush="#78C8FF" BorderThickness="1">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <Canvas MouseLeftButtonDown="SelectUGV" Background="Transparent"  MouseRightButtonDown="EndPointUGV">
+                            <Canvas MouseLeftButtonDown="SelectUGV" Background="Transparent">
                             </Canvas>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
@@ -127,8 +133,31 @@
                             </TextBlock>
                         </TabItem.Header>
                         <Grid>
+                            <Grid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="그룹 생성"></MenuItem>
+                                    <Separator />                                    
+                                </ContextMenu>
+                            </Grid.ContextMenu>
                             <Border BorderThickness="0, 1, 0, 0" Margin="1, -3, 1, 0" BorderBrush="#78C8FF" />
-                            <TextBlock Text="GroupStateView" />
+                            <ItemsControl
+                                ItemTemplateSelector="{StaticResource MyDataTemplateSeletor}"
+                                ItemsSource="{Binding Source={StaticResource UGVGroupSrc}}" Margin="10"
+                                >
+                                <ItemsControl.Template>
+                                    <ControlTemplate TargetType="{x:Type ItemsControl}">
+                                        <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
+                                            <ItemsPresenter></ItemsPresenter>
+                                        </ScrollViewer>
+                                    </ControlTemplate>
+                                </ItemsControl.Template>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel>
+                                        </StackPanel>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
                         </Grid>
                     </TabItem>
                 </TabControl>

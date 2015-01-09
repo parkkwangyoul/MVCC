@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using System.Windows.Controls;
+
 using MVCC.Model;
 
 namespace MVCC
@@ -23,16 +25,6 @@ namespace MVCC
 
         private Globals()
         {
-        }
-
-        private bool isGroupMode = false;
-        public bool IsGroupMode
-        {
-            get { return isGroupMode; }
-            set
-            {
-                isGroupMode = value;
-            }
         }
 
         private UGV nowSelectedUGV;

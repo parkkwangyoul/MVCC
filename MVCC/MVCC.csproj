@@ -73,6 +73,9 @@
     <Compile Include="CustomControl\BuildingControl.xaml.cs">
       <DependentUpon>BuildingControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CustomControl\GroupControl.xaml.cs">
+      <DependentUpon>GroupControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CustomControl\StateControl.xaml.cs">
       <DependentUpon>StateControl.xaml</DependentUpon>
     </Compile>
@@ -80,6 +83,8 @@
       <DependentUpon>UGVControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Globals.cs" />
+    <Compile Include="Model\Group.cs" />
+    <Compile Include="Model\GroupColor.cs" />
     <Compile Include="Model\ModelDataTemplateSelector.cs" />
     <Compile Include="Model\Building.cs" />
     <Compile Include="Model\ModelBase.cs" />
@@ -104,6 +109,10 @@
       <DependentUpon>SettingView.xaml</DependentUpon>
     </Compile>
     <Page Include="CustomControl\BuildingControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomControl\GroupControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

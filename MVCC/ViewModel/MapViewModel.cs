@@ -36,7 +36,7 @@ namespace MVCC.ViewModel
          * MVCC Building, UGV 객체를 보관하는 MVCCItemList
          * */
         private ObservableCollection<UGV> _MVCCItemList;
-        private ObservableCollection<State> _MVCCItemStateList;
+        private ObservableCollection<State> _MVCCItemStateList;             
 
 
         public ObservableCollection<UGV> MVCCItemList
@@ -75,13 +75,52 @@ namespace MVCC.ViewModel
         }
         #endregion MVCCItemStateList
 
+        #region MVCCTempList
+        private List<UGV> _MVCCTempList;
+        public List<UGV> MVCCTempList
+        {
+            get 
+            {
+                if (_MVCCTempList == null)
+                {
+                    _MVCCTempList = new List<UGV>();
+                }
+
+                return _MVCCTempList;
+            }
+            set
+            {
+                Set <List<UGV>>(ref _MVCCTempList, value);
+            }
+        }
+        #endregion MVCCTempList
+
+        #region MVCCGroupList
+        /**
+         *  MVCC UGV 그룹 리스트
+         * */
+        private ObservableCollection<Group> _MVCCGroupList;
+        public ObservableCollection<Group> MVCCGroupList
+        {
+            get
+            {
+                if (_MVCCGroupList == null)
+                    _MVCCGroupList = new ObservableCollection<Group>();
+
+                return _MVCCGroupList;
+            }
+            set
+            {
+                Set<ObservableCollection<Group>>(ref _MVCCGroupList, value);
+            }
+        }
+        #endregion MVCCGroupList
+
+        //private List<Point> mainTouchPoint = new List<Point>();
+
+        #region AddUGVCommand
+
         private RelayCommand _AddUGVCommand;
-
-        private RelayCommand _AddBuildingCommand;
-
-        private List<Point> mainTouchPoint = new List<Point>();
-
-        
         /* *
          * UGV를 추가
          * */
@@ -110,5 +149,13 @@ namespace MVCC.ViewModel
                 MVCCItemStateList.Add(new State(ugv));                            
             }
         }
+        #endregion AddUGVCommand
+
+        #region AddBuildingCommand
+
+        private RelayCommand _AddBuildingCommand;
+
+        #endregion AddBuildingCommand
+
     }
 }
