@@ -79,8 +79,6 @@ namespace MVCC.View
 
                     if (!ugv.IsBelongToGroup)
                     {
-
-                        //MessageBox.Show()
                         // 그룹 선택이 안된 것
                         if (!ugv.IsClickedReadyBelongToGroup)
                         {                            
@@ -97,6 +95,17 @@ namespace MVCC.View
                             cancelSelectUGV(ugv);
 
                             RemoveSelectedUGVInGroupTempList(ugv);
+                        }
+
+                        // 그룹 대기열에 없는 UGV중에 이미 그룹에 속한 UGV들의 Layout을 해제                       
+                        for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
+                        {
+                            UGV tempUGV = mapViewModel.MVCCItemList[i];
+
+                            if (!tempUGV.Id.Equals(ugv.Id) && tempUGV.IsBelongToGroup)
+                            {
+                                cancelSelectUGV(tempUGV);
+                            }
                         }
                     }
 
@@ -244,7 +253,7 @@ namespace MVCC.View
                 }
                 else
                 {
-                    MessageBox.Show("선택된 UGV가 없습니다.");
+                    MessageBox.Show("그룹 대기열에 포함된 UGV가 없습니다.");
                 }
             }
             
@@ -264,6 +273,19 @@ namespace MVCC.View
                             UGV tempUGV = tempGroup.MemberList[j];
                             selectUGVAndStateChangeLayout(tempUGV, tempGroup.StateBorderBrush, tempUGV.Id);
                             tempUGV.IsGroupClicked = true;
+                        }
+                    }
+                    else
+                    {
+                        if (Keyboard.Modifiers != ModifierKeys.Control
+                            && Keyboard.Modifiers != ModifierKeys.Alt
+                            && Keyboard.Modifiers != ModifierKeys.Shift)
+                        {
+                            for (int j = 0; j < tempGroup.MemberList.Count; j++)
+                            {
+                                UGV tempUGV = tempGroup.MemberList[j];
+                                cancelSelectUGV(tempUGV);
+                            }
                         }
                     }
                 }
@@ -443,7 +465,7 @@ namespace MVCC.View
                 for (int j = 0; j < tempGroup.MemberList.Count; j++)
                 {
                     UGV tempUGV = tempGroup.MemberList[j];
-                    if (tempUGV.IsBelongToGroup)
+                    if (tempUGV.IsBelongToGroup && tempUGV.IsGroupClicked)
                     {
                         return tempGroup;
                     }
