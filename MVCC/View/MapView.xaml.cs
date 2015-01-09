@@ -46,22 +46,6 @@ namespace MVCC.View
             (FindResource("UGVGroupSrc") as CollectionViewSource).Source = mapViewModel.MVCCGroupList;            
         }
 
-        private void cancelSelectUGV(UGV ugv)
-        {
-            ugv.UGVStrokeThickness = 0;
-
-            for (int j = 0; j < mapViewModel.MVCCItemStateList.Count; j++)
-            {
-                State tempState = mapViewModel.MVCCItemStateList[j];
-
-                if (tempState.ugv.Id.Equals(ugv.Id))
-                {
-                    tempState.StateBorderBrush = "#78C8FF";
-                }
-            }
-
-        }
-
         // UGV를 선택하는 모드
         private void SelectUGV(object sender, MouseButtonEventArgs e)
         {
@@ -90,93 +74,90 @@ namespace MVCC.View
                         if (tempUGV.IsClicked)
                         {
                             cancelSelectUGV(tempUGV);
-
-                            tempUGV.IsClicked = false;
-                            tempUGV.IsClickedReadyBelongToGroup = false;
                         }
                     }
 
                     if (!ugv.IsBelongToGroup)
                     {
+
+                        //MessageBox.Show()
                         // 그룹 선택이 안된 것
                         if (!ugv.IsClickedReadyBelongToGroup)
-                        {
-                            ugv.UGVStrokeThickness = 2;
-                            ugv.UGVStroke = "Blue";
-                            //ugv.IsClicked = true;
+                        {                            
                             ugv.IsClickedReadyBelongToGroup = true;
 
+                            selectUGVAndStateChangeLayout(ugv, "Blue", id);
+
                             mapViewModel.MVCCTempList.Add(ugv);
-
-                            for (int i = 0; i < mapViewModel.MVCCItemStateList.Count; i++)
-                            {
-                                State tempState = mapViewModel.MVCCItemStateList[i];
-
-                                if (tempState.ugv.Id.Equals(id))
-                                {
-                                    tempState.StateBorderBrush = "Blue";
-                                }
-                            }
                         }
                         else
                         {
                             ugv.IsClickedReadyBelongToGroup = false;
 
-                            for (int i = 0; i < mapViewModel.MVCCItemStateList.Count; i++)
-                            {
-                                State tempState = mapViewModel.MVCCItemStateList[i];
+                            cancelSelectUGV(ugv);
 
-                                if (tempState.ugv.Id.Equals(ugv.Id))
-                                {
-                                    tempState.StateBorderBrush = "#78C8FF";
-                                }
-                            }
-
-                            // 그룹에 포함되지 않았지만, 대기중이 UGV들 중에 선택한 UGV가 해제된다.
-                            for (int i = 0; i < mapViewModel.MVCCTempList.Count; i++)
-                            {
-                                UGV tempUGV = mapViewModel.MVCCTempList[i];
-
-                                if (tempUGV.Id.Equals(ugv.Id))
-                                {
-                                    mapViewModel.MVCCTempList.Remove(tempUGV);
-                                }
-                            }
+                            RemoveSelectedUGVInGroupTempList(ugv);
                         }
                     }
 
-                    // View에 반영
-                    (FindResource("UGVItemSrc") as CollectionViewSource).View.Refresh();
-
-                    (FindResource("UGVStateSrc") as CollectionViewSource).View.Refresh();
+                    refreshView();
                 }
                 else
                 {
-                    // UGV가 아닌 다른곳을 클릭했을경우 선택이 해제된다.
-                    for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
-                    {
-                        UGV tempUGV = mapViewModel.MVCCItemList[i];
+                    cancelSelectUGV();
 
-                        tempUGV.UGVStrokeThickness = 0;
-                        tempUGV.IsClicked = false;
-                        tempUGV.IsClickedReadyBelongToGroup = false;
-                    }
-
-                    for (int i = 0; i < mapViewModel.MVCCItemStateList.Count; i++)
-                    {
-                        State tempState = mapViewModel.MVCCItemStateList[i];
-
-                        tempState.StateBorderBrush = "#78C8FF";
-                    }
-
-                    // 그룹에 포함되지 않았지만, 대기중인 UGV전체를 해제한다.
-                    mapViewModel.MVCCTempList.Clear();
-
-                    // View에 반영
-                    (FindResource("UGVItemSrc") as CollectionViewSource).View.Refresh();
-
-                    (FindResource("UGVStateSrc") as CollectionViewSource).View.Refresh();
+                    refreshView();
                 }
+            }
+
+            // 그룹이 선택된 상태에서 Alt를 누르고 부대선택되지 않은 UGV를 선택하면, 그 그룹에 추가된다.
+            else if (Keyboard.Modifiers == ModifierKeys.Alt) 
+            {
+                Group group = findClickedGroup();
+
+                if (group != null)
+                {
+                    if (clickedElement is Ellipse)
+                    {
+                        Ellipse ellipse = clickedElement as Ellipse;
+
+                        Grid grid = ellipse.Parent as Grid;
+                        string id = (grid.Children[0] as TextBlock).Text;
+
+                        UGV ugv = new UGV();
+                                                
+                        for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
+                        {
+                            UGV tempUGV = mapViewModel.MVCCItemList[i];
+                            if (tempUGV.Id.Equals(id))
+                            {
+                                ugv = tempUGV;
+                            }
+                        }
+
+                        if (!ugv.IsBelongToGroup)
+                        {
+
+                            ugv.GroupName = group.Name;
+                            ugv.IsBelongToGroup = true;
+
+                            group.MemberList.Add(ugv);
+
+                            selectUGVAndStateChangeLayout(ugv, group.StateBorderBrush, ugv.Id);
+                        }
+                        else
+                        {
+                            ugv.GroupName = null;
+                            ugv.IsBelongToGroup = false;
+
+                            group.MemberList.Remove(ugv);
+
+                            cancelSelectUGV(ugv);
+                        }
+                    }
+                }
+
+                refreshView();
             }
 
             // 하나하나 선택할때
@@ -191,15 +172,13 @@ namespace MVCC.View
 
                     UGV ugv = new UGV();
 
-
                     // 선택한 UGV를 찾아서 나머지 선택을 해제
                     for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
                     {
                         UGV tempUGV = mapViewModel.MVCCItemList[i];
                         if (!tempUGV.Id.Equals(id))
                         {
-                            tempUGV.UGVStrokeThickness = 0;
-                            tempUGV.IsClicked = false;
+                            cancelSelectUGV(tempUGV);
                         }
                         else
                         {
@@ -213,24 +192,8 @@ namespace MVCC.View
                      * */
                     if (!ugv.IsBelongToGroup)
                     {
-                        ugv.UGVStrokeThickness = 2;
-                        ugv.UGVStroke = "Red";
                         ugv.IsClicked = true;
-                        
-                        // UGV의 상태를 바꾸는 기능
-                        for (int i = 0; i < mapViewModel.MVCCItemStateList.Count; i++)
-                        {
-                            State tempState = mapViewModel.MVCCItemStateList[i];
-
-                            if (tempState.ugv.Id.Equals(id))
-                            {
-                                tempState.StateBorderBrush = "Red";
-                            }
-                            else
-                            {
-                                tempState.StateBorderBrush = "#78C8FF";
-                            }
-                        }
+                        selectUGVAndStateChangeLayout(ugv, "Red", id);
                     }
                     else
                     {
@@ -250,58 +213,19 @@ namespace MVCC.View
                         {
                             UGV tempUGV = selectGroup.MemberList[i];
 
-                            tempUGV.UGVStrokeThickness = 2;
-                            tempUGV.UGVStroke = selectGroup.StateBorderBrush;
+                            selectUGVAndStateChangeLayout(tempUGV, selectGroup.StateBorderBrush, tempUGV.Id);
+
                             tempUGV.IsGroupClicked = true;
-                        }
-
-                        for (int i = 0; i < selectGroup.MemberList.Count; i++)
-                        {
-                            UGV tempUGV = selectGroup.MemberList[i];
-
-                            for (int j = 0; j < mapViewModel.MVCCItemStateList.Count; j++)
-                            {
-                                State tempState = mapViewModel.MVCCItemStateList[j];
-
-                                if (tempUGV.Id.Equals(tempState.ugv.Id))
-                                {
-                                    tempState.StateBorderBrush = selectGroup.StateBorderBrush;
-                                }
-                            }
                         }
                     }
 
-                    // View에 반영
-                    (FindResource("UGVItemSrc") as CollectionViewSource).View.Refresh();
-
-                    (FindResource("UGVStateSrc") as CollectionViewSource).View.Refresh();
+                    refreshView();
                 }
                 else
                 {
-                    // UGV가 아닌 다른곳을 클릭했을경우 선택이 해제된다.
-                    for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
-                    {
-                        UGV tempUGV = mapViewModel.MVCCItemList[i];
+                    cancelSelectUGV();
 
-                        tempUGV.UGVStrokeThickness = 0;
-                        tempUGV.IsClicked = false;
-                        tempUGV.IsClickedReadyBelongToGroup = false;
-                    }
-
-                    for (int i = 0; i < mapViewModel.MVCCItemStateList.Count; i++)
-                    {
-                        State tempState = mapViewModel.MVCCItemStateList[i];
-
-                        tempState.StateBorderBrush = "#78C8FF";
-                    }
-
-                    // 그룹에 포함되지 않았지만, 대기중인 UGV전체를 해제한다.
-                    mapViewModel.MVCCTempList.Clear();
-
-                    // View에 반영
-                    (FindResource("UGVItemSrc") as CollectionViewSource).View.Refresh();
-
-                    (FindResource("UGVStateSrc") as CollectionViewSource).View.Refresh();
+                    refreshView();
                 }
             }
         }        
@@ -311,10 +235,17 @@ namespace MVCC.View
 
             if (Keyboard.Modifiers == ModifierKeys.Control)
             {
-                int groupNum = findGroupNum(e.Key);
+                if (mapViewModel.MVCCTempList.Count > 0)
+                {
+                    int groupNum = findGroupNum(e.Key);
 
-                if (groupNum != 0)
-                    MakeGroup(groupNum);
+                    if (groupNum != 0)
+                        MakeGroup(groupNum);
+                }
+                else
+                {
+                    MessageBox.Show("선택된 UGV가 없습니다.");
+                }
             }
             
             // 해당 그룹 번호를 누르면 해당그룹이 선택됨.
@@ -331,34 +262,13 @@ namespace MVCC.View
                         for (int j = 0; j < tempGroup.MemberList.Count; j++)
                         {
                             UGV tempUGV = tempGroup.MemberList[j];
-
-                            tempUGV.UGVStrokeThickness = 2;
-                            tempUGV.UGVStroke = tempGroup.StateBorderBrush;
+                            selectUGVAndStateChangeLayout(tempUGV, tempGroup.StateBorderBrush, tempUGV.Id);
                             tempUGV.IsGroupClicked = true;
                         }
-
-                        for (int j = 0; j < tempGroup.MemberList.Count; j++)
-                        {
-                            UGV tempUGV = tempGroup.MemberList[j];
-
-                            for (int k = 0; k < mapViewModel.MVCCItemStateList.Count; k++)
-                            {
-                                State tempState = mapViewModel.MVCCItemStateList[k];
-
-                                if (tempUGV.Id.Equals(tempState.ugv.Id))
-                                {
-                                    tempState.StateBorderBrush = tempGroup.StateBorderBrush;
-                                }
-                            }
-                        }
-
                     }
                 }
 
-                // View에 반영
-                (FindResource("UGVItemSrc") as CollectionViewSource).View.Refresh();
-
-                (FindResource("UGVStateSrc") as CollectionViewSource).View.Refresh();
+                refreshView();
             }
         }
 
@@ -416,11 +326,7 @@ namespace MVCC.View
 
                 mapViewModel.MVCCTempList.Clear();
 
-                (FindResource("UGVItemSrc") as CollectionViewSource).View.Refresh();
-
-                (FindResource("UGVStateSrc") as CollectionViewSource).View.Refresh();
-
-                (FindResource("UGVGroupSrc") as CollectionViewSource).View.Refresh();
+                refreshView();
             }
             else
             {
@@ -428,6 +334,94 @@ namespace MVCC.View
             }
         }
 
+        // 선택한 UGV의 Layout을 변경해주는 기능
+        private void selectUGVAndStateChangeLayout(UGV ugv, string color, string id)
+        {
+            ugv.UGVStrokeThickness = 2;
+            ugv.UGVStroke = color;
+            
+            for (int i = 0; i < mapViewModel.MVCCItemStateList.Count; i++)
+            {
+                State tempState = mapViewModel.MVCCItemStateList[i];
+
+                if (tempState.ugv.Id.Equals(id))
+                {
+                    tempState.StateBorderBrush = color;
+                }
+            }
+        }
+
+        // 특정 UGV의 선택을 해제하는 기능
+        private void cancelSelectUGV(UGV ugv)
+        {
+            ugv.UGVStrokeThickness = 0;
+            ugv.IsClicked = false;
+            ugv.IsClickedReadyBelongToGroup = false;
+            ugv.IsGroupClicked = false;
+
+            for (int j = 0; j < mapViewModel.MVCCItemStateList.Count; j++)
+            {
+                State tempState = mapViewModel.MVCCItemStateList[j];
+
+                if (tempState.ugv.Id.Equals(ugv.Id))
+                {
+                    tempState.StateBorderBrush = "#78C8FF";
+                }
+            }
+
+        }
+
+        // UGV 전체의 선택을 해제하는 기능
+        private void cancelSelectUGV()
+        {
+            // UGV가 아닌 다른곳을 클릭했을경우 선택이 해제된다.
+            for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
+            {
+                UGV tempUGV = mapViewModel.MVCCItemList[i];
+
+                tempUGV.UGVStrokeThickness = 0;
+                tempUGV.IsClicked = false;
+                tempUGV.IsClickedReadyBelongToGroup = false;
+                tempUGV.IsGroupClicked = false;
+            }
+
+            for (int i = 0; i < mapViewModel.MVCCItemStateList.Count; i++)
+            {
+                State tempState = mapViewModel.MVCCItemStateList[i];
+
+                tempState.StateBorderBrush = "#78C8FF";
+            }
+
+            // 그룹에 포함되지 않았지만, 대기중인 UGV전체를 해제한다.
+            mapViewModel.MVCCTempList.Clear();
+        }
+
+        // UGV가 그룹 대기열에 들어갔을때, 그것을 다시 선택할때, UGV가 해제됨.
+        private void RemoveSelectedUGVInGroupTempList(UGV ugv)
+        {
+            // 그룹에 포함되지 않았지만, 대기중이 UGV들 중에 선택한 UGV가 해제된다.
+            for (int i = 0; i < mapViewModel.MVCCTempList.Count; i++)
+            {
+                UGV tempUGV = mapViewModel.MVCCTempList[i];
+
+                if (tempUGV.Id.Equals(ugv.Id))
+                {
+                    mapViewModel.MVCCTempList.Remove(tempUGV);
+                }
+            }
+        }
+
+        private void refreshView()
+        {
+            // View에 반영
+            (FindResource("UGVItemSrc") as CollectionViewSource).View.Refresh();
+
+            (FindResource("UGVStateSrc") as CollectionViewSource).View.Refresh();
+
+            (FindResource("UGVGroupSrc") as CollectionViewSource).View.Refresh();
+        }
+
+        // 숫자키에 대응되는 그룹의 번호
         private int findGroupNum(Key key)
         {
             switch (key)
@@ -438,6 +432,25 @@ namespace MVCC.View
                 case Key.D4: return 4;
                 default: return 0;
             }
+        }
+
+        private Group findClickedGroup()
+        {
+            for (int i = 0; i < mapViewModel.MVCCGroupList.Count; i++)
+            {
+                Group tempGroup = mapViewModel.MVCCGroupList[i];
+
+                for (int j = 0; j < tempGroup.MemberList.Count; j++)
+                {
+                    UGV tempUGV = tempGroup.MemberList[j];
+                    if (tempUGV.IsBelongToGroup)
+                    {
+                        return tempGroup;
+                    }
+                }
+            }
+
+            return null;
         }
 
         private string getGroupColor(int groupNum)

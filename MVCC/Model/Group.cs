@@ -42,6 +42,16 @@ namespace MVCC.Model
             }
         }
 
+        private bool isClicked = false;
+        public bool IsClicked
+        {
+            get { return isClicked; }
+            set
+            {
+                isClicked = value;
+            }
+        }
+
         public override string ToString()
         {
             return "Group";
