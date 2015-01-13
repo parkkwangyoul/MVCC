@@ -5,9 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:base="clr-namespace:System.Windows;assembly=PresentationFramework"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300"
-             DataContext="{Binding Source={StaticResource Locator}, Path=SettingViewModel}"
-             Content="Setting View">
+             d:DesignHeight="500" d:DesignWidth="500"
+             DataContext="{Binding Source={StaticResource Locator}, Path=SettingViewModel}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -18,4 +17,8 @@
     <UserControl.Style>
         <base:StaticResource ResourceKey="BaseViewStyle" />
     </UserControl.Style>
+    
+    <Grid>
+        
+    </Grid>
 </UserControl>

@@ -56,7 +56,6 @@ namespace MVCC.View
             {
                 if (clickedElement is Ellipse)
                 {
-
                     Ellipse ellipse = clickedElement as Ellipse;
 
                     Grid grid = ellipse.Parent as Grid;
@@ -289,7 +288,7 @@ namespace MVCC.View
                         }
                     }
                 }
-
+                //내일오면 선택부분 오류 수정
                 refreshView();
             }
         }
@@ -491,59 +490,6 @@ namespace MVCC.View
                 default:
                     return "Green";
             }
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        DispatcherTimer MyUGVMoveTimer = new DispatcherTimer();
-
-        // 타이머를 셋팅한다.
-        // 일단 안되게 해놨음
-        private void MyUGVTimerSetting(UGV tempUGV, Point p)
-        {
-            double originX = tempUGV.X;
-            double originY = tempUGV.Y;
-
-            double x = (originX - (p.X - tempUGV.Width / 2)) / 100;
-            double y = (originY - (p.Y - tempUGV.Height / 2)) / 100;
-
-            //얼마의 주기로 호출할 것인가?
-            MyUGVMoveTimer.Interval = new TimeSpan(30);
-            MyUGVMoveTimer.Tick +=
-                (sender, eventArgs) =>
-                {
-                    tempUGV.X = (p.X - tempUGV.Width / 2);//Math.Abs(x);
-                    tempUGV.Y = (p.Y - tempUGV.Height / 2);//Math.Abs(y);
-
-                    // View에 반영
-                    (FindResource("UGVItemSrc") as CollectionViewSource).View.Refresh();
-
-                    (FindResource("UGVStateSrc") as CollectionViewSource).View.Refresh();
-
-                    MyUGVMoveTimer.Stop();
-                };
-
-            MyUGVMoveTimer.Start(); //타이머 시작
         }
     }
 }
