@@ -19,6 +19,14 @@ using System.Diagnostics;
 using MVCC.ViewModel;
 using MVCC.Model;
 
+using Emgu.CV;
+using Emgu.CV.Structure;
+using Emgu.CV.CvEnum;
+
+using System.ComponentModel;
+using System.Runtime.InteropServices;
+using MVCC.Utill;
+
 namespace MVCC.View
 {
     /// <summary>
@@ -26,12 +34,218 @@ namespace MVCC.View
     /// </summary>
     public partial class MapView : UserControl
     {
+        private Capture webcam; //캠 영상 받을 변수 
+        Image<Bgr, Byte> obstacle_image; //캠에서 받은 원본(장애물 이미지를 위한)
+        System.Drawing.Rectangle[] tracking_rect; //트래킹한 결과를 그리는 네모박스
+        int[,] hand_image_arr = new int[480, 640]; //손검출한 좌표의정보
+        bool obstacle_check = false; //트래킹과 장애물검사랑 동기화 위해
+        GlobalClass glo = GlobalClass.Instance; //gloal 변수를 위해   
+
 
         // MapViewModel 가져옴
         private MapViewModel mapViewModel;
 
         // Globals Class
         private Globals globals = Globals.Instance;
+
+        /**
+      * 카메라를 켬
+      * */
+        private void CamOn(object sender, RoutedEventArgs e)
+        {
+            webcam = new Capture(0); //cam 설정
+            thread_start(); //thread 시작
+        }
+
+        private void thread_start()
+        {
+            //색 트레킹 쓰레드
+            BackgroundWorker thread = new BackgroundWorker();
+            thread.DoWork += colorTracking;
+            thread.RunWorkerAsync();
+
+            //장애물 감지 쓰레드
+            thread = new BackgroundWorker();
+            thread.DoWork += obstacleDection;
+            thread.RunWorkerAsync();
+        }
+
+        private void colorTracking(object sender, DoWorkEventArgs e)
+        {
+            bool image_is_changed = true; //영상을 비교했을때 차이가 날경우 (초기화를 true하는이유는 차가 놓여진상태에서 시작하면 바로 탬플릿 매칭을 수행해야되기때문)
+            ColorTracking colorTracking = new ColorTracking(); //트래킹클래스선언
+
+            Image<Bgr, Byte> img1 = new Image<Bgr, Byte>("testtest6.jpg"); // 템플릿 매칭할 사진     
+            Image<Bgr, Byte> matchColorCheck = null;
+            Image<Gray, float> matchResImage = null;
+            int totalPicxel = img1.Width * img1.Height; //탬플릿이미지의 총 픽셀수(어느정도 픽셀의 기준을 잡기 위해)
+            List<UGV> ugvList = new List<UGV>();
+
+            while (true)
+            {
+                using (Image<Bgr, Byte> frame = webcam.QueryFrame().Flip(Emgu.CV.CvEnum.FLIP.HORIZONTAL)) //webcam에서 영상 받음
+                {
+                    obstacle_image = frame.Clone(); //원본 복사
+
+                    if (image_is_changed == true) //시작할때 바로 들어고, 변화가 감지됬을때 들어가서 탬플릿 매칭 수행
+                    {
+                        //image_is_changed = false; // 변화변수 초기화 (나중에 변화감지함수를 구현하면 풀도록)
+                        Image<Gray, Byte> img1_gray = img1.Convert<Gray, Byte>().PyrDown().PyrUp();
+                        matchResImage = frame.Convert<Gray, Byte>().PyrDown().PyrUp().MatchTemplate(img1_gray, Emgu.CV.CvEnum.TM_TYPE.CV_TM_CCOEFF_NORMED); //템플릿 매칭 중간 결과 저장
+                        matchColorCheck = frame.Clone(); //매치된 칼라가 저장될 변수
+
+                        float[, ,] matches = matchResImage.Data;
+                        for (int x = 0; x < matches.GetLength(1); x++)
+                        {
+                            for (int y = 0; y < matches.GetLength(0); y++)
+                            {
+                                double matchScore = matches[y, x, 0];
+
+                                if (matchScore > 0.87)
+                                {
+                                    colorTracking.colorCheck(matchColorCheck, totalPicxel, x, y, img1.Width, img1.Height); //어떤 색인지 체크                        
+                                    image_is_changed = false; //지금은 test라 여기다해놈.
+                                    //변화감지 함수 구현하면 이거 지우고 암에껄로 해야함(왠지 이거 바꾸는것은 장애물변화랑 같이 해야될듯)                              
+                                    y += img1.Height; //x축 다음 y축(세로)이 변화기 때문에 속도를 높이기 위해 검출된 y좌표 + 이미지 사이즈 함.                             
+                                }
+                            }
+                        }
+
+                        Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
+                        {
+                            ugvList = colorTracking.get_ugv();
+                            mapViewModel.AddUGV(ugvList);
+                            refreshView();                
+                        }));          
+                    }
+
+                    //(frame); //이건 트래킹되는 색상을 표시하기 위한 테스트 함수(블루)                  
+
+                    //색상 트래킹
+                    tracking_rect = colorTracking.tracking_start(frame);
+
+                    //영상에 트레킹 결과 내보내기
+                    for (int i = 0; i < 4; i++)
+                    {                       
+                        //AddUGV(i.ToString(), tracking_rect[i].X, tracking_rect[i].Y);
+                        if (tracking_rect[i].X != 0 && tracking_rect[i].Y != 0)
+                        {
+                            //frame.Draw(tracking_rect[i], new Bgr(255, 255, 255), 3);
+                            Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
+                            {
+                                foreach (UGV ugv in mapViewModel.MVCCItemList)
+                                {
+                                    if (ugv.Id.Equals("A" + i))
+                                    {
+                                        ugv.X = tracking_rect[i].X;
+                                        ugv.Y = tracking_rect[i].Y;
+                                        break;
+                                    }
+                                }
+                                
+                                refreshView();
+                            }));   
+                        }
+                        else
+                        {
+
+                            Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
+                            {
+                                mapViewModel.RemoveUGV("A" + i);
+                                refreshView();
+                            }));   
+                        }
+                    }
+
+                    //색상 트레킹중에 하나가 사라졌는지..(test임!! 나중엔.. 이걸로 말고 장애물 변화를 해야함. 밑에 image_is_changed는 장애물변화될떄!!!!)
+                    for (int i = 0; i < 4; i++)
+                    {
+                        if (colorTracking.change_chk(i) == true)
+                        {
+                            image_is_changed = true;
+                            colorTracking.change_chk_reset(i);
+                        }
+                    }
+
+                    //손 색 지우기
+                    //colorTracking.clean_hand(frame, hand_image_arr);
+
+                    System.Drawing.Rectangle map_rect = new System.Drawing.Rectangle(frame.Width / 8, frame.Height / 6, frame.Width / 8 * 6, frame.Height / 6 * 4);
+                    frame.Draw(map_rect, new Bgr(0, 255, 0), 3);
+
+                    //System.Drawing.Rectangle map_outside_rect = new System.Drawing.Rectangle(frame.Width / 8 - 30, frame.Height / 6 - 30, frame.Width / 8 * 6 + 30 * 2, frame.Height / 6 * 4 + 30 * 2);
+                    //frame.Draw(map_outside_rect, new Bgr(0, 255, 255), 3);
+
+                    /*
+                    Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
+                    {
+                        InputImage4.Source = frame.ToBitmapSource(); //원본 영상 + 트래킹결과                          
+                    }));
+                    */
+
+
+                    obstacle_check = true; //장애물이미지와 싱크 맞추기 위해 설정
+                }
+            }
+        }
+
+        private void obstacleDection(object sender, DoWorkEventArgs e)
+        {
+            ObstacleDetection obstacleDetection = new ObstacleDetection();
+
+            Image<Gray, Byte> cannyRes; //트래킹돈 부분을 제외한 원본 이미지
+            Image<Bgr, Byte> gridImage; //장애물을 표시하는 이미지(배열에도 저장함)
+            Image<Gray, Byte> pre_image = null; //이전 이미지 저장
+            Image<Gray, Byte> dst_image = null; //차영상의 대한 결과 저장
+
+            int[,] Map_obstacle = new int[48, 60]; //Map의 장애물의 정보 
+            int frame_count = 0; //frame 카운터를 샘(차영상에서 지연을 주기 위해)
+
+            while (true)
+            {
+                if (obstacle_check == true) //frame의 추적 영상 처리가 끝나고 처리
+                {
+                    cannyRes = obstacleDetection.cannyEdge(obstacle_image, tracking_rect, hand_image_arr); //외곽선 땀
+                    gridImage = obstacleDetection.drowGrid(cannyRes, obstacle_image.Clone(), Map_obstacle, 20, 20); //Map 정보 만듬
+
+                    frame_count++; //프레임수 셈
+
+                    if (frame_count == 5) //5프레임 마다 변화 검사
+                    {
+                        /*
+                        if (obstacleDetection.sub_image(cannyRes, pre_image, dst_image) == 1)
+                        {
+                        }
+                        */
+                        dst_image = obstacleDetection.sub_image(cannyRes, pre_image, dst_image); //차영상 구함
+                        frame_count = 0;
+                        /*
+                        Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
+                        {
+                            inputImage3.Source = dst_image.ToBitmapSource(); //차영상 결과                  
+                        }));
+                         * */
+                    }
+
+                    pre_image = cannyRes.Clone(); //차영상을 위한 이전프레임 설정
+                    /*
+                    Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
+                    {
+                        inputImage2.Source = cannyRes.ToBitmapSource(); //canny 결과               
+                        inputImage6.Source = gridImage.ToBitmapSource(); //grid 그림결과                
+                    }));
+                    */
+                    obstacle_check = false;
+                }
+            }
+
+        }
+
+
+
+
+
+
 
         public MapView()
         {
@@ -54,9 +268,9 @@ namespace MVCC.View
             // 그룹모드로 선택할때
             if (Keyboard.Modifiers == ModifierKeys.Shift)
             {
-                if (clickedElement is Ellipse)
+                if (clickedElement is System.Windows.Shapes.Ellipse)
                 {
-                    Ellipse ellipse = clickedElement as Ellipse;
+                    System.Windows.Shapes.Ellipse ellipse = clickedElement as System.Windows.Shapes.Ellipse;
 
                     Grid grid = ellipse.Parent as Grid;
                     string id = (grid.Children[0] as TextBlock).Text;
@@ -125,9 +339,9 @@ namespace MVCC.View
 
                 if (group != null)
                 {
-                    if (clickedElement is Ellipse)
+                    if (clickedElement is System.Windows.Shapes.Ellipse)
                     {
-                        Ellipse ellipse = clickedElement as Ellipse;
+                        System.Windows.Shapes.Ellipse ellipse = clickedElement as System.Windows.Shapes.Ellipse;
 
                         Grid grid = ellipse.Parent as Grid;
                         string id = (grid.Children[0] as TextBlock).Text;
@@ -171,9 +385,9 @@ namespace MVCC.View
             // 하나하나 선택할때
             else
             {
-                if (clickedElement is Ellipse)
+                if (clickedElement is System.Windows.Shapes.Ellipse)
                 {
-                    Ellipse ellipse = clickedElement as Ellipse;
+                    System.Windows.Shapes.Ellipse ellipse = clickedElement as System.Windows.Shapes.Ellipse;
 
                     Grid grid = ellipse.Parent as Grid;
                     string id = (grid.Children[0] as TextBlock).Text;

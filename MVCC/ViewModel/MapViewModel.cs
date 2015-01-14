@@ -20,12 +20,13 @@ namespace MVCC.ViewModel
     /// </summary>
     public class MapViewModel : ViewModelBase
     {
+           
         /// <summary>
         /// Initializes a new instance of the MapViewModel class.
         /// </summary>
         public MapViewModel()
         {
-            
+
         }
 
         private Globals globals = Globals.Instance;
@@ -36,7 +37,7 @@ namespace MVCC.ViewModel
          * MVCC Building, UGV 객체를 보관하는 MVCCItemList
          * */
         private ObservableCollection<UGV> _MVCCItemList;
-        private ObservableCollection<State> _MVCCItemStateList;             
+        private ObservableCollection<State> _MVCCItemStateList;
 
 
         public ObservableCollection<UGV> MVCCItemList
@@ -51,12 +52,12 @@ namespace MVCC.ViewModel
 
             set
             {
-                Set<ObservableCollection<UGV>>(ref _MVCCItemList, value); 
+                Set<ObservableCollection<UGV>>(ref _MVCCItemList, value);
             }
         }
         #endregion MVCCItemList
 
-        #region MVCCItemStateList 
+        #region MVCCItemStateList
 
         public ObservableCollection<State> MVCCItemStateList
         {
@@ -79,7 +80,7 @@ namespace MVCC.ViewModel
         private List<UGV> _MVCCTempList;
         public List<UGV> MVCCTempList
         {
-            get 
+            get
             {
                 if (_MVCCTempList == null)
                 {
@@ -90,7 +91,7 @@ namespace MVCC.ViewModel
             }
             set
             {
-                Set <List<UGV>>(ref _MVCCTempList, value);
+                Set<List<UGV>>(ref _MVCCTempList, value);
             }
         }
         #endregion MVCCTempList
@@ -119,36 +120,36 @@ namespace MVCC.ViewModel
         //private List<Point> mainTouchPoint = new List<Point>();
 
         #region AddUGVCommand
-
-        private RelayCommand _AddUGVCommand;
-        /* *
-         * UGV를 추가
-         * */
-        public RelayCommand AddUGVCommand
-        {
-            get
-            {
-                return _AddUGVCommand
-                    ?? (_AddUGVCommand = new RelayCommand(AddUGV));
-            }
-        }
-
+   
         /* *
          * UGV를 넣는 코드가 들어가면 된다. (영상인식으로 들어온 UGV)
          * */
-
-        private void AddUGV()
+        
+        public void AddUGV(List<UGV> ugvList)
         {
-            // Test용
-            for (int i = 0; i < 3; i++)
+            foreach (UGV ugv in ugvList)
             {
-                string id = "A" + i;
-                UGV ugv = new UGV(id, 50, 50, 0 + i * 100, 0 + i * 100);
+                bool addUGVFlag = false;
 
-                MVCCItemList.Add(ugv);
-                MVCCItemStateList.Add(new State(ugv));                            
+                foreach (UGV existUGV in MVCCItemList)
+                {
+                    if(existUGV.Id.Equals(ugv.Id)){
+                        addUGVFlag = true;
+                        break;
+                    }
+                }
+
+                if (!addUGVFlag)
+                {
+                    MVCCItemList.Add(ugv);
+                    MVCCItemStateList.Add(new State(ugv));
+                }
+                
+                if (ugvList.Count == MVCCItemList.Count)
+                    break;
             }
         }
+
         #endregion AddUGVCommand
 
         #region AddBuildingCommand
@@ -157,5 +158,44 @@ namespace MVCC.ViewModel
 
         #endregion AddBuildingCommand
 
+
+        public void RemoveUGV(string ugvId)
+        {
+            UGV removeUGV = new UGV();
+
+            // MVCC List에서 없어진 UGV 삭제
+            foreach (UGV tempUGV in MVCCItemList)
+            {
+                if (tempUGV.Id.Equals(ugvId))
+                {
+                    removeUGV = tempUGV;
+
+                    MVCCItemList.Remove(removeUGV);
+                    break;
+                }
+            }
+
+            // 없어진 UGV 상태 제거
+            foreach (State state in MVCCItemStateList)
+            {
+                if (state.ugv.Equals(removeUGV))
+                {
+                    MVCCItemStateList.Remove(state);
+                    break;
+                }
+            }
+
+            foreach (Group group in MVCCGroupList)
+            {
+                foreach (UGV tempUGV in group.MemberList)
+                {
+                    if (tempUGV.Equals(removeUGV))
+                    {
+                        MVCCGroupList.Remove(group);
+                        break;
+                    }
+                }
+            }
+        }
     }
 }

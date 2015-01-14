@@ -47,5 +47,27 @@ namespace MVCC
                 nowSelectedUGV = value;
             }
         }
+
+        //템플릿 매칭 너비
+        private int _TemplateWidth = 120;
+        public int TemplateWidth
+        {
+            get { return _TemplateWidth; }
+            set
+            {
+                _TemplateWidth = value;
+            }
+        }
+
+        //템플릿 매칭 높이
+        private int _TemplateHeight = 120;
+        public int TemplateHeight
+        {
+            get { return _TemplateHeight; }
+            set
+            {
+                _TemplateHeight = value;
+            }
+        }
     }
 }
