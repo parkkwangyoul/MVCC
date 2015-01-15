@@ -78,15 +78,10 @@
             </Grid>
 
             <Grid Grid.Row="1" x:Name="MapGrid">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="265*"/>
-                    <ColumnDefinition Width="6*"/>
-                    <ColumnDefinition Width="10*"/>
-                </Grid.ColumnDefinitions>
                 <ItemsControl
                     ItemTemplateSelector="{StaticResource MyDataTemplateSeletor}"
                     ItemsSource="{Binding Source={StaticResource UGVItemSrc}}"
-                    Margin="10" BorderBrush="#78C8FF" BorderThickness="1" Grid.ColumnSpan="2">
+                    Margin="10" BorderBrush="#78C8FF" BorderThickness="1">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <Canvas MouseLeftButtonDown="SelectUGV" Background="Transparent">
