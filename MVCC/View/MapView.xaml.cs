@@ -73,7 +73,7 @@ namespace MVCC.View
             bool image_is_changed = true; //영상을 비교했을때 차이가 날경우 (초기화를 true하는이유는 차가 놓여진상태에서 시작하면 바로 탬플릿 매칭을 수행해야되기때문)
             ColorTracking colorTracking = new ColorTracking(); //트래킹클래스선언
 
-            Image<Bgr, Byte> img1 = new Image<Bgr, Byte>("testtest6.jpg"); // 템플릿 매칭할 사진     
+            Image<Bgr, Byte> img1 = new Image<Bgr, Byte>("testtest7.jpg"); // 템플릿 매칭할 사진     
             Image<Bgr, Byte> matchColorCheck = null;
             Image<Gray, float> matchResImage = null;
             int totalPicxel = img1.Width * img1.Height; //탬플릿이미지의 총 픽셀수(어느정도 픽셀의 기준을 잡기 위해)

@@ -40,13 +40,16 @@ namespace MVCC.Utill
                     if (i == 0) //blue
                         YccColorCheck(i, 0, 51, 141, 255, 240, 240);
                     else if (i == 1) //green
-                        YccColorCheck(i, 0, 0, 0, 194, 103, 154);
+                        //YccColorCheck(i, 0, 0, 0, 194, 103, 154); //가까울떄
+                        YccColorCheck(i, 66, 66, 61, 114, 124, 140); //라온제나
                     else if (i == 2) //pink
                         //YccColorCheck(i, 41, 81, 134, 205, 240, 162);
                         //YccColorCheck(i, 0, 133, 20, 255, 160, 97); //yellow
-                        YccColorCheck(i, 0, 130, 0, 255, 223, 102); //orange
+                        //YccColorCheck(i, 0, 130, 0, 255, 223, 102); //orange 가까울때
+                        YccColorCheck(i, 65, 166, 74, 255, 240, 129); //orange 라온제나
                     else //red
-                        YccColorCheck(i, 0, 136, 100, 110, 221, 129);
+                        //YccColorCheck(i, 0, 136, 100, 110, 221, 129); //가까울때
+                        YccColorCheck(i, 0, 149, 93, 100, 221, 142); //멀때
                     //YccColorCheck(i, 0, 133, 20, 255, 160, 97); //yellow
                 }
             }
@@ -71,6 +74,19 @@ namespace MVCC.Utill
             CvInvoke.cvDilate(colorSetting, colorSetting, rect_6, 2); //수축 팽창
 
             Image<Bgr, Byte> colorCount = colorSetting.Convert<Bgr, Byte>(); //픽셀수 세기 위해
+
+
+            //이미지가 범위를 벗어날경우 처리
+            if (pos_x < 0)
+                pos_x = 0;
+            if (pos_y < 0)
+                pos_y = 0;
+
+            if (pos_x + img_width > colorCheckImage.Width)
+                pos_x = colorCheckImage.Width - img_width;
+            if (pos_y + img_height > colorCheckImage.Height)
+                pos_y = colorCheckImage.Height - img_height;
+
 
             for (int x = pos_x; x < pos_x + img_width; x++)
             {
@@ -143,13 +159,18 @@ namespace MVCC.Utill
                     if (i == 0)
                         color_traking(i, 0, 51, 151, 105, 124, 194, iamge, rect);
                     else if (i == 1)
-                        color_traking(i, 0, 0, 0, 194, 103, 154, iamge, rect);
+                        //color_traking(i, 0, 0, 0, 194, 103, 154, iamge, rect); //가까울때
+                        color_traking(i, 66, 66, 61, 114, 124, 140, iamge, rect); //라온제나
                     else if (i == 2)
                         //color_traking(i, 41, 81, 134, 205, 240, 162, iamge, rect); //pink
                         //color_traking(i, 0, 133, 20, 255, 160, 97, iamge, rect); //yellow
-                        color_traking(i, 0, 130, 0, 255, 223, 102, iamge, rect); //orange                       
+                        // color_traking(i, 0, 130, 0, 255, 223, 102, iamge, rect); //orange 가까울때
+                        color_traking(i, 65, 166, 74, 255, 240, 129, iamge, rect); //orange 라온제나
+
                     else
-                        color_traking(i, 0, 136, 100, 110, 221, 129, iamge, rect);
+                        //color_traking(i, 0, 136, 100, 110, 221, 129, iamge, rect);
+                        color_traking(i, 0, 149, 93, 100, 221, 142, iamge, rect); //멀때
+
                 }// ([0]blue [1] green [2]pink [3]red)
             }
 
