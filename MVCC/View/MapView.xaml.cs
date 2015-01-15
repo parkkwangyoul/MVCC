@@ -37,9 +37,9 @@ namespace MVCC.View
         private Capture webcam; //캠 영상 받을 변수 
         Image<Bgr, Byte> obstacle_image; //캠에서 받은 원본(장애물 이미지를 위한)
         System.Drawing.Rectangle[] tracking_rect; //트래킹한 결과를 그리는 네모박스
-        int[,] hand_image_arr = new int[480, 640]; //손검출한 좌표의정보
         bool obstacle_check = false; //트래킹과 장애물검사랑 동기화 위해
-
+        bool image_is_changed = true; //영상을 비교했을때 차이가 날경우 (초기화를 true하는이유는 차가 놓여진상태에서 시작하면 바로 탬플릿 매칭을 수행해야되기때문)
+            
         // MapViewModel 가져옴
         private MapViewModel mapViewModel;
 
@@ -70,7 +70,6 @@ namespace MVCC.View
 
         private void colorTracking(object sender, DoWorkEventArgs e)
         {
-            bool image_is_changed = true; //영상을 비교했을때 차이가 날경우 (초기화를 true하는이유는 차가 놓여진상태에서 시작하면 바로 탬플릿 매칭을 수행해야되기때문)
             ColorTracking colorTracking = new ColorTracking(); //트래킹클래스선언
 
             Image<Bgr, Byte> img1 = new Image<Bgr, Byte>("testtest7.jpg"); // 템플릿 매칭할 사진     
@@ -198,44 +197,56 @@ namespace MVCC.View
             Image<Gray, Byte> pre_image = null; //이전 이미지 저장
             Image<Gray, Byte> dst_image = null; //차영상의 대한 결과 저장
 
-            int[,] Map_obstacle = new int[48, 60]; //Map의 장애물의 정보 
+            int[,] Map_obstacle = new int[globals.ImageHeight / globals.y_grid, globals.ImageWidth / globals.x_grid]; //Map의 장애물의 정보 
+            int obstacle_count = 0, pre_obstacle_count = 0;
+            int[,] pre_Map_obstacle = new int[globals.ImageHeight / globals.y_grid, globals.ImageWidth / globals.x_grid]; //Map의 장애물의 정보 
+
             int frame_count = 0; //frame 카운터를 샘(차영상에서 지연을 주기 위해)
 
             while (true)
             {
                 if (obstacle_check == true) //frame의 추적 영상 처리가 끝나고 처리
                 {
-                    cannyRes = obstacleDetection.cannyEdge(obstacle_image, tracking_rect, hand_image_arr); //외곽선 땀
-                    gridImage = obstacleDetection.drowGrid(cannyRes, obstacle_image.Clone(), Map_obstacle, 20, 20); //Map 정보 만듬
+                    cannyRes = obstacleDetection.cannyEdge(obstacle_image, tracking_rect); //외곽선 땀, 그리고 차량 부분 지움
+                    gridImage = obstacle_image.Clone();
+                    obstacleDetection.drowGrid(cannyRes, gridImage, Map_obstacle); //Map 정보 만듬
+
+
+                    for (int i = 0; i < globals.ImageWidth / globals.x_grid; i++)
+                        for (int j = 0; j < globals.ImageHeight / globals.y_grid; j++)
+                            if (Map_obstacle[j, i] == 1)
+                                obstacle_count++;
 
                     frame_count++; //프레임수 셈
 
-                    if (frame_count == 5) //5프레임 마다 변화 검사
+                    System.Drawing.Rectangle map_rect = new System.Drawing.Rectangle(220, 10, 200, 380);
+                    gridImage.Draw(map_rect, new Bgr(0, 255, 0), 3); //장애물 생김
+
+                    if (frame_count == 2) //5프레임 마다 변화 검사
                     {
+                        if (pre_obstacle_count + 3 <= obstacle_count || pre_obstacle_count - 3 >= obstacle_count)
+                        {
+                            //System.Console.WriteLine(" Map 변화!!! obstacle_count = " + obstacle_count + " pre_obstacle_count = " + pre_obstacle_count);
+                            gridImage.Draw(map_rect, new Bgr(0, 0, 255), 3); //Map 변화 생김
+                            image_is_changed = true;
+                        }
+          
+                        frame_count = 0;
                         /*
                         if (obstacleDetection.sub_image(cannyRes, pre_image, dst_image) == 1)
                         {
                         }
                         */
-                        dst_image = obstacleDetection.sub_image(cannyRes, pre_image, dst_image); //차영상 구함
-                        frame_count = 0;
-                        /*
-                        Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
-                        {
-                            inputImage3.Source = dst_image.ToBitmapSource(); //차영상 결과                  
-                        }));
-                         * */
+                      
+                        //dst_image = obstacleDetection.sub_image(cannyRes, pre_image, dst_image); //차영상 구함                    
                     }
 
+                    pre_obstacle_count = obstacle_count;
+                    obstacle_count = 0;
+                    pre_Map_obstacle = (int[,])Map_obstacle.Clone(); //비교를 위해 이전 Map정보 설정
+                    Array.Clear(Map_obstacle, 0, globals.ImageHeight / globals.y_grid * globals.ImageWidth / globals.x_grid);
                     pre_image = cannyRes.Clone(); //차영상을 위한 이전프레임 설정
-                    /*
-                    Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
-                    {
-                        inputImage2.Source = cannyRes.ToBitmapSource(); //canny 결과               
-                        inputImage6.Source = gridImage.ToBitmapSource(); //grid 그림결과                
-                    }));
-                    */
-                    obstacle_check = false;
+
                 }
             }
 

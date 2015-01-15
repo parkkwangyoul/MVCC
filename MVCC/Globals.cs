@@ -48,6 +48,29 @@ namespace MVCC
             }
         }
 
+        //영상 너비
+        private int _ImageWidth = 640;
+
+        public int ImageWidth
+        {
+            get { return _ImageWidth; }
+            set
+            {
+                _ImageWidth = value;
+            }
+        }
+
+        //영상 높이
+        private int _ImageHeight = 480;
+        public int ImageHeight
+        {
+            get { return _ImageHeight; }
+            set
+            {
+                _ImageHeight = value;
+            }
+        }
+
         //템플릿 매칭 너비
         private int _TemplateWidth;
         public int TemplateWidth
@@ -67,6 +90,28 @@ namespace MVCC
             set
             {
                 _TemplateHeight = value;
+            }
+        }
+
+        //x축 gird 간격
+        private int _x_grid = 10;
+        public int x_grid
+        {
+            get { return _x_grid; }
+            set
+            {
+                _x_grid = value;
+            }
+        }
+
+        //y축 gird 간격
+        private int _y_grid = 10;
+        public int y_grid
+        {
+            get { return _y_grid; }
+            set
+            {
+                _y_grid = value;
             }
         }
     }

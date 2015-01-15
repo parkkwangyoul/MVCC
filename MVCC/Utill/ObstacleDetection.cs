@@ -13,9 +13,10 @@ namespace MVCC.Utill
     {
         int sub_check;
         int sub_count;
+        Globals globals = Globals.Instance; //globalsal 변수를 위해
 
         //윤곽선 검출
-        public Image<Gray, Byte> cannyEdge(Image<Bgr, Byte> img, Rectangle[] tracking_rect, int[,] arr)
+        public Image<Gray, Byte> cannyEdge(Image<Bgr, Byte> img, Rectangle[] tracking_rect)
         {
             Image<Gray, Byte> canny = img.Convert<Gray, Byte>().PyrDown().PyrUp();
             CvInvoke.cvCanny(canny, canny, 65, 30, 3);
@@ -40,26 +41,19 @@ namespace MVCC.Utill
                     pos_y = img.Height - tracking_rect[i].Height;
 
                 for (int x = pos_x; x < pos_x + tracking_rect[i].Width; x++)
-                    for (int y = tracking_rect[i].Y; y < pos_y + tracking_rect[i].Height; y++)
+                    for (int y = pos_y; y < pos_y + tracking_rect[i].Height; y++)
                         sub_ROI_image[y, x] = new Bgr(0, 0, 0);
             }
-
-            /*
-            for (int x = 0; x < img.Width; x++)
-                for (int y = 0; y < img.Height; y++)
-                    if(arr[y, x] == 1)
-                        sub_ROI_image[y, x] = new Bgr(0, 0, 0);
-            */
 
             return sub_ROI_image.Convert<Gray, Byte>();
         }
 
         //그리드 그림
-        public Image<Bgr, Byte> drowGrid(Image<Gray, Byte> canny_img, Image<Bgr, Byte> img, int[,] Map_obstacle, int x_grid, int y_gird)
+        public int drowGrid(Image<Gray, Byte> canny_img, Image<Bgr, Byte> img, int[,] Map_obstacle)
         {
             /*
             //가로 줄 (y는 세로 간격)
-            for (int y = y_gird; y < img.Height; y += y_gird)
+            for (int y = globals.y_grid; y < img.Height; y += globals.y_grid)
             {
                 Point start = new Point(0, y);
                 Point end = new Point(img.Width - 1, y);
@@ -68,7 +62,7 @@ namespace MVCC.Utill
             }
 
             //세로 줄 (x는 가로 간격)
-            for (int x = x_grid; x < img.Width; x += x_grid)
+            for (int x = globals.x_grid; x < img.Width; x += globals.x_grid)
             {
                 Point start = new Point(x, 0);
                 Point end = new Point(x, img.Height - 1);
@@ -76,15 +70,18 @@ namespace MVCC.Utill
                 img.Draw(line, new Bgr(0, 255, 0), 1);
             }
             */
-            obstacle_grid_fill(canny_img, img, Map_obstacle, x_grid, y_gird);
 
-            return img;
+            return obstacle_grid_fill(canny_img, img, Map_obstacle);
+
         }
 
+
         //장애물 있는곳 그리드 색칠하기
-        public void obstacle_grid_fill(Image<Gray, Byte> canny_img, Image<Bgr, Byte> img, int[,] Map_obstacle, int x_grid, int y_gird)
+        public int obstacle_grid_fill(Image<Gray, Byte> canny_img, Image<Bgr, Byte> img, int[,] Map_obstacle)
         {
             Image<Bgr, Byte> colorCount = canny_img.Convert<Bgr, Byte>(); //픽셀수 세기 위해
+            int count = 0;
+            bool grid_check = false;
 
             for (int x = 0; x < canny_img.Width; x++)
             {
@@ -92,34 +89,47 @@ namespace MVCC.Utill
                 {
                     if (!colorCount[y, x].Equals(new Bgr(0, 0, 0)))
                     {
-                        for (int pos_x = x - x_grid; pos_x < x; pos_x++)
+                        for (int pos_x = x - globals.x_grid; pos_x < x; pos_x++)
                         {
-                            for (int pos_y = y - y_gird; pos_y < y; pos_y++)
+                            for (int pos_y = y - globals.y_grid; pos_y < y; pos_y++)
                             {
-                                if (pos_x % x_grid == 0 && pos_y % y_gird == 0)
+                                if (pos_x % globals.x_grid == 0 && pos_y % globals.y_grid == 0)
                                 {
                                     int t_x = pos_x;
                                     int t_y = pos_y;
+
                                     if (pos_x < 0)
                                         t_x = 0;
                                     else
-                                        t_x = pos_x / x_grid;
+                                        t_x = pos_x / globals.x_grid;
 
                                     if (pos_y < 0)
                                         t_y = 0;
                                     else
-                                        t_y = pos_y / y_gird;
+                                        t_y = pos_y / globals.y_grid;
 
                                     Map_obstacle[t_y, t_x] = 1;
-                                    Rectangle rect = new Rectangle(pos_x, pos_y, x_grid, y_gird);
+                                    Rectangle rect = new Rectangle(pos_x, pos_y, globals.x_grid, globals.y_grid);
                                     img.Draw(rect, new Bgr(0, 0, 255), 1);
+                                    grid_check = true;
+
+                                    y = pos_y + globals.y_grid;
                                 }
+                                if (grid_check == true)
+                                    break;
+                            }
+                            if (grid_check == true)
+                            {
+                                grid_check = false;
+                                break;
                             }
                         }
                     }
                 }
             }
+            return count;
         }
+
 
         //영상 변화를 확인하는 함수
         public Image<Gray, Byte> sub_image(Image<Gray, Byte> cannyRes, Image<Gray, Byte> pre_image, Image<Gray, Byte> dst_image)
@@ -159,6 +169,6 @@ namespace MVCC.Utill
             return dst_image;
 
         }
-
     }
+
 }

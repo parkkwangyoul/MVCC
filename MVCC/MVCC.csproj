@@ -111,7 +111,6 @@
       <DependentUpon>UGVControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utill\EmguImageExtensions.cs" />
-    <Compile Include="Utill\GlobalClass.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="Utill\ImageExtensions.cs" />
     <Compile Include="Model\Group.cs" />
