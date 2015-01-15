@@ -39,8 +39,6 @@ namespace MVCC.View
         System.Drawing.Rectangle[] tracking_rect; //트래킹한 결과를 그리는 네모박스
         int[,] hand_image_arr = new int[480, 640]; //손검출한 좌표의정보
         bool obstacle_check = false; //트래킹과 장애물검사랑 동기화 위해
-        GlobalClass glo = GlobalClass.Instance; //gloal 변수를 위해   
-
 
         // MapViewModel 가져옴
         private MapViewModel mapViewModel;
@@ -53,7 +51,7 @@ namespace MVCC.View
       * */
         private void CamOn(object sender, RoutedEventArgs e)
         {
-            webcam = new Capture(0); //cam 설정
+            webcam = new Capture(1); //cam 설정
             thread_start(); //thread 시작
         }
 

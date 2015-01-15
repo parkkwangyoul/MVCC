@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:base="clr-namespace:System.Windows;assembly=PresentationFramework"
              mc:Ignorable="d" 
-             d:DesignHeight="500" d:DesignWidth="500"
+             d:DesignHeight="800" d:DesignWidth="500"
              DataContext="{Binding Source={StaticResource Locator}, Path=SettingViewModel}">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -19,6 +19,55 @@
     </UserControl.Style>
     
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25*" />
+            <RowDefinition Height="25*" />
+            <RowDefinition Height="25*" />
+            <RowDefinition Height="25*" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" BorderBrush="Gray" BorderThickness="0 0 0 1"> 
+            <Grid Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="10*" />
+                    <RowDefinition Height="90*" />
+                </Grid.RowDefinitions>
+            
+                <TextBlock Text="Vehicle 1" VerticalAlignment="Center" Margin="10 0 0 0" />
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="0 0 0 1">
+            <Grid Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="10*" />
+                    <RowDefinition Height="90*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Vehicle 2" VerticalAlignment="Center" Margin="10 0 0 0" />
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="2" BorderBrush="Gray" BorderThickness="0 0 0 1">
+            <Grid Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="10*" />
+                    <RowDefinition Height="90*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Vehicle 3" VerticalAlignment="Center" Margin="10 0 0 0" />
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="3" BorderBrush="Gray" BorderThickness="0">
+            <Grid Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="10*" />
+                    <RowDefinition Height="90*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Vehicle 4" VerticalAlignment="Center" Margin="10 0 0 0" />
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>
