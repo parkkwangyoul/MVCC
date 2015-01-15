@@ -77,6 +77,8 @@ namespace MVCC.View
             Image<Bgr, Byte> matchColorCheck = null;
             Image<Gray, float> matchResImage = null;
             int totalPicxel = img1.Width * img1.Height; //탬플릿이미지의 총 픽셀수(어느정도 픽셀의 기준을 잡기 위해)
+            globals.TemplateWidth = img1.Width + 30;
+            globals.TemplateHeight = img1.Height + 30;
             List<UGV> ugvList = new List<UGV>();
 
             while (true)
@@ -101,7 +103,7 @@ namespace MVCC.View
 
                                 if (matchScore > 0.87)
                                 {
-                                    colorTracking.colorCheck(matchColorCheck, totalPicxel, x, y, img1.Width, img1.Height); //어떤 색인지 체크                        
+                                    colorTracking.colorCheck(matchColorCheck, totalPicxel, x, y, globals.TemplateWidth, globals.TemplateHeight); //어떤 색인지 체크                        
                                     image_is_changed = false; //지금은 test라 여기다해놈.
                                     //변화감지 함수 구현하면 이거 지우고 암에껄로 해야함(왠지 이거 바꾸는것은 장애물변화랑 같이 해야될듯)                              
                                     y += img1.Height; //x축 다음 y축(세로)이 변화기 때문에 속도를 높이기 위해 검출된 y좌표 + 이미지 사이즈 함.                             

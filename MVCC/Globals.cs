@@ -49,7 +49,7 @@ namespace MVCC
         }
 
         //템플릿 매칭 너비
-        private int _TemplateWidth = 50;
+        private int _TemplateWidth;
         public int TemplateWidth
         {
             get { return _TemplateWidth; }
@@ -60,7 +60,7 @@ namespace MVCC
         }
 
         //템플릿 매칭 높이
-        private int _TemplateHeight = 50;
+        private int _TemplateHeight;
         public int TemplateHeight
         {
             get { return _TemplateHeight; }

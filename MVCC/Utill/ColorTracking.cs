@@ -96,7 +96,7 @@ namespace MVCC.Utill
                     {
                         pixCount++;
 
-                        if (totalPicxel / 5 <= pixCount) //일정 픽섹 이상시 색상배열 변경후 종료
+                        if (totalPicxel / 9 <= pixCount) //일정 픽섹 이상시 색상배열 변경후 종료
                         //if (pixCount > 1000)
                         {
                             color[index] = true;
@@ -232,7 +232,7 @@ namespace MVCC.Utill
                 color_ROI[index].X = x_p / pixCount - glo.TemplateWidth / 2;
                 color_ROI[index].Y = y_p / pixCount - glo.TemplateHeight / 2;
             }
-            else if (pixCount <= 100)//픽셀이 0이면 사라졌단 소리이므로 추적에서 제외
+            else if (pixCount <= pixCount / 3)//픽셀이 0이면 사라졌단 소리이므로 추적에서 제외
             {
                 //rect[index] = new Rectangle(-1, -1, 0, 0); //test중
                 color[index] = false;
