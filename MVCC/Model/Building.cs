@@ -10,7 +10,7 @@ namespace MVCC.Model
     {
         public Building() : base() { }
 
-        public Building(string id, double width, double height, double x, double y) : base(id, width, height, x, y) { }        
+        public Building(string id, double width, double height, double x, double y, string buildingColor) : base(id, width, height, x, y) { this.BuildingColor = buildingColor; }        
         
         // 각 Building별 색깔이 다름
         private string buildingColor = "#78C8FF";

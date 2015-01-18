@@ -95,10 +95,13 @@ namespace MVCC.Utill
                         continue;
                     }
 
+
                     foreach (Building building in building_list)
                     {
-                        if (targetBlob.BoundingBox.X - targetBlob.BoundingBox.Width / 2 < building.X && building.X < targetBlob.BoundingBox.X + targetBlob.BoundingBox.Width / 2
-                            && targetBlob.BoundingBox.Y - targetBlob.BoundingBox.Height / 2 < building.Y && building.Y < targetBlob.BoundingBox.Y + targetBlob.BoundingBox.Height / 2
+                        if (targetBlob.BoundingBox.X - targetBlob.BoundingBox.Width / 2 < building.X 
+                            && building.X  < targetBlob.BoundingBox.X + targetBlob.BoundingBox.Width / 2
+                            && targetBlob.BoundingBox.Y - targetBlob.BoundingBox.Height / 2 < building.Y 
+                            && building.Y < targetBlob.BoundingBox.Y + targetBlob.BoundingBox.Height / 2
                             && building.BuildingColor == temp)
                         {
                             building.X = targetBlob.BoundingBox.X;
@@ -122,7 +125,9 @@ namespace MVCC.Utill
                     blob_indenti[6] = (int)targetBlob.BoundingBox.Y;           
                     blob_indenti_list.Add(blob_indenti);
                     */
-                    building_list.Add(new Building("B" + blob_indenti_count++, (double)targetBlob.BoundingBox.Width, (double)targetBlob.BoundingBox.Height, targetBlob.BoundingBox.X, targetBlob.BoundingBox.Y));
+                    building_list.Add(new Building("B" + blob_indenti_count++, (double)targetBlob.BoundingBox.Width, (double)targetBlob.BoundingBox.Height, targetBlob.BoundingBox.X, targetBlob.BoundingBox.Y, temp));
+
+                    //Console.WriteLine("building List : " + building_list.Count);
 
                    
                     blob_image.Draw(targetBlob.BoundingBox, new Bgr(0, 255, 0), 1);

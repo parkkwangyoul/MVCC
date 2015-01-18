@@ -83,7 +83,6 @@
                             </ComboBox.ItemContainerStyle>
                         </ComboBox>
                     </Grid>
-
                     <Grid Margin="10 2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="100" />
@@ -92,7 +91,7 @@
                         <TextBlock VerticalAlignment="Center" Text="Stop Bit :" Grid.Column="0" />
                         <ComboBox HorizontalAlignment="Left" Background="Transparent" Margin="10 0 0 0" Width="200" SelectedValue="{Binding ComPort}" Grid.Column="1" x:Name="StopBitComboBox">
                             <ComboBox.ItemContainerStyle>
-                                <Style TargetType="ComboBoxItem">
+                                <Style TargetType="{x:Type ComboBoxItem}">
                                     <Setter Property="Background" Value="Yellow"/>
                                     <Setter Property="BorderBrush" Value="Yellow"/>
                                 </Style>
