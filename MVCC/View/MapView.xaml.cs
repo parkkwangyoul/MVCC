@@ -225,9 +225,7 @@ namespace MVCC.View
                     blob_info[1] = greyThreshImg;
                     blob_info = obstacleDetection.detectBlob(blob_image, Map_obstacle, blob_info);
                     obstacleDetection.drow_bloded_Grid(blob_image, Map_obstacle, blob_info);
-
-
-                 
+                    
 
 
                     for (int i = 0; i < globals.ImageWidth / globals.x_grid; i++)
@@ -318,6 +316,9 @@ namespace MVCC.View
 
                     for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
                     {
+                        if (!(mapViewModel.MVCCItemList[i] is UGV))
+                            continue;
+
                         UGV tempUGV = mapViewModel.MVCCItemList[i] as UGV;
                         if (tempUGV.Id.Equals(id))
                             ugv = tempUGV;
@@ -352,6 +353,9 @@ namespace MVCC.View
                         // 그룹 대기열에 없는 UGV중에 이미 그룹에 속한 UGV들의 Layout을 해제                       
                         for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
                         {
+                            if (!(mapViewModel.MVCCItemList[i] is UGV))
+                                continue;
+
                             UGV tempUGV = mapViewModel.MVCCItemList[i] as UGV;
 
                             if (!tempUGV.Id.Equals(ugv.Id) && tempUGV.IsBelongToGroup)
@@ -389,6 +393,9 @@ namespace MVCC.View
                                                 
                         for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
                         {
+                            if (!(mapViewModel.MVCCItemList[i] is UGV))
+                                continue;
+
                             UGV tempUGV = mapViewModel.MVCCItemList[i] as UGV;
                             if (tempUGV.Id.Equals(id))
                             {
@@ -428,7 +435,7 @@ namespace MVCC.View
             // 하나하나 선택할때
             else
             {
-                Console.WriteLine("Red Circle");
+                //Console.WriteLine("Red Circle");
                 if (clickedElement is System.Windows.Shapes.Ellipse)
                 {
                     System.Windows.Shapes.Ellipse ellipse = clickedElement as System.Windows.Shapes.Ellipse;
@@ -441,9 +448,11 @@ namespace MVCC.View
                     // 선택한 UGV를 찾아서 나머지 선택을 해제
                     for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
                     {
+                        if (!(mapViewModel.MVCCItemList[i] is UGV))
+                            continue;
+
                         UGV tempUGV = mapViewModel.MVCCItemList[i] as UGV;
 
-                        Debug.Write("check : " + tempUGV.Id);
                         if (!tempUGV.Id.Equals(id))
                         {
                             cancelSelectUGV(tempUGV);
@@ -661,6 +670,9 @@ namespace MVCC.View
             // UGV가 아닌 다른곳을 클릭했을경우 선택이 해제된다.
             for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
             {
+                if (!(mapViewModel.MVCCItemList[i] is UGV))
+                    continue;
+
                 UGV tempUGV = mapViewModel.MVCCItemList[i] as UGV;
 
                 tempUGV.UGVStrokeThickness = 0;
