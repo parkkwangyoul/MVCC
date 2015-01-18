@@ -1,4 +1,14 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Media;
+using System.Diagnostics;
+using System.Linq;
+
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using MVCC.Model;
 
 namespace MVCC.ViewModel
 {
@@ -13,8 +23,16 @@ namespace MVCC.ViewModel
         /// <summary>
         /// Initializes a new instance of the SettingViewModel class.
         /// </summary>
+        /// 
+
+        private Globals globals = Globals.Instance;
+
         public SettingViewModel()
         {
+            for (int i = 0; i < 4; i++)
+            {
+                globals.UGVSettingDictionary.Add("A" + i, new UGV());
+            }
         }
     }
 }

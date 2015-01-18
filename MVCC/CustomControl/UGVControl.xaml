@@ -12,17 +12,7 @@
 
     <Grid>
         <TextBlock TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Id}" />
-        <Ellipse Width="{Binding Width}" Height="{Binding Height}" Fill="{Binding UGVColor}" StrokeDashArray="5 5" Stroke="{Binding UGVStroke}" StrokeThickness="{Binding UGVStrokeThickness}" Cursor="Hand"> 
-            <!--Ellipse.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="{Binding Id}" />
-                    <Separator />
-                    <MenuItem Header="그룹 선택"></MenuItem>
-                    <MenuItem Header="Menu item 2" />
-                    <Separator />
-                    <MenuItem Header="Menu item 3" />
-                </ContextMenu>
-            </Ellipse.ContextMenu -->                          
+        <Ellipse Width="{Binding Width}" Height="{Binding Height}" Fill="{Binding UGVColor}" StrokeDashArray="5 5" Stroke="{Binding UGVStroke}" StrokeThickness="{Binding UGVStrokeThickness}" Cursor="Hand">                          
         </Ellipse>
     </Grid>
 

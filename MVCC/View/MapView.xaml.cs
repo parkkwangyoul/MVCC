@@ -271,19 +271,13 @@ namespace MVCC.View
 
         }
 
-
-
-
-
-
-
         public MapView()
         {
             InitializeComponent();
 
             mapViewModel = DataContext as MapViewModel;
 
-            (FindResource("UGVItemSrc") as CollectionViewSource).Source = mapViewModel.MVCCItemList;
+            (FindResource("MVCCItemSrc") as CollectionViewSource).Source = mapViewModel.MVCCItemList;
 
             (FindResource("UGVStateSrc") as CollectionViewSource).Source = mapViewModel.MVCCItemStateList;
 
@@ -309,7 +303,7 @@ namespace MVCC.View
 
                     for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
                     {
-                        UGV tempUGV = mapViewModel.MVCCItemList[i];
+                        UGV tempUGV = mapViewModel.MVCCItemList[i] as UGV;
                         if (tempUGV.Id.Equals(id))
                             ugv = tempUGV;
 
@@ -343,7 +337,7 @@ namespace MVCC.View
                         // 그룹 대기열에 없는 UGV중에 이미 그룹에 속한 UGV들의 Layout을 해제                       
                         for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
                         {
-                            UGV tempUGV = mapViewModel.MVCCItemList[i];
+                            UGV tempUGV = mapViewModel.MVCCItemList[i] as UGV;
 
                             if (!tempUGV.Id.Equals(ugv.Id) && tempUGV.IsBelongToGroup)
                             {
@@ -380,13 +374,13 @@ namespace MVCC.View
                                                 
                         for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
                         {
-                            UGV tempUGV = mapViewModel.MVCCItemList[i];
+                            UGV tempUGV = mapViewModel.MVCCItemList[i] as UGV;
                             if (tempUGV.Id.Equals(id))
                             {
                                 ugv = tempUGV;
                             }
                         }
-
+                        
                         if (!ugv.IsBelongToGroup)
                         {
 
@@ -397,7 +391,7 @@ namespace MVCC.View
 
                             selectUGVAndStateChangeLayout(ugv, group.StateBorderBrush, ugv.Id);
                         }
-                        else
+                        else if(ugv.GroupName.Equals(group.Name))
                         {
                             ugv.GroupName = null;
                             ugv.IsBelongToGroup = false;
@@ -405,6 +399,10 @@ namespace MVCC.View
                             group.MemberList.Remove(ugv);
 
                             cancelSelectUGV(ugv);
+                        }
+                        else
+                        {
+                            MessageBox.Show("이미 다른 그룹에 속한 UGV 입니다.");
                         }
                     }
                 }
@@ -415,6 +413,7 @@ namespace MVCC.View
             // 하나하나 선택할때
             else
             {
+                Console.WriteLine("Red Circle");
                 if (clickedElement is System.Windows.Shapes.Ellipse)
                 {
                     System.Windows.Shapes.Ellipse ellipse = clickedElement as System.Windows.Shapes.Ellipse;
@@ -427,7 +426,7 @@ namespace MVCC.View
                     // 선택한 UGV를 찾아서 나머지 선택을 해제
                     for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
                     {
-                        UGV tempUGV = mapViewModel.MVCCItemList[i];
+                        UGV tempUGV = mapViewModel.MVCCItemList[i] as UGV;
                         if (!tempUGV.Id.Equals(id))
                         {
                             cancelSelectUGV(tempUGV);
@@ -484,6 +483,9 @@ namespace MVCC.View
 
         private void MakeGroup(object sender, KeyEventArgs e)
         {
+
+            if (Keyboard.Modifiers == ModifierKeys.Shift || Keyboard.Modifiers == ModifierKeys.Alt)
+                return;
 
             if (Keyboard.Modifiers == ModifierKeys.Control)
             {
@@ -642,7 +644,7 @@ namespace MVCC.View
             // UGV가 아닌 다른곳을 클릭했을경우 선택이 해제된다.
             for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
             {
-                UGV tempUGV = mapViewModel.MVCCItemList[i];
+                UGV tempUGV = mapViewModel.MVCCItemList[i] as UGV;
 
                 tempUGV.UGVStrokeThickness = 0;
                 tempUGV.IsClicked = false;
@@ -679,7 +681,7 @@ namespace MVCC.View
         private void refreshView()
         {
             // View에 반영
-            (FindResource("UGVItemSrc") as CollectionViewSource).View.Refresh();
+            (FindResource("MVCCItemSrc") as CollectionViewSource).View.Refresh();
 
             (FindResource("UGVStateSrc") as CollectionViewSource).View.Refresh();
 

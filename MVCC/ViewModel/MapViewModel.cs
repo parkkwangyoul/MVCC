@@ -36,28 +36,29 @@ namespace MVCC.ViewModel
         /* *
          * MVCC Building, UGV 객체를 보관하는 MVCCItemList
          * */
-        private ObservableCollection<UGV> _MVCCItemList;
-        private ObservableCollection<State> _MVCCItemStateList;
+        private ObservableCollection<ModelBase> _MVCCItemList;
 
 
-        public ObservableCollection<UGV> MVCCItemList
+        public ObservableCollection<ModelBase> MVCCItemList
         {
             get
             {
                 if (_MVCCItemList == null)
-                    _MVCCItemList = new ObservableCollection<UGV>();
+                    _MVCCItemList = new ObservableCollection<ModelBase>();
 
                 return _MVCCItemList;
             }
 
             set
             {
-                Set<ObservableCollection<UGV>>(ref _MVCCItemList, value);
+                Set<ObservableCollection<ModelBase>>(ref _MVCCItemList, value);
             }
         }
         #endregion MVCCItemList
 
         #region MVCCItemStateList
+
+        private ObservableCollection<State> _MVCCItemStateList;
 
         public ObservableCollection<State> MVCCItemStateList
         {
@@ -153,8 +154,30 @@ namespace MVCC.ViewModel
         #endregion AddUGVCommand
 
         #region AddBuildingCommand
+        public void AddBuilding(List<Building> buildingList)
+        {
+            foreach (Building building in buildingList)
+            {
+                bool addBuildingFlag = false;
 
-        private RelayCommand _AddBuildingCommand;
+                foreach (Building existBuilding in MVCCItemList)
+                {
+                    if (existBuilding.Id.Equals(building.Id))
+                    {
+                        addBuildingFlag = true;
+                        break;
+                    }
+                }
+
+                if (!addBuildingFlag)
+                {
+                    MVCCItemList.Add(building);
+                }
+
+                if (buildingList.Count == MVCCItemList.Count)
+                    break;
+            }
+        }
 
         #endregion AddBuildingCommand
 

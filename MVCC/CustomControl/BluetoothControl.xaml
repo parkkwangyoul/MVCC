@@ -1,0 +1,69 @@
+﻿<UserControl x:Class="MVCC.CustomControl.BluetoothControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:base="clr-namespace:System.Windows;assembly=PresentationFramework"
+             mc:Ignorable="d" 
+             d:DesignHeight="200" d:DesignWidth="300">
+    
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Skins/MainSkin.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <UserControl.Style>
+        <base:StaticResource ResourceKey="BaseViewStyle" />
+    </UserControl.Style>
+
+    <Border Grid.Row="0" BorderBrush="#C9C9C9" BorderThickness="0 0 0 1">
+        <Grid Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10*" />
+                <RowDefinition Height="90*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Vehicle 1" Grid.Row="0" VerticalAlignment="Center" Margin="10 0 0 0" />
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20*" />
+                    <ColumnDefinition Width="80*" />
+                </Grid.ColumnDefinitions>
+
+                <Rectangle Margin="5" Stroke="#C9C9C9" StrokeThickness="1"/>
+
+                <StackPanel Grid.Column="1">
+                    <StackPanel Orientation="Horizontal" Margin="10">
+                        <TextBlock Text="COM Port :" />
+                        <ComboBox Background="Transparent" Margin="10 0 0 0" Width="100">
+                            <ComboBox.ItemContainerStyle>
+                                <Style TargetType="ComboBoxItem">
+                                    <Setter Property="Background" Value="Yellow"/>
+                                    <Setter Property="BorderBrush" Value="Yellow"/>
+                                </Style>
+                            </ComboBox.ItemContainerStyle>
+                            <ComboBoxItem Content="One"/>
+                            <ComboBoxItem Content="Two"/>
+                            <ComboBoxItem Content="Three"/>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="10">
+                        <TextBlock Text="Baudrate :" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="10">
+                        <TextBlock Text="Data Bit :" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="10">
+                        <TextBlock Text="Stop Bit :" />
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

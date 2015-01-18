@@ -39,7 +39,7 @@
                                              DataTemplateStateControl="{StaticResource DataTemplateStateControl}"
                                              DataTemplateGroupControl="{StaticResource DatatTemplateGroupControl}"/>
 
-            <CollectionViewSource x:Key="UGVItemSrc" />
+            <CollectionViewSource x:Key="MVCCItemSrc" />
             <CollectionViewSource x:Key="UGVStateSrc" />
             <CollectionViewSource x:Key="UGVGroupSrc" />
         </ResourceDictionary>
@@ -80,7 +80,7 @@
             <Grid Grid.Row="1" x:Name="MapGrid">
                 <ItemsControl
                     ItemTemplateSelector="{StaticResource MyDataTemplateSeletor}"
-                    ItemsSource="{Binding Source={StaticResource UGVItemSrc}}"
+                    ItemsSource="{Binding Source={StaticResource MVCCItemSrc}}"
                     Margin="10" BorderBrush="#78C8FF" BorderThickness="1">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
