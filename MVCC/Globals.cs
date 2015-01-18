@@ -69,5 +69,17 @@ namespace MVCC
                 _TemplateHeight = value;
             }
         }
+
+        private Dictionary<string, UGV> _UGVSettingDictionary;
+        public Dictionary<string, UGV> UGVSettingDictionary
+        {
+            get 
+            {
+                if (_UGVSettingDictionary == null)
+                    _UGVSettingDictionary = new Dictionary<string, UGV>();
+
+                return _UGVSettingDictionary;
+            }
+        }
     }
 }

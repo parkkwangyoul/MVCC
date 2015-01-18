@@ -51,7 +51,7 @@ namespace MVCC.View
       * */
         private void CamOn(object sender, RoutedEventArgs e)
         {
-            webcam = new Capture(1); //cam 설정
+            webcam = new Capture(0); //cam 설정
             thread_start(); //thread 시작
         }
 
