@@ -10,7 +10,18 @@ namespace MVCC.Model
     {
         public Building() : base() { }
 
-        public Building(string id, double width, double height, double x, double y) : base(id, width, height, x, y) { }
+        public Building(string id, double width, double height, double x, double y) : base(id, width, height, x, y) { }        
+        
+        // 각 Building별 색깔이 다름
+        private string buildingColor = "#78C8FF";
+        public string BuildingColor
+        {
+            get { return buildingColor; }
+            set
+            {
+                buildingColor = value;
+            }
+        }
 
         public override string ToString() { return "Building"; }
     }

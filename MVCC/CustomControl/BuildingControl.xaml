@@ -5,7 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.RenderTransform>
+        <TranslateTransform  X="{Binding X}" Y="{Binding Y}"/>
+    </UserControl.RenderTransform>
+    
     <Grid>
-            
+        <TextBlock TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Id}" />
+        <Rectangle Width="{Binding Width}" Height="{Binding Height}" Fill="{Binding BuildingColor}">
+        </Rectangle>
     </Grid>
 </UserControl>
