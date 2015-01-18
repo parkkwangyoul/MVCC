@@ -7,6 +7,7 @@ using Emgu.CV;
 using Emgu.CV.Structure;
 using Emgu.CV.Cvb;
 using System.Drawing;
+using MVCC.Model;
 
 namespace MVCC.Utill
 {
@@ -14,7 +15,10 @@ namespace MVCC.Utill
     {
         int sub_check;
         int sub_count;
+        int blob_indenti_count;
         Globals globals = Globals.Instance; //globalsal 변수를 위해
+        List<Object> blob_indenti_list = new List<Object>();
+        List<Building> building_list = new List<Building>();
 
         //윤곽선 검출, blob할 이미지 만들기
         public Image<Gray, Byte> cannyEdge(Image<Bgr, Byte> img, Rectangle[] tracking_rect, Image<Bgr, Byte> blob_image)
@@ -57,7 +61,8 @@ namespace MVCC.Utill
         {
             int blob_count = 0;
 
-
+            Object[] blob_indenti = new Object[6]; // [0]indetifier [2]color [3] width [4] height [5] x [6] y  
+            
             //라온제나 좁은 곳간 test 범위 지정
             for (int x = 0; x < globals.ImageWidth; x++)
                 for (int y = 0; y < globals.ImageHeight; y++)
@@ -79,14 +84,47 @@ namespace MVCC.Utill
             foreach (CvBlob targetBlob in resultingImgBlobs.Values)
             {
                 if (targetBlob.Area > 100 && targetBlob.Area < 1500)
-                {
-                    if (obstacle_colorCheck(blob_image, targetBlob.Area, targetBlob.BoundingBox.X, targetBlob.BoundingBox.Y, targetBlob.BoundingBox.Width, targetBlob.BoundingBox.Height) == -1)
+                {           
+                    string temp;
+                    bool is_check = false;
+                    if ((temp = obstacle_colorCheck(blob_image, targetBlob.Area, targetBlob.BoundingBox.X, targetBlob.BoundingBox.Y, targetBlob.BoundingBox.Width, targetBlob.BoundingBox.Height)) == "null")
                     {
                         for (int x = (int)targetBlob.BoundingBox.X; x < (int)targetBlob.BoundingBox.X + targetBlob.BoundingBox.Width; x++)
                             for (int y = (int)targetBlob.BoundingBox.Y; y < (int)targetBlob.BoundingBox.Y + targetBlob.BoundingBox.Height; y++)
                                 temp_img[y, x] = new Bgr(0, 0, 0);
                         continue;
                     }
+
+                    foreach (Building building in building_list)
+                    {
+                        if (targetBlob.BoundingBox.X - targetBlob.BoundingBox.Width / 2 < building.X && building.X  < targetBlob.BoundingBox.X + targetBlob.BoundingBox.Width / 2
+                            && targetBlob.BoundingBox.Y - targetBlob.BoundingBox.Height / 2 < building.Y && building.Y < targetBlob.BoundingBox.Y + targetBlob.BoundingBox.Height / 2
+                            && building.BuildingColor == temp)
+                        {
+                            building.X = targetBlob.BoundingBox.X;
+                            building.Y = targetBlob.BoundingBox.Y;
+
+                            building.Width = targetBlob.BoundingBox.Width;
+                            building.Height = targetBlob.BoundingBox.Height;
+                            is_check = true;
+                            break;
+                        }
+                    }
+
+                    if (is_check == true)
+                        continue;
+                    /*
+                    blob_indenti[0] = blob_indenti_count++;
+                    blob_indenti[1] = temp;            
+                    blob_indenti[2] = targetBlob.BoundingBox.Width;
+                    blob_indenti[3] = targetBlob.BoundingBox.Height;
+                    blob_indenti[5] = (int)targetBlob.BoundingBox.X;
+                    blob_indenti[6] = (int)targetBlob.BoundingBox.Y;           
+                    blob_indenti_list.Add(blob_indenti);
+                    */
+                    building_list.Add(new Building("B" + blob_indenti_count++, (double)targetBlob.BoundingBox.Width, (double)targetBlob.BoundingBox.Height, targetBlob.BoundingBox.X, targetBlob.BoundingBox.Y));
+
+                   
                     blob_image.Draw(targetBlob.BoundingBox, new Bgr(0, 255, 0), 1);
                     blob_count++;
                 }
@@ -101,20 +139,25 @@ namespace MVCC.Utill
 
             blob_info[1] = temp_img.Convert<Gray, Byte>();
             blob_info[0] = blob_count;
+            blob_info[2] = blob_indenti_list;
 
             return blob_info;
+        }
 
+        public List<Building> get_building()
+        {
+            return building_list;
         }
 
         //보라 0 101 133 67 137 188
-        public int obstacle_colorCheck(Image<Bgr, Byte> image, int totalPicxel, int x, int y, int width, int height)
+        public string obstacle_colorCheck(Image<Bgr, Byte> image, int totalPicxel, int x, int y, int width, int height)
         {
             if (obstacle_YccColorCheck(image, totalPicxel, x, y, width, height, 0, 101, 133, 67, 137, 188) == 1) //보라
-                return 1;
+                return "purple";
             else if (obstacle_YccColorCheck(image, totalPicxel, x, y, width, height, 0, 133, 20, 255, 160, 97) == 1) //노랑
-                return 1;
+                return "yellow";
             else
-                return -1;
+                return "null";
         }
 
         public int obstacle_YccColorCheck(Image<Bgr, Byte> iamge, int totalPicxel, int pos_x, int pos_y, int img_width, int img_height, int min1, int min2, int min3, int max1, int max2, int max3)

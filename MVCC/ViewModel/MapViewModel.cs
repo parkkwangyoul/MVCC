@@ -160,9 +160,14 @@ namespace MVCC.ViewModel
             {
                 bool addBuildingFlag = false;
 
-                foreach (Building existBuilding in MVCCItemList)
+                foreach (ModelBase existBuilding in MVCCItemList)
                 {
-                    if (existBuilding.Id.Equals(building.Id))
+                    if (existBuilding is UGV)
+                        continue;
+
+                    Building ExistBuilding = existBuilding as Building;
+
+                    if (ExistBuilding.Id.Equals(building.Id))
                     {
                         addBuildingFlag = true;
                         break;

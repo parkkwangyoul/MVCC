@@ -206,10 +206,12 @@ namespace MVCC.View
             //int blob_count = 0, 
             int pre_blob_count = 0;
 
-            object[] blob_info = new object[2];
-
+            object[] blob_info = new object[3];
+   
             int frame_count = 0; //frame 카운터를 샘(차영상에서 지연을 주기 위해)
             bool frist_change_check = true;
+            
+            List<Building> building_List = new List<Building>();
 
             while (true)
             {
@@ -222,8 +224,11 @@ namespace MVCC.View
                     //obstacleDetection.drowGrid(cannyRes, gridImage, Map_obstacle); //Map 정보 만듬
                     blob_info[1] = greyThreshImg;
                     blob_info = obstacleDetection.detectBlob(blob_image, Map_obstacle, blob_info);
-
                     obstacleDetection.drow_bloded_Grid(blob_image, Map_obstacle, blob_info);
+
+
+                 
+
 
                     for (int i = 0; i < globals.ImageWidth / globals.x_grid; i++)
                         for (int j = 0; j < globals.ImageHeight / globals.y_grid; j++)
@@ -266,6 +271,16 @@ namespace MVCC.View
                     pre_Map_obstacle = (int[,])Map_obstacle.Clone(); //비교를 위해 이전 Map정보 설정
                     Array.Clear(Map_obstacle, 0, globals.ImageHeight / globals.y_grid * globals.ImageWidth / globals.x_grid);
                     pre_image = cannyRes.Clone(); //차영상을 위한 이전프레임 설정
+
+
+
+                    Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
+                    {
+                        building_List = obstacleDetection.get_building();
+                        mapViewModel.AddBuilding(building_List);
+                        refreshView();                
+                    }));          
+             
                 }
             }
 
@@ -427,6 +442,8 @@ namespace MVCC.View
                     for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
                     {
                         UGV tempUGV = mapViewModel.MVCCItemList[i] as UGV;
+
+                        Debug.Write("check : " + tempUGV.Id);
                         if (!tempUGV.Id.Equals(id))
                         {
                             cancelSelectUGV(tempUGV);
