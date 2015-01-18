@@ -196,57 +196,76 @@ namespace MVCC.View
             Image<Bgr, Byte> gridImage; //장애물을 표시하는 이미지(배열에도 저장함)
             Image<Gray, Byte> pre_image = null; //이전 이미지 저장
             Image<Gray, Byte> dst_image = null; //차영상의 대한 결과 저장
+            Image<Bgr, Byte> blob_image;
+            Image<Gray, Byte> greyThreshImg = null;
 
             int[,] Map_obstacle = new int[globals.ImageHeight / globals.y_grid, globals.ImageWidth / globals.x_grid]; //Map의 장애물의 정보 
-            int obstacle_count = 0, pre_obstacle_count = 0;
-            int[,] pre_Map_obstacle = new int[globals.ImageHeight / globals.y_grid, globals.ImageWidth / globals.x_grid]; //Map의 장애물의 정보 
+            int[,] pre_Map_obstacle = new int[globals.ImageHeight / globals.y_grid, globals.ImageWidth / globals.x_grid]; //이전 Map의 장애물의 정보 
+
+            int obstacle_count = 0, pre_obstacle_count = 0; //배열의 1표시를 세기 위해
+            //int blob_count = 0, 
+            int pre_blob_count = 0;
+
+            object[] blob_info = new object[2];
 
             int frame_count = 0; //frame 카운터를 샘(차영상에서 지연을 주기 위해)
+            bool frist_change_check = true;
 
             while (true)
             {
                 if (obstacle_check == true) //frame의 추적 영상 처리가 끝나고 처리
                 {
-                    cannyRes = obstacleDetection.cannyEdge(obstacle_image, tracking_rect); //외곽선 땀, 그리고 차량 부분 지움
-                    gridImage = obstacle_image.Clone();
-                    obstacleDetection.drowGrid(cannyRes, gridImage, Map_obstacle); //Map 정보 만듬
+                    blob_image = obstacle_image.Clone();
+                    cannyRes = obstacleDetection.cannyEdge(obstacle_image, tracking_rect, blob_image); //차량 부분 지우고 외곽선따고, blob위한 이미지 만듬
 
+                    gridImage = obstacle_image.Clone();
+                    //obstacleDetection.drowGrid(cannyRes, gridImage, Map_obstacle); //Map 정보 만듬
+                    blob_info[1] = greyThreshImg;
+                    blob_info = obstacleDetection.detectBlob(blob_image, Map_obstacle, blob_info);
+
+                    obstacleDetection.drow_bloded_Grid(blob_image, Map_obstacle, blob_info);
 
                     for (int i = 0; i < globals.ImageWidth / globals.x_grid; i++)
                         for (int j = 0; j < globals.ImageHeight / globals.y_grid; j++)
                             if (Map_obstacle[j, i] == 1)
                                 obstacle_count++;
 
-                    frame_count++; //프레임수 셈
+                    //frame_count++; //프레임수 셈
 
                     System.Drawing.Rectangle map_rect = new System.Drawing.Rectangle(220, 10, 200, 380);
                     gridImage.Draw(map_rect, new Bgr(0, 255, 0), 3); //장애물 생김
 
-                    if (frame_count == 2) //5프레임 마다 변화 검사
+
+                    if (pre_blob_count != (int)blob_info[0])
                     {
-                        if (pre_obstacle_count + 3 <= obstacle_count || pre_obstacle_count - 3 >= obstacle_count)
+                        if (frist_change_check == false)
                         {
-                            //System.Console.WriteLine(" Map 변화!!! obstacle_count = " + obstacle_count + " pre_obstacle_count = " + pre_obstacle_count);
-                            gridImage.Draw(map_rect, new Bgr(0, 0, 255), 3); //Map 변화 생김
-                            image_is_changed = true;
+                            System.Console.WriteLine(" Map 변화 생김!!! pre_blob_count = " + pre_blob_count + " blob_count = " + blob_info[0]);
+                            map_rect = new System.Drawing.Rectangle(220, 10, 200, 380);
+                            blob_image.Draw(map_rect, new Bgr(0, 0, 255), 2); //장애물 생김
                         }
-          
-                        frame_count = 0;
-                        /*
-                        if (obstacleDetection.sub_image(cannyRes, pre_image, dst_image) == 1)
-                        {
-                        }
-                        */
-                      
-                        //dst_image = obstacleDetection.sub_image(cannyRes, pre_image, dst_image); //차영상 구함                    
+
+                        frist_change_check = false;
+                        image_is_changed = true;
+                    }
+                    else
+                    {
+                        int moving_check_count = 0;
+                        for (int i = 0; i < globals.ImageWidth / globals.x_grid; i++)
+                            for (int j = 0; j < globals.ImageHeight / globals.y_grid; j++)
+                                if (Map_obstacle[j, i] != pre_Map_obstacle[j, i])
+                                    moving_check_count++;
+
+                        if (moving_check_count >= 3)
+                            System.Console.WriteLine("장애물 옮기는 중!");
                     }
 
+                    pre_blob_count = (int)blob_info[0];
                     pre_obstacle_count = obstacle_count;
                     obstacle_count = 0;
                     pre_Map_obstacle = (int[,])Map_obstacle.Clone(); //비교를 위해 이전 Map정보 설정
                     Array.Clear(Map_obstacle, 0, globals.ImageHeight / globals.y_grid * globals.ImageWidth / globals.x_grid);
                     pre_image = cannyRes.Clone(); //차영상을 위한 이전프레임 설정
-
                 }
             }
 

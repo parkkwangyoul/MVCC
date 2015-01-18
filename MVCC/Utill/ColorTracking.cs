@@ -38,10 +38,12 @@ namespace MVCC.Utill
                 {
                     //42, 133, 0, 169, 179, 97 yellow
                     if (i == 0) //blue
-                        YccColorCheck(i, 0, 51, 141, 255, 240, 240);
+                        //YccColorCheck(i, 0, 51, 141, 255, 240, 240); //가까운곳
+                        YccColorCheck(i, 34, 73, 130, 104, 186, 198); //라온제나 보라색과 파랑 같이 잡힘
                     else if (i == 1) //green
                         //YccColorCheck(i, 0, 0, 0, 194, 103, 154); //가까울떄
-                        YccColorCheck(i, 66, 66, 61, 114, 124, 140); //라온제나
+                        //YccColorCheck(i, 66, 66, 61, 114, 124, 140); //라온제나
+                        YccColorCheck(i, 39, 73, 85, 98, 164, 146); //라온제나 이건 다른것까지 잡힘
                     else if (i == 2) //pink
                         //YccColorCheck(i, 41, 81, 134, 205, 240, 162);
                         //YccColorCheck(i, 0, 133, 20, 255, 160, 97); //yellow
@@ -86,7 +88,6 @@ namespace MVCC.Utill
                 pos_x = colorCheckImage.Width - img_width;
             if (pos_y + img_height > colorCheckImage.Height)
                 pos_y = colorCheckImage.Height - img_height;
-
 
             for (int x = pos_x; x < pos_x + img_width; x++)
             {
@@ -157,10 +158,13 @@ namespace MVCC.Utill
                 if (color[i] == true) //있는 색상만 트레킹
                 {
                     if (i == 0)
-                        color_traking(i, 0, 51, 151, 105, 124, 194, iamge, rect);
+                        //color_traking(i, 0, 51, 151, 105, 124, 194, iamge, rect);  //가까운곳
+                        color_traking(i, 34, 73, 130, 104, 186, 198, iamge, rect); //라온제나 보라색과 파랑 같이 잡힘
+
                     else if (i == 1)
                         //color_traking(i, 0, 0, 0, 194, 103, 154, iamge, rect); //가까울때
-                        color_traking(i, 66, 66, 61, 114, 124, 140, iamge, rect); //라온제나
+                        //color_traking(i, 66, 66, 61, 114, 124, 140, iamge, rect); //라온제나
+                        color_traking(i, 39, 73, 85, 98, 164, 146, iamge, rect);// 라온제나 이건 다른것까지 잡힘                      
                     else if (i == 2)
                         //color_traking(i, 41, 81, 134, 205, 240, 162, iamge, rect); //pink
                         //color_traking(i, 0, 133, 20, 255, 160, 97, iamge, rect); //yellow
@@ -262,30 +266,6 @@ namespace MVCC.Utill
         public List<UGV> get_ugv()
         {
             return ugvList;
-        }
-
-        public void clean_hand(Image<Bgr, Byte> img, int[,] arr)
-        {
-            Image<Ycc, Byte> YCrCbFrame = img.Convert<Ycc, Byte>(); //YCrCb 변환
-            Image<Gray, byte> colorSetting = new Image<Gray, byte>(YCrCbFrame.Width, YCrCbFrame.Height); //Ycc범위로 뽑아낸 것을 gray로 바꿔서 수축팽창 하기 위해
-
-            Ycc YCrCb_min = new Ycc(0, 131, 90);
-            Ycc YCrCb_max = new Ycc(197, 164, 143);   //살색 범위
-            //Ycc YCrCb_min = new Ycc(0, 132, 69);
-            //Ycc YCrCb_max = new Ycc(174, 194, 151);   //살색 범위
-            colorSetting = YCrCbFrame.InRange((Ycc)YCrCb_min, (Ycc)YCrCb_max); //색 범위 설정
-
-            StructuringElementEx rect_12 = new StructuringElementEx(12, 12, 6, 6, Emgu.CV.CvEnum.CV_ELEMENT_SHAPE.CV_SHAPE_RECT);
-            CvInvoke.cvErode(colorSetting, colorSetting, rect_12, 1);
-            StructuringElementEx rect_6 = new StructuringElementEx(6, 6, 3, 3, Emgu.CV.CvEnum.CV_ELEMENT_SHAPE.CV_SHAPE_RECT);
-            CvInvoke.cvDilate(colorSetting, colorSetting, rect_6, 2); //수축 팽창
-
-            Image<Bgr, Byte> colorCount = colorSetting.Convert<Bgr, Byte>(); //픽셀수 세기 위해
-
-            for (int x = 0; x < img.Width; x++)
-                for (int y = 0; y < img.Height; y++)
-                    if (!colorCount[y, x].Equals(new Bgr(0, 0, 0)))
-                        arr[y, x] = 1;
         }
     }
 }

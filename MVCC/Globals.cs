@@ -94,7 +94,7 @@ namespace MVCC
         }
 
         //x축 gird 간격
-        private int _x_grid = 10;
+        private int _x_grid = 20;
         public int x_grid
         {
             get { return _x_grid; }
@@ -105,7 +105,7 @@ namespace MVCC
         }
 
         //y축 gird 간격
-        private int _y_grid = 10;
+        private int _y_grid = 20;
         public int y_grid
         {
             get { return _y_grid; }
@@ -128,5 +128,4 @@ namespace MVCC
         }
     }
 }
-    }
-}
+
