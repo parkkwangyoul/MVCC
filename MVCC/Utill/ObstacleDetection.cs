@@ -97,7 +97,7 @@ namespace MVCC.Utill
 
                     foreach (Building building in building_list)
                     {
-                        if (targetBlob.BoundingBox.X - targetBlob.BoundingBox.Width / 2 < building.X && building.X  < targetBlob.BoundingBox.X + targetBlob.BoundingBox.Width / 2
+                        if (targetBlob.BoundingBox.X - targetBlob.BoundingBox.Width / 2 < building.X && building.X < targetBlob.BoundingBox.X + targetBlob.BoundingBox.Width / 2
                             && targetBlob.BoundingBox.Y - targetBlob.BoundingBox.Height / 2 < building.Y && building.Y < targetBlob.BoundingBox.Y + targetBlob.BoundingBox.Height / 2
                             && building.BuildingColor == temp)
                         {
