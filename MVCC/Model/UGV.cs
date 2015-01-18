@@ -15,7 +15,7 @@ namespace MVCC.Model
         public UGV(string id) { this.Id = id; }
 
         // UGV를 만들기 위한 생성자
-        public UGV(string id, double width, double height, double x, double y) : base(id, width, height, x, y) { }        
+        public UGV(string id, double width, double height, double x, double y, string UGVColor) : base(id, width, height, x, y) { this.UGVColor = UGVColor; }        
 
         // 클릭 했을때 상태
         private bool isClicked = false;

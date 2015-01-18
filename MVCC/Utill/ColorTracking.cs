@@ -15,6 +15,7 @@ namespace MVCC.Utill
         bool[] color = new bool[4]; //색상 여부 ([0]blue [1] green [2]pink [3]red)
         Point[] color_ROI = new Point[4]; //색상추적에 대한 이동 ROI
         bool[] change_check = new bool[4]; // 이미지 변환 됫는지 체크.. 지금은 그냥 블루색깔 없어졌는지 test;
+        string[] colorStr = { "blue", "green", "pink", "red" };
 
         Image<Bgr, Byte> colorCheckImage; //칼라 체크할 이미지 변수
         int totalPicxel, pos_x, pos_y, img_width, img_height; //탬플릿매칭으로 넘어온 정보
@@ -104,7 +105,7 @@ namespace MVCC.Utill
                             change_check[index] = false;
                             color_ROI[index].X = x;
                             color_ROI[index].Y = y;
-                            ugvList.Add(new UGV("A" + index, glo.TemplateWidth, glo.TemplateHeight, x, y));
+                            ugvList.Add(new UGV("A" + index, glo.TemplateWidth, glo.TemplateHeight, x, y, colorStr[index]));
                             return;
                         }
                     }
