@@ -100,7 +100,7 @@ namespace MVCC.View
                             {
                                 double matchScore = matches[y, x, 0];
 
-                                if (matchScore > 0.87)
+                                if (matchScore > 0.84)
                                 {
                                     colorTracking.colorCheck(matchColorCheck, totalPicxel, x, y, globals.TemplateWidth, globals.TemplateHeight); //어떤 색인지 체크                        
                                     image_is_changed = false; //지금은 test라 여기다해놈.
