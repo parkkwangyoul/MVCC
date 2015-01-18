@@ -27,11 +27,33 @@ namespace MVCC.ViewModel
 
         private Globals globals = Globals.Instance;
 
+        #region MVCCBluetoothSettingList
+
+        private ObservableCollection<UGV> _MVCCBluetoothSettingList;
+
+        public ObservableCollection<UGV> MVCCBluetoothSettingList
+        {
+            get {
+                if (_MVCCBluetoothSettingList == null)
+                {
+                    _MVCCBluetoothSettingList = new ObservableCollection<UGV>();
+                }
+
+                return _MVCCBluetoothSettingList; 
+            }
+            set
+            {
+                Set<ObservableCollection<UGV>>(ref _MVCCBluetoothSettingList, value);
+            }
+        }
+
+        #endregion MVCCBluetoothSettingList
+
         public SettingViewModel()
         {
             for (int i = 0; i < 4; i++)
             {
-                globals.UGVSettingDictionary.Add("A" + i, new UGV());
+                MVCCBluetoothSettingList.Add(new UGV("Vehicle " + i));
             }
         }
     }

@@ -22,7 +22,7 @@ namespace MVCC.View
     {
         public SettingView()
         {
-            InitializeComponent();
+            InitializeComponent();              
         }
     }
 }
