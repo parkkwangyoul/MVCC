@@ -25,43 +25,80 @@
                 <RowDefinition Height="90*" />
             </Grid.RowDefinitions>
 
-            <TextBlock Text="Vehicle 1" Grid.Row="0" VerticalAlignment="Center" Margin="10 0 0 0" />
+            <TextBlock Text="{Binding Id}" Grid.Row="0" VerticalAlignment="Center" Margin="10 0 0 0" />
 
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="20*" />
-                    <ColumnDefinition Width="80*" />
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="100*" />
                 </Grid.ColumnDefinitions>
 
-                <Rectangle Margin="5" Stroke="#C9C9C9" StrokeThickness="1"/>
+                <Rectangle Height="100" VerticalAlignment="Center" Margin="5" Stroke="#C9C9C9" StrokeThickness="1"/>
 
                 <StackPanel Grid.Column="1">
-                    <StackPanel Orientation="Horizontal" Margin="10">
-                        <TextBlock Text="COM Port :" />
-                        <ComboBox Background="Transparent" Margin="10 0 0 0" Width="100">
+                    <Grid Margin="10 2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="100*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock VerticalAlignment="Center" Text="COM Port :" Grid.Column="0" />
+                        <ComboBox HorizontalAlignment="Left" Background="#2D2D30" Margin="10 0 0 0" Width="200" SelectedValue="{Binding ComPort}" Grid.Column="1" x:Name="COMportComboBox">
+                            <ComboBox.ItemContainerStyle>
+                                <Style TargetType="ComboBoxItem">
+                                    <Setter Property="Background" Value="#2D2D30"/>
+                                    <Setter Property="BorderBrush" Value="#C9C9C9"/>
+                                </Style>
+                            </ComboBox.ItemContainerStyle>
+                        </ComboBox>
+                    </Grid>
+
+                    <Grid Margin="10 2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="100*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock VerticalAlignment="Center" Text="Baudrate :" Grid.Column="0" />
+                        <ComboBox HorizontalAlignment="Left"  Background="Transparent" Margin="10 0 0 0" Width="200" SelectedValue="{Binding ComPort}" Grid.Column="1" x:Name="BaudrateComboBox" >
                             <ComboBox.ItemContainerStyle>
                                 <Style TargetType="ComboBoxItem">
                                     <Setter Property="Background" Value="Yellow"/>
                                     <Setter Property="BorderBrush" Value="Yellow"/>
                                 </Style>
                             </ComboBox.ItemContainerStyle>
-                            <ComboBoxItem Content="One"/>
-                            <ComboBoxItem Content="Two"/>
-                            <ComboBoxItem Content="Three"/>
                         </ComboBox>
-                    </StackPanel>
+                    </Grid>
 
-                    <StackPanel Orientation="Horizontal" Margin="10">
-                        <TextBlock Text="Baudrate :" />
-                    </StackPanel>
+                    <Grid Margin="10 2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="100*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock VerticalAlignment="Center" Text="Data Bit :" Grid.Column="0" />
+                        <ComboBox HorizontalAlignment="Left" Background="Transparent" Margin="10 0 0 0" Width="200" SelectedValue="{Binding ComPort}" Grid.Column="1" x:Name="DataBitComboBox">
+                            <ComboBox.ItemContainerStyle>
+                                <Style TargetType="ComboBoxItem">
+                                    <Setter Property="Background" Value="Yellow"/>
+                                    <Setter Property="BorderBrush" Value="Yellow"/>
+                                </Style>
+                            </ComboBox.ItemContainerStyle>
+                        </ComboBox>
+                    </Grid>
 
-                    <StackPanel Orientation="Horizontal" Margin="10">
-                        <TextBlock Text="Data Bit :" />
-                    </StackPanel>
-
-                    <StackPanel Orientation="Horizontal" Margin="10">
-                        <TextBlock Text="Stop Bit :" />
-                    </StackPanel>
+                    <Grid Margin="10 2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="100*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock VerticalAlignment="Center" Text="Stop Bit :" Grid.Column="0" />
+                        <ComboBox HorizontalAlignment="Left" Background="Transparent" Margin="10 0 0 0" Width="200" SelectedValue="{Binding ComPort}" Grid.Column="1" x:Name="StopBitComboBox">
+                            <ComboBox.ItemContainerStyle>
+                                <Style TargetType="ComboBoxItem">
+                                    <Setter Property="Background" Value="Yellow"/>
+                                    <Setter Property="BorderBrush" Value="Yellow"/>
+                                </Style>
+                            </ComboBox.ItemContainerStyle>
+                        </ComboBox>
+                    </Grid>
                 </StackPanel>
             </Grid>
         </Grid>

@@ -8,7 +8,13 @@ namespace MVCC.Model
 {
     public class UGV : MVCCItem
     {
+        // 빈 생성자
         public UGV() : base() { }
+
+        // UGV Setting 상태를 저장하기 위한 임시 생성자
+        public UGV(string id) { this.Id = id; }
+
+        // UGV를 만들기 위한 생성자
         public UGV(string id, double width, double height, double x, double y) : base(id, width, height, x, y) { }        
 
         // 클릭 했을때 상태
@@ -109,6 +115,13 @@ namespace MVCC.Model
         /**
          * Bluetooth 관련 속성들 
          **/
+
+        private string comPort;
+        public string ComPort
+        {
+            get { return comPort; }
+            set { comPort = value; }
+        }
 
         private int baudrate;
         public int Baudrate
