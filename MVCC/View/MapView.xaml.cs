@@ -100,7 +100,7 @@ namespace MVCC.View
                             {
                                 double matchScore = matches[y, x, 0];
 
-                                if (matchScore > 0.84)
+                                if (matchScore > 0.85)
                                 {
                                     colorTracking.colorCheck(matchColorCheck, totalPicxel, x, y, globals.TemplateWidth, globals.TemplateHeight); //어떤 색인지 체크                        
                                     image_is_changed = false; //지금은 test라 여기다해놈.
@@ -132,8 +132,13 @@ namespace MVCC.View
                             //frame.Draw(tracking_rect[i], new Bgr(255, 255, 255), 3);
                             Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
                             {
-                                foreach (UGV ugv in mapViewModel.MVCCItemList)
+                                for (int j = 0 ; j < mapViewModel.MVCCItemList.Count; j ++)
                                 {
+                                    if (!(mapViewModel.MVCCItemList[j] is UGV))
+                                        continue;
+
+                                    UGV ugv = mapViewModel.MVCCItemList[j] as UGV;
+
                                     if (ugv.Id.Equals("A" + i))
                                     {
                                         ugv.X = tracking_rect[i].X;
@@ -274,8 +279,20 @@ namespace MVCC.View
 
                     Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
                     {
-                        building_List = obstacleDetection.get_building();
+                        building_List = obstacleDetection.get_building();                                         
                         mapViewModel.AddBuilding(building_List);
+
+                        
+                        for (int i = 0; i < building_List.Count; i++)
+                        {
+                            Building remov_tmp = building_List[i];
+                            if (remov_tmp.DisapperCheck == false)
+                            {
+                                building_List.Remove(remov_tmp);
+                                mapViewModel.RemoveBuilding(remov_tmp.Id);
+                            }
+                        }
+                        
                         refreshView();                
                     }));          
              

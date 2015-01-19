@@ -62,18 +62,27 @@ namespace MVCC.Utill
             int blob_count = 0;
 
             Object[] blob_indenti = new Object[6]; // [0]indetifier [2]color [3] width [4] height [5] x [6] y  
-            
+
+            /*
             //라온제나 좁은 곳간 test 범위 지정
             for (int x = 0; x < globals.ImageWidth; x++)
                 for (int y = 0; y < globals.ImageHeight; y++)
                     if (!(x >= 221 && x < 220 + 200 && y >= 11 && y < 10 + 380))
                         blob_image[y, x] = new Bgr(255, 255, 255);
+            */
+
+            //8섹션 test 범위 지정
+            for (int x = 0; x < globals.ImageWidth; x++)
+                for (int y = 0; y < globals.ImageHeight; y++)
+                    if (x >= 560 && y >= 350 )
+                        blob_image[y, x] = new Bgr(255, 255, 255);
+            
 
             Image<Bgr, Byte> _blobsImg = blob_image.Clone();
             Image<Gray, Byte> greyImg = _blobsImg.Convert<Gray, Byte>().PyrDown().PyrUp();
             //Image<Gray, Byte> greyThreshImg = greyImg.ThresholdBinaryInv(new Gray(87), new Gray(255));
 
-            blob_info[1] = greyImg.ThresholdBinaryInv(new Gray(87), new Gray(255));
+            blob_info[1] = greyImg.ThresholdBinaryInv(new Gray(110), new Gray(255));
 
             CvBlobs resultingImgBlobs = new CvBlobs();
             CvBlobDetector bDetect = new CvBlobDetector();
@@ -83,8 +92,8 @@ namespace MVCC.Utill
 
             foreach (CvBlob targetBlob in resultingImgBlobs.Values)
             {
-                if (targetBlob.Area > 100 && targetBlob.Area < 1500)
-                {           
+                if (targetBlob.Area > 10 && targetBlob.Area < 1500)
+                {
                     string temp;
                     bool is_check = false;
                     if ((temp = obstacle_colorCheck(blob_image, targetBlob.Area, targetBlob.BoundingBox.X, targetBlob.BoundingBox.Y, targetBlob.BoundingBox.Width, targetBlob.BoundingBox.Height)) == "null")
@@ -95,20 +104,26 @@ namespace MVCC.Utill
                         continue;
                     }
 
+                    blob_image.Draw(targetBlob.BoundingBox, new Bgr(0, 255, 0), 1);
+                    blob_count++;
 
                     foreach (Building building in building_list)
                     {
-                        if (targetBlob.BoundingBox.X - targetBlob.BoundingBox.Width / 2 < building.X 
-                            && building.X  < targetBlob.BoundingBox.X + targetBlob.BoundingBox.Width / 2
-                            && targetBlob.BoundingBox.Y - targetBlob.BoundingBox.Height / 2 < building.Y 
-                            && building.Y < targetBlob.BoundingBox.Y + targetBlob.BoundingBox.Height / 2
+                        if (building.X - building.Width < targetBlob.BoundingBox.X
+                            && targetBlob.BoundingBox.X < building.X + building.Width
+                            && building.Y - building.Height < targetBlob.BoundingBox.Y
+                            && targetBlob.BoundingBox.Y < building.Y + building.Height
                             && building.BuildingColor == temp)
                         {
+                            //Console.WriteLine("building.id = " + building.Id + " building.X =  " + building.X + " building.Y = " + building.Y + " targetBlob.BoundingBox.X = " + targetBlob.BoundingBox.X + " targetBlob.BoundingBox.Y = " + targetBlob.BoundingBox.Y + " building.BuildingColor = " + building.BuildingColor);
+                  
                             building.X = targetBlob.BoundingBox.X;
                             building.Y = targetBlob.BoundingBox.Y;
 
                             building.Width = targetBlob.BoundingBox.Width;
                             building.Height = targetBlob.BoundingBox.Height;
+                            building.DisapperCheck = true;
+
                             is_check = true;
                             break;
                         }
@@ -116,22 +131,15 @@ namespace MVCC.Utill
 
                     if (is_check == true)
                         continue;
-                    /*
-                    blob_indenti[0] = blob_indenti_count++;
-                    blob_indenti[1] = temp;            
-                    blob_indenti[2] = targetBlob.BoundingBox.Width;
-                    blob_indenti[3] = targetBlob.BoundingBox.Height;
-                    blob_indenti[5] = (int)targetBlob.BoundingBox.X;
-                    blob_indenti[6] = (int)targetBlob.BoundingBox.Y;           
-                    blob_indenti_list.Add(blob_indenti);
-                    */
-                    building_list.Add(new Building("B" + blob_indenti_count++, (double)targetBlob.BoundingBox.Width, (double)targetBlob.BoundingBox.Height, targetBlob.BoundingBox.X, targetBlob.BoundingBox.Y, temp));
+
+                    //Console.WriteLine("blob_indenti_count =  " + blob_indenti_count + " targetBlob.BoundingBox.X = " + targetBlob.BoundingBox.X + " targetBlob.BoundingBox.Y = " + targetBlob.BoundingBox.Y + " temp_color = " + temp);
+                    Console.WriteLine("blob_indenti_count =  " + blob_indenti_count);
+                    building_list.Add(new Building("B" + blob_indenti_count++, (double)targetBlob.BoundingBox.Width, (double)targetBlob.BoundingBox.Height, targetBlob.BoundingBox.X, targetBlob.BoundingBox.Y, temp, true));
 
                     //Console.WriteLine("building List : " + building_list.Count);
 
+
                    
-                    blob_image.Draw(targetBlob.BoundingBox, new Bgr(0, 255, 0), 1);
-                    blob_count++;
                 }
                 else
                 //if(targetBlob.Area < 50)
@@ -151,13 +159,44 @@ namespace MVCC.Utill
 
         public List<Building> get_building()
         {
-            return building_list;
+            List<Building> tmp = new List<Building>();
+
+       
+            for (int i = 0; i < building_list.Count; i++ )
+                tmp.Add(new Building(building_list[i].Id, building_list[i].Width, building_list[i].Height, building_list[i].X, building_list[i].Y, building_list[i].BuildingColor, building_list[i].DisapperCheck));
+            
+            //Console.WriteLine("building List : " + building_list.Count);
+
+            /*
+            for (int i = 0; i < building_list.Count; i++)
+            {
+                Console.WriteLine("building_list[" + i + "].DisapperCheck = " + building_list[i].DisapperCheck);
+            }
+            */
+            for (int i = 0; i < building_list.Count; i++)
+            {
+                Building remov_tmp = building_list[i];
+                if (remov_tmp.DisapperCheck == false)
+                    building_list.Remove(remov_tmp);
+                else
+                    remov_tmp.DisapperCheck = false;
+            }
+
+            for (int i = 0; i < building_list.Count; i++)
+            {
+                //Console.WriteLine("building_list[" + i + "].DisapperCheck = " + building_list[i].DisapperCheck);
+                Console.WriteLine("tmp[" + i + "].DisapperCheck = " + tmp[i].DisapperCheck);
+           
+            }
+
+
+            return tmp;
         }
 
         //보라 0 101 133 67 137 188
         public string obstacle_colorCheck(Image<Bgr, Byte> image, int totalPicxel, int x, int y, int width, int height)
         {
-            if (obstacle_YccColorCheck(image, totalPicxel, x, y, width, height, 0, 101, 133, 67, 137, 188) == 1) //보라
+            if (obstacle_YccColorCheck(image, totalPicxel, x, y, width, height, 0, 101, 146, 81, 147, 188) == 1) //보라
                 return "purple";
             else if (obstacle_YccColorCheck(image, totalPicxel, x, y, width, height, 0, 133, 20, 255, 160, 97) == 1) //노랑
                 return "yellow";
@@ -197,7 +236,6 @@ namespace MVCC.Utill
                 }
             }
 
-            System.Console.WriteLine("totalPicxel = " + totalPicxel + "pixCount = " + pixCount + " pos_x = " + pos_x + " pos_y = " + pos_y);
             return -1;
         }
 
@@ -225,7 +263,6 @@ namespace MVCC.Utill
             */
 
             return obstacle_grid_fill(canny_img, img, Map_obstacle);
-
         }
 
         public void drow_bloded_Grid(Image<Bgr, Byte> img, int[,] Map_obstacle, object[] blob_info)
@@ -233,18 +270,18 @@ namespace MVCC.Utill
             bool grid_check = false;
             Image<Bgr, Byte> count_img = ((Image<Gray, Byte>)blob_info[1]).Convert<Bgr, Byte>();
 
-
+            
             for (int x = 0; x < img.Width; x++)
             {
                 for (int y = 0; y < img.Height; y++)
                 {
-
-                    /*
-                              for (int x = 221; x < 220 + 200; x++)
-                              {
-                                  for (int y = 11; y < 10 + 380; y++)
-                                  {
-                                 */
+           
+/*
+            for (int x = 221; x < 220 + 200; x++)
+            {
+                for (int y = 11; y < 10 + 380; y++)
+                {
+            */
                     if (count_img[y, x].Equals(new Bgr(255, 255, 255)))
                     {
                         for (int pos_x = x - globals.x_grid; pos_x < x; pos_x++)

@@ -15,7 +15,7 @@ namespace MVCC.Utill
         bool[] color = new bool[4]; //색상 여부 ([0]blue [1] green [2]pink [3]red)
         Point[] color_ROI = new Point[4]; //색상추적에 대한 이동 ROI
         bool[] change_check = new bool[4]; // 이미지 변환 됫는지 체크.. 지금은 그냥 블루색깔 없어졌는지 test;
-        string[] colorStr = { "blue", "green", "pink", "red" };
+        string[] colorStr = { "blue", "green", "orange", "red" };
 
         Image<Bgr, Byte> colorCheckImage; //칼라 체크할 이미지 변수
         int totalPicxel, pos_x, pos_y, img_width, img_height; //탬플릿매칭으로 넘어온 정보
@@ -45,7 +45,7 @@ namespace MVCC.Utill
                         //YccColorCheck(i, 0, 0, 0, 194, 103, 154); //가까울떄
                         //YccColorCheck(i, 66, 66, 61, 114, 124, 140); //라온제나
                         YccColorCheck(i, 39, 73, 85, 98, 164, 146); //라온제나 이건 다른것까지 잡힘
-                    else if (i == 2) //pink
+                    else if (i == 2) //orange
                         //YccColorCheck(i, 41, 81, 134, 205, 240, 162);
                         //YccColorCheck(i, 0, 133, 20, 255, 160, 97); //yellow
                         //YccColorCheck(i, 0, 130, 0, 255, 223, 102); //orange 가까울때
@@ -176,7 +176,7 @@ namespace MVCC.Utill
                         //color_traking(i, 0, 136, 100, 110, 221, 129, iamge, rect);
                         color_traking(i, 0, 149, 93, 100, 221, 142, iamge, rect); //멀때
 
-                }// ([0]blue [1] green [2]pink [3]red)
+                }// ([0]blue [1] green [2]orange [3]red)
             }
 
             return rect;
