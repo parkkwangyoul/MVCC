@@ -19,7 +19,8 @@ namespace MVCC.Utill
         Globals globals = Globals.Instance; //globalsal 변수를 위해
         List<Object> blob_indenti_list = new List<Object>();
         List<Building> building_list = new List<Building>();
-
+        int[] obstacle_color_count = new int[4]; //[0]purple [1] black [2] yellow [3]
+        
         /*
         //윤곽선 검출, blob할 이미지 만들기
         public Image<Gray, Byte> cannyEdge(Image<Bgr, Byte> img, Rectangle[] tracking_rect, Image<Bgr, Byte> blob_image)
@@ -70,7 +71,7 @@ namespace MVCC.Utill
 
             Image<Gray, Byte> graySoft = _blobsImg.Convert<Gray, Byte>().PyrDown().PyrUp();
             Image<Gray, Byte> gray = graySoft.SmoothGaussian(3);
-            gray = gray.AddWeighted(graySoft, 1.5, -0.5, 0);
+            gray = gray.AddWeighted(graySoft, 1.2, -0.5, 0);
             Image<Gray, Byte> bin = gray.ThresholdBinary(new Gray(90), new Gray(255));
 
             Gray cannyThreshold = new Gray(149);
@@ -123,7 +124,15 @@ namespace MVCC.Utill
                     }
                 }
             }
- 
+        
+            int[] temp_color_count = new int[4]; //[0]purple [1] black [2] yellow [3]
+            temp_color_count = (int[])obstacle_color_count.Clone();
+            int temp_blob_count = building_list.Count;
+
+            List<Building> tmp = new List<Building>(); //몇개 있는지 확인후에 제거 하면서 검사 하기 위해
+            for (int i = 0; i < building_list.Count; i++)
+                tmp.Add(new Building(building_list[i].Id, building_list[i].Width, building_list[i].Height, building_list[i].X, building_list[i].Y, building_list[i].BuildingColor, building_list[i].DisapperCheck));
+
             foreach (CvBlob targetBlob in resultingImgBlobs.Values)
             {
                 if (targetBlob.Area > 100 && targetBlob.Area < 700)
@@ -133,54 +142,125 @@ namespace MVCC.Utill
 
                     if ((temp = obstacle_colorCheck(blob_image, targetBlob.Area, targetBlob.BoundingBox.X, targetBlob.BoundingBox.Y, targetBlob.BoundingBox.Width, targetBlob.BoundingBox.Height)) == "null")
                     {
-                        for (int x = (int)targetBlob.BoundingBox.X; x < (int)targetBlob.BoundingBox.X + targetBlob.BoundingBox.Width; x++)
-                            for (int y = (int)targetBlob.BoundingBox.Y; y < (int)targetBlob.BoundingBox.Y + targetBlob.BoundingBox.Height; y++)
+                        for (int x = targetBlob.BoundingBox.X; x < targetBlob.BoundingBox.X + targetBlob.BoundingBox.Width; x++)
+                            for (int y = targetBlob.BoundingBox.Y; y < targetBlob.BoundingBox.Y + targetBlob.BoundingBox.Height; y++)
                                 temp_img[y, x] = new Bgr(0, 0, 0);
                         continue;
                     }
 
-                    for (int x = (int)targetBlob.BoundingBox.X; x < (int)targetBlob.BoundingBox.X + targetBlob.BoundingBox.Width; x++)
-                        for (int y = (int)targetBlob.BoundingBox.Y; y < (int)targetBlob.BoundingBox.Y + targetBlob.BoundingBox.Height; y++)
+                    for (int x = targetBlob.BoundingBox.X; x < targetBlob.BoundingBox.X + targetBlob.BoundingBox.Width; x++)
+                        for (int y = targetBlob.BoundingBox.Y; y < targetBlob.BoundingBox.Y + targetBlob.BoundingBox.Height; y++)
                             temp_img[y, x] = new Bgr(255, 255, 255);
-
-                    blob_image.Draw(targetBlob.BoundingBox, new Bgr(0, 255, 0), 1);
-                    blob_count++;
-
-                    foreach (Building building in building_list)
+                    
+                    if (temp == "purple")
                     {
-                        if (building.X - building.Width < targetBlob.BoundingBox.X
-                            && targetBlob.BoundingBox.X < building.X + building.Width
-                            && building.Y - building.Height < targetBlob.BoundingBox.Y
-                            && targetBlob.BoundingBox.Y < building.Y + building.Height
-                            && building.BuildingColor == temp)
+                        if (temp_color_count[0] == 0)
                         {
-                            //Console.WriteLine("building.id = " + building.Id + " building.X =  " + building.X + " building.Y = " + building.Y + " targetBlob.BoundingBox.X = " + targetBlob.BoundingBox.X + " targetBlob.BoundingBox.Y = " + targetBlob.BoundingBox.Y + " building.BuildingColor = " + building.BuildingColor);
-                  
-                            building.X = targetBlob.BoundingBox.X;
-                            building.Y = targetBlob.BoundingBox.Y;
+                            building_list.Add(new Building("B" + blob_indenti_count++, (double)targetBlob.BoundingBox.Width, (double)targetBlob.BoundingBox.Height, targetBlob.BoundingBox.X, targetBlob.BoundingBox.Y, temp, true));
+                            obstacle_color_count[0]++;
+                        }
+                        else if (temp_color_count[0] != 0)
+                        {
+                            for (int i = 0; i < tmp.Count; i++)
+                            {
+                                Building remov_tmp = tmp[i];
+                                if (remov_tmp.BuildingColor == temp)
+                                {
+                                    tmp.Remove(remov_tmp);
+                                    temp_color_count[0]--;
 
-                            building.Width = targetBlob.BoundingBox.Width;
-                            building.Height = targetBlob.BoundingBox.Height;
-                            building.DisapperCheck = true;
+                                    foreach (Building building in building_list)
+                                    {
+                                        if (building.BuildingColor == temp && building.DisapperCheck == false)
+                                        {
+                                            building.X = targetBlob.BoundingBox.X;
+                                            building.Y = targetBlob.BoundingBox.Y;
+                                            building.Width = targetBlob.BoundingBox.Width;
+                                            building.Height = targetBlob.BoundingBox.Height;
+                                            building.DisapperCheck = true;
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                }
+                            }                         
+                        }
+                    }
+                    else if (temp == "black")
+                    {
+                        if (temp_color_count[1] == 0)
+                        {
+                            building_list.Add(new Building("B" + blob_indenti_count++, (double)targetBlob.BoundingBox.Width, (double)targetBlob.BoundingBox.Height, targetBlob.BoundingBox.X, targetBlob.BoundingBox.Y, temp, true));
+                            obstacle_color_count[1]++;
+                        }
+                        else if (temp_color_count[1] != 0)
+                        {
+                            for (int i = 0; i < tmp.Count; i++)
+                            {
+                                Building remov_tmp = tmp[i];
+                                if (remov_tmp.BuildingColor == temp)
+                                {
+                                    tmp.Remove(remov_tmp);
+                                    temp_color_count[1]--;
 
-                            is_check = true;
-                            break;
+                                    foreach (Building building in building_list)
+                                    {
+                                        if (building.BuildingColor == temp && building.DisapperCheck == false)
+                                        {
+                                            building.X = targetBlob.BoundingBox.X;
+                                            building.Y = targetBlob.BoundingBox.Y;
+                                            building.Width = targetBlob.BoundingBox.Width;
+                                            building.Height = targetBlob.BoundingBox.Height;
+                                            building.DisapperCheck = true;
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                }
+                            }                         
+                        }
+                    }
+                    else if (temp == "yellow")
+                    {
+                        if (temp_color_count[2] == 0)
+                        {
+                            building_list.Add(new Building("B" + blob_indenti_count++, (double)targetBlob.BoundingBox.Width, (double)targetBlob.BoundingBox.Height, targetBlob.BoundingBox.X, targetBlob.BoundingBox.Y, temp, true));
+                            obstacle_color_count[2]++;
+                        }
+                        else if(temp_color_count[2] != 0)
+                        {
+                            for (int i = 0; i < tmp.Count; i++)
+                            {
+                                Building remov_tmp = tmp[i];
+                                if (remov_tmp.BuildingColor == temp)
+                                {
+                                    tmp.Remove(remov_tmp);
+                                    temp_color_count[2]--;
+
+                                    foreach (Building building in building_list)
+                                    {
+                                        if (building.BuildingColor == temp && building.DisapperCheck == false)
+                                        {
+                                            building.X = targetBlob.BoundingBox.X;
+                                            building.Y = targetBlob.BoundingBox.Y;
+                                            building.Width = targetBlob.BoundingBox.Width;
+                                            building.Height = targetBlob.BoundingBox.Height;
+                                            building.DisapperCheck = true;
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                }
+                            }                      
                         }
                     }
 
-                    if (is_check == true)
-                        continue;
-
-                    //Console.WriteLine("blob_indenti_count =  " + blob_indenti_count + " targetBlob.BoundingBox.X = " + targetBlob.BoundingBox.X + " targetBlob.BoundingBox.Y = " + targetBlob.BoundingBox.Y + " temp_color = " + temp);
-                    //Console.WriteLine("blob_indenti_count =  " + blob_indenti_count);
-                    building_list.Add(new Building("B" + blob_indenti_count++, (double)targetBlob.BoundingBox.Width, (double)targetBlob.BoundingBox.Height, targetBlob.BoundingBox.X, targetBlob.BoundingBox.Y, temp, true));
-
-                    //Console.WriteLine("building List : " + building_list.Count);               
-                }
+                    blob_count++;
+                 }
                 else            
                 {
-                    for (int x = (int)targetBlob.BoundingBox.X; x < (int)targetBlob.BoundingBox.X + targetBlob.BoundingBox.Width; x++)
-                        for (int y = (int)targetBlob.BoundingBox.Y; y < (int)targetBlob.BoundingBox.Y + targetBlob.BoundingBox.Height; y++)
+                    for (int x = targetBlob.BoundingBox.X; x < targetBlob.BoundingBox.X + targetBlob.BoundingBox.Width; x++)
+                        for (int y = targetBlob.BoundingBox.Y; y < targetBlob.BoundingBox.Y + targetBlob.BoundingBox.Height; y++)
                             temp_img[y, x] = new Bgr(0, 0, 0);
                 }
             }
@@ -211,16 +291,24 @@ namespace MVCC.Utill
             {
                 Building remov_tmp = building_list[i];
                 if (remov_tmp.DisapperCheck == false)
+                {
                     building_list.Remove(remov_tmp);
+                    if(remov_tmp.BuildingColor == "purple")
+                        obstacle_color_count[0]--;
+                    else if (remov_tmp.BuildingColor == "black")
+                        obstacle_color_count[1]--;
+                    else if (remov_tmp.BuildingColor == "yellow")
+                        obstacle_color_count[2]--;
+                }
                 else
                     remov_tmp.DisapperCheck = false;
             }
 
-            for (int i = 0; i < building_list.Count; i++)
-            {
+            //for (int i = 0; i < building_list.Count; i++)
+            //{
                 //Console.WriteLine("building_list[" + i + "].DisapperCheck = " + building_list[i].DisapperCheck);
                 //Console.WriteLine("tmp[" + i + "].DisapperCheck = " + tmp[i].DisapperCheck);     
-            }
+           // }
 
             return tmp;
         }
@@ -230,10 +318,10 @@ namespace MVCC.Utill
         {
             if (obstacle_YccColorCheck(image, totalPicxel, x, y, width, height, 0, 95, 136, 255, 184, 173) == 1) //보라 8섹션
                 return "purple";
-            else if (obstacle_YccColorCheck(image, totalPicxel, x, y, width, height, 0, 120, 13, 255, 168, 103) == 1) //노랑 8섹션
-                return "yellow";
             else if (obstacle_YccColorCheck(image, totalPicxel, x, y, width, height, 0, 122, 106, 65, 140, 141) == 1) //검정 8섹션
                 return "black";
+            else if (obstacle_YccColorCheck(image, totalPicxel, x, y, width, height, 0, 120, 13, 255, 168, 103) == 1) //노랑 8섹션
+                return "yellow";
             else
                 return "null";
         }

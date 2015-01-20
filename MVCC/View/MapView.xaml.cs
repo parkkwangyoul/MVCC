@@ -39,7 +39,7 @@ namespace MVCC.View
         System.Drawing.Rectangle[] tracking_rect; //트래킹한 결과를 그리는 네모박스
         bool obstacle_check = false; //트래킹과 장애물검사랑 동기화 위해
         bool image_is_changed = true; //영상을 비교했을때 차이가 날경우 (초기화를 true하는이유는 차가 놓여진상태에서 시작하면 바로 탬플릿 매칭을 수행해야되기때문)
-            
+
         // MapViewModel 가져옴
         private MapViewModel mapViewModel;
 
@@ -73,7 +73,7 @@ namespace MVCC.View
             ColorTracking colorTracking = new ColorTracking(); //트래킹클래스선언
 
             Image<Bgr, Byte> img1 = new Image<Bgr, Byte>("testtest7.jpg"); // 템플릿 매칭할 사진     
-            Image<Gray, Byte> img1_gray = img1.Convert<Gray, Byte>().PyrDown().PyrUp();                     
+            Image<Gray, Byte> img1_gray = img1.Convert<Gray, Byte>().PyrDown().PyrUp();
             Image<Bgr, Byte> matchColorCheck = null;
             Image<Gray, float> matchResImage = null;
             int totalPicxel = img1.Width * img1.Height; //탬플릿이미지의 총 픽셀수(어느정도 픽셀의 기준을 잡기 위해)
@@ -113,8 +113,8 @@ namespace MVCC.View
                         {
                             ugvList = colorTracking.get_ugv();
                             mapViewModel.AddUGV(ugvList);
-                            refreshView();                
-                        }));          
+                            refreshView();
+                        }));
                     }
 
                     //(frame); //이건 트래킹되는 색상을 표시하기 위한 테스트 함수(블루)                  
@@ -124,13 +124,13 @@ namespace MVCC.View
 
                     //영상에 트레킹 결과 내보내기
                     for (int i = 0; i < 4; i++)
-                    {                       
+                    {
                         //AddUGV(i.ToString(), tracking_rect[i].X, tracking_rect[i].Y);
                         if (tracking_rect[i].Width != 0 && tracking_rect[i].Height != 0)
-                        {                     
+                        {
                             Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
                             {
-                                for (int j = 0 ; j < mapViewModel.MVCCItemList.Count; j ++)
+                                for (int j = 0; j < mapViewModel.MVCCItemList.Count; j++)
                                 {
                                     if (!(mapViewModel.MVCCItemList[j] is UGV))
                                         continue;
@@ -144,9 +144,9 @@ namespace MVCC.View
                                         break;
                                     }
                                 }
-                                
+
                                 refreshView();
-                            }));   
+                            }));
                         }
                         else
                         {
@@ -154,7 +154,7 @@ namespace MVCC.View
                             {
                                 mapViewModel.RemoveUGV("A" + i);
                                 refreshView();
-                            }));   
+                            }));
                         }
                     }
 
@@ -167,7 +167,7 @@ namespace MVCC.View
                             colorTracking.change_chk_reset(i);
                         }
                     }
-                        
+
                     obstacle_check = true; //장애물이미지와 싱크 맞추기 위해 설정
                 }
             }
@@ -192,10 +192,10 @@ namespace MVCC.View
             int pre_blob_count = 0;
 
             object[] blob_info = new object[3];
-   
+
             int frame_count = 0; //frame 카운터를 샘(차영상에서 지연을 주기 위해)
             bool frist_change_check = true;
-            
+
             List<Building> building_List = new List<Building>();
 
             while (true)
@@ -203,7 +203,7 @@ namespace MVCC.View
                 if (obstacle_check == true) //frame의 추적 영상 처리가 끝나고 처리
                 {
                     blob_image = obstacle_image.Clone();
-                   
+
                     blob_info[1] = greyThreshImg;
                     blob_info = obstacleDetection.detectBlob(blob_image, Map_obstacle, blob_info, tracking_rect);
                     obstacleDetection.drow_bloded_Grid(blob_image, Map_obstacle, blob_info);
@@ -217,7 +217,7 @@ namespace MVCC.View
                     {
                         if (frist_change_check == false)
                             Console.WriteLine(" Map 변화 생김!!! pre_blob_count = " + pre_blob_count + " blob_count = " + blob_info[0]);
-             
+
                         frist_change_check = false;
                         image_is_changed = true;
                     }
@@ -230,8 +230,8 @@ namespace MVCC.View
                                 if (Map_obstacle[j, i] != pre_Map_obstacle[j, i])
                                     moving_check_count++;
 
-                        if (moving_check_count >= 3)
-                           Console.WriteLine("장애물 옮기는 중!");
+                        if (moving_check_count >= 53)
+                            Console.WriteLine("장애물 옮기는 중!");
                     }
 
                     pre_blob_count = (int)blob_info[0];
@@ -243,9 +243,9 @@ namespace MVCC.View
 
                     Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
                     {
-                        building_List = obstacleDetection.get_building();                                         
+                        building_List = obstacleDetection.get_building();
                         mapViewModel.AddBuilding(building_List);
-                    
+
                         for (int i = 0; i < building_List.Count; i++)
                         {
                             Building remov_tmp = building_List[i];
@@ -254,9 +254,33 @@ namespace MVCC.View
                                 building_List.Remove(remov_tmp);
                                 mapViewModel.RemoveBuilding(remov_tmp.Id);
                             }
-                        }                    
-                        refreshView();                
-                    }));                    
+                        }
+
+                        for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
+                        {
+                            if (!(mapViewModel.MVCCItemList[i] is Building))
+                                continue;
+
+                            Building building = mapViewModel.MVCCItemList[i] as Building;
+
+                            if (building.Id.Equals(building.Id))
+                            {
+                                foreach (Building temp_building in building_List)
+                                {
+                                    if (temp_building.Id.Equals(building.Id))
+                                    {
+                                        building.X = temp_building.X;
+                                        building.Y = temp_building.Y;
+                                        building.Width = temp_building.Width;
+                                        building.Height = temp_building.Height;
+                                        building.DisapperCheck = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        refreshView();
+                    }));
                 }
             }
 
@@ -272,7 +296,7 @@ namespace MVCC.View
 
             (FindResource("UGVStateSrc") as CollectionViewSource).Source = mapViewModel.MVCCItemStateList;
 
-            (FindResource("UGVGroupSrc") as CollectionViewSource).Source = mapViewModel.MVCCGroupList;            
+            (FindResource("UGVGroupSrc") as CollectionViewSource).Source = mapViewModel.MVCCGroupList;
         }
 
         // UGV를 선택하는 모드
@@ -312,7 +336,7 @@ namespace MVCC.View
                     {
                         // 그룹 선택이 안된 것
                         if (!ugv.IsClickedReadyBelongToGroup)
-                        {                            
+                        {
                             ugv.IsClickedReadyBelongToGroup = true;
 
                             selectUGVAndStateChangeLayout(ugv, "Blue", id);
@@ -354,7 +378,7 @@ namespace MVCC.View
             }
 
             // 그룹이 선택된 상태에서 Alt를 누르고 부대선택되지 않은 UGV를 선택하면, 그 그룹에 추가된다.
-            else if (Keyboard.Modifiers == ModifierKeys.Alt) 
+            else if (Keyboard.Modifiers == ModifierKeys.Alt)
             {
                 Group group = findClickedGroup();
 
@@ -368,7 +392,7 @@ namespace MVCC.View
                         string id = (grid.Children[0] as TextBlock).Text;
 
                         UGV ugv = new UGV();
-                                                
+
                         for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
                         {
                             if (!(mapViewModel.MVCCItemList[i] is UGV))
@@ -380,7 +404,7 @@ namespace MVCC.View
                                 ugv = tempUGV;
                             }
                         }
-                        
+
                         if (!ugv.IsBelongToGroup)
                         {
 
@@ -391,7 +415,7 @@ namespace MVCC.View
 
                             selectUGVAndStateChangeLayout(ugv, group.StateBorderBrush, ugv.Id);
                         }
-                        else if(ugv.GroupName.Equals(group.Name))
+                        else if (ugv.GroupName.Equals(group.Name))
                         {
                             ugv.GroupName = null;
                             ugv.IsBelongToGroup = false;
@@ -483,7 +507,7 @@ namespace MVCC.View
                     refreshView();
                 }
             }
-        }        
+        }
 
         private void MakeGroup(object sender, KeyEventArgs e)
         {
@@ -505,7 +529,7 @@ namespace MVCC.View
                     MessageBox.Show("그룹 대기열에 포함된 UGV가 없습니다.");
                 }
             }
-            
+
             // 해당 그룹 번호를 누르면 해당그룹이 선택됨.
             else
             {
@@ -592,7 +616,7 @@ namespace MVCC.View
                         }
                     }
                 }
-                
+
                 mapViewModel.MVCCGroupList.Add(group);
 
                 mapViewModel.MVCCTempList.Clear();
@@ -610,7 +634,7 @@ namespace MVCC.View
         {
             ugv.UGVStrokeThickness = 2;
             ugv.UGVStroke = color;
-            
+
             for (int i = 0; i < mapViewModel.MVCCItemStateList.Count; i++)
             {
                 State tempState = mapViewModel.MVCCItemStateList[i];
@@ -738,7 +762,7 @@ namespace MVCC.View
                 case (int)GroupColor.White:
                     return GroupColor.White.ToString();
                 case (int)GroupColor.Yellow:
-                    return GroupColor.Yellow.ToString();      
+                    return GroupColor.Yellow.ToString();
 
                 default:
                     return "Green";
