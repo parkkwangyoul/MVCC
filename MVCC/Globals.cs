@@ -137,6 +137,7 @@ namespace MVCC
                 _rect_height = value;
             }
         }
+
         private Dictionary<string, UGV> _UGVSettingDictionary;
         public Dictionary<string, UGV> UGVSettingDictionary
         {

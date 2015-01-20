@@ -37,23 +37,14 @@ namespace MVCC.Utill
             {
                 if (color[i] == false)
                 {
-                    //42, 133, 0, 169, 179, 97 yellow
                     if (i == 0) //blue
-                        //YccColorCheck(i, 0, 51, 141, 255, 240, 240); //가까운곳
-                        YccColorCheck(i, 34, 73, 130, 104, 186, 198); //라온제나 보라색과 파랑 같이 잡힘
+                       YccColorCheck(i, 0, 41, 151, 255, 119, 240); //8섹션
                     else if (i == 1) //green
-                        //YccColorCheck(i, 0, 0, 0, 194, 103, 154); //가까울떄
-                        //YccColorCheck(i, 66, 66, 61, 114, 124, 140); //라온제나
-                        YccColorCheck(i, 39, 73, 85, 98, 164, 146); //라온제나 이건 다른것까지 잡힘
+                         YccColorCheck(i, 0, 75, 100, 186, 123, 143); //8섹션
                     else if (i == 2) //orange
-                        //YccColorCheck(i, 41, 81, 134, 205, 240, 162);
-                        //YccColorCheck(i, 0, 133, 20, 255, 160, 97); //yellow
-                        //YccColorCheck(i, 0, 130, 0, 255, 223, 102); //orange 가까울때
-                        YccColorCheck(i, 65, 166, 74, 255, 240, 129); //orange 라온제나
+                         YccColorCheck(i, 0, 155, 0, 255, 218, 106); //8섹션
                     else //red
-                        //YccColorCheck(i, 0, 136, 100, 110, 221, 129); //가까울때
-                        YccColorCheck(i, 0, 149, 93, 100, 221, 142); //멀때
-                    //YccColorCheck(i, 0, 133, 20, 255, 160, 97); //yellow
+                        YccColorCheck(i, 0, 159, 102, 196, 240, 124); //8섹션
                 }
             }
         }
@@ -78,7 +69,6 @@ namespace MVCC.Utill
 
             Image<Bgr, Byte> colorCount = colorSetting.Convert<Bgr, Byte>(); //픽셀수 세기 위해
 
-
             //이미지가 범위를 벗어날경우 처리
             if (pos_x < 0)
                 pos_x = 0;
@@ -98,8 +88,7 @@ namespace MVCC.Utill
                     {
                         pixCount++;
 
-                        if (totalPicxel / 9 <= pixCount) //일정 픽섹 이상시 색상배열 변경후 종료
-                        //if (pixCount > 1000)
+                        if (totalPicxel / 10 <= pixCount) //일정 픽섹 이상시 색상배열 변경후 종료
                         {
                             color[index] = true;
                             change_check[index] = false;
@@ -111,42 +100,6 @@ namespace MVCC.Utill
                     }
                 }
             }
-
-            /*
-            //이걸로 하면 안됨  왜안되지?? 범위를 지정하고 한건데.. 근데 신기하게 위에 코드는 됨.
-           
-            //이미지가 범위를 벗어날경우 처리
-            if (pos_x < 0)
-                pos_x = 0;
-            if (pos_y < 0)
-                pos_y = 0;
-
-            if (pos_x + img_width > colorCheckImage.Width)
-                pos_x = colorCheckImage.Width - img_width;
-            if (pos_y + img_height > colorCheckImage.Height)
-                pos_y = colorCheckImage.Height - img_height;
-
-            for (int x = pos_x; x < pos_x + img_width; x++)
-            {
-                for (int y = pos_y; y < pos_y + img_height; y++)
-                {
-                    if (!colorCount[y, x].Equals(new Bgr(0, 0, 0)))
-                    {
-                        pixCount++;
-
-                        //if (totalPicxel / 5 <= pixCount) //일정 픽섹 이상시 색상배열 변경후 종료
-                        if (pixCount > 3000)
-                        {
-                            color[index] = true;
-                            change_check[index] = false;
-                            color_ROI[index].X = x;
-                            color_ROI[index].Y = y;
-                            return;
-                        }
-                    }
-                }
-            }    
-            */
         }
 
         //색상 트레킹 시작
@@ -159,23 +112,13 @@ namespace MVCC.Utill
                 if (color[i] == true) //있는 색상만 트레킹
                 {
                     if (i == 0)
-                        //color_traking(i, 0, 51, 151, 105, 124, 194, iamge, rect);  //가까운곳
-                        color_traking(i, 34, 73, 130, 104, 186, 198, iamge, rect); //라온제나 보라색과 파랑 같이 잡힘
-
+                        color_traking(i, 0, 41, 151, 255, 119, 240, iamge, rect); //8섹션
                     else if (i == 1)
-                        //color_traking(i, 0, 0, 0, 194, 103, 154, iamge, rect); //가까울때
-                        //color_traking(i, 66, 66, 61, 114, 124, 140, iamge, rect); //라온제나
-                        color_traking(i, 39, 73, 85, 98, 164, 146, iamge, rect);// 라온제나 이건 다른것까지 잡힘                      
+                         color_traking(i, 0, 75, 100, 186, 123, 143, iamge, rect); //8섹션
                     else if (i == 2)
-                        //color_traking(i, 41, 81, 134, 205, 240, 162, iamge, rect); //pink
-                        //color_traking(i, 0, 133, 20, 255, 160, 97, iamge, rect); //yellow
-                        // color_traking(i, 0, 130, 0, 255, 223, 102, iamge, rect); //orange 가까울때
-                        color_traking(i, 65, 166, 74, 255, 240, 129, iamge, rect); //orange 라온제나
-
+                         color_traking(i, 0, 155, 0, 255, 218, 106, iamge, rect); //8섹션
                     else
-                        //color_traking(i, 0, 136, 100, 110, 221, 129, iamge, rect);
-                        color_traking(i, 0, 149, 93, 100, 221, 142, iamge, rect); //멀때
-
+                         color_traking(i, 0, 159, 102, 196, 240, 124, iamge, rect); //8섹션
                 }// ([0]blue [1] green [2]orange [3]red)
             }
 
@@ -188,7 +131,6 @@ namespace MVCC.Utill
             int pixCount = 0;
 
             Image<Ycc, Byte> YCrCbFrame = iamge.Convert<Ycc, Byte>(); //YCrCb 변환
-
             Image<Gray, byte> colorSetting = new Image<Gray, byte>(YCrCbFrame.Width, YCrCbFrame.Height);
 
             Ycc YCrCb_min = new Ycc(min1, min2, min3);
@@ -231,26 +173,35 @@ namespace MVCC.Utill
             }
 
             //픽셀 개수에 따라
-            if (pixCount != 0) //개수가 0이 아닐때 ROI 변경해줌
+            if (pixCount >= 10) //개수가 0이 아닐때 ROI 변경해줌
             {
-                rect[index] = new Rectangle(x_p / pixCount - glo.TemplateWidth / 2, y_p / pixCount - glo.TemplateHeight / 2, glo.TemplateWidth, glo.TemplateHeight); //사각형의 왼쪽 위의 좌표
+                //사라진것을 판별하기 위해.. 원랜 마이너스값으로 좌표가 계산되어 일부러 음수좌표는 0으로 만들고 사라졌을때 좌표를 -1로 만듬
+                int tmp_x = x_p / pixCount - glo.TemplateWidth / 2;
+                int tmp_y = y_p / pixCount - glo.TemplateHeight / 2;
+
+                int tmp_width = glo.TemplateWidth;
+                int tmp_height = glo.TemplateHeight;
+
+                if (tmp_x < 0)
+                {
+                    tmp_width += tmp_x;
+                    tmp_x = 0;
+                }
+                if (tmp_y < 0)
+                {
+                    tmp_height += tmp_y;
+                    tmp_y = 0;
+                }
+
+                rect[index] = new Rectangle(tmp_x, tmp_y, tmp_width, tmp_height); //사각형의 왼쪽 위의 좌표
                 color_ROI[index].X = x_p / pixCount - glo.TemplateWidth / 2;
                 color_ROI[index].Y = y_p / pixCount - glo.TemplateHeight / 2;
             }
-            else if (pixCount <= pixCount / 3)//픽셀이 0이면 사라졌단 소리이므로 추적에서 제외
+            else
             {
-                //rect[index] = new Rectangle(-1, -1, 0, 0); //test중
+                rect[index] = new Rectangle(0, 0, 0, 0);  //사라졌을때 좌표를 -1로 만듬
                 color[index] = false;
                 change_check[index] = true;
-
-                foreach (UGV ugv in ugvList)
-                {
-                    if (ugv.Id.Equals("A" + index))
-                    {
-                        ugvList.Remove(ugv);
-                        break;
-                    }
-                }
             }
         }
 

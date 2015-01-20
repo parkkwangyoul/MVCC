@@ -73,6 +73,7 @@ namespace MVCC.View
             ColorTracking colorTracking = new ColorTracking(); //트래킹클래스선언
 
             Image<Bgr, Byte> img1 = new Image<Bgr, Byte>("testtest7.jpg"); // 템플릿 매칭할 사진     
+            Image<Gray, Byte> img1_gray = img1.Convert<Gray, Byte>().PyrDown().PyrUp();                     
             Image<Bgr, Byte> matchColorCheck = null;
             Image<Gray, float> matchResImage = null;
             int totalPicxel = img1.Width * img1.Height; //탬플릿이미지의 총 픽셀수(어느정도 픽셀의 기준을 잡기 위해)
@@ -82,14 +83,14 @@ namespace MVCC.View
 
             while (true)
             {
-                using (Image<Bgr, Byte> frame = webcam.QueryFrame().Flip(Emgu.CV.CvEnum.FLIP.HORIZONTAL)) //webcam에서 영상 받음
+                using (Image<Bgr, Byte> frame = webcam.QueryFrame()) //webcam에서 영상 받음
                 {
+                    frame.ROI = new System.Drawing.Rectangle(0, 0, globals.rect_width, globals.rect_height); // 정한 범위를 ROI로 설정                 
                     obstacle_image = frame.Clone(); //원본 복사
 
                     if (image_is_changed == true) //시작할때 바로 들어고, 변화가 감지됬을때 들어가서 탬플릿 매칭 수행
                     {
-                        //image_is_changed = false; // 변화변수 초기화 (나중에 변화감지함수를 구현하면 풀도록)
-                        Image<Gray, Byte> img1_gray = img1.Convert<Gray, Byte>().PyrDown().PyrUp();
+                        image_is_changed = false; // 변화감지되면 true해서 들어옴
                         matchResImage = frame.Convert<Gray, Byte>().PyrDown().PyrUp().MatchTemplate(img1_gray, Emgu.CV.CvEnum.TM_TYPE.CV_TM_CCOEFF_NORMED); //템플릿 매칭 중간 결과 저장
                         matchColorCheck = frame.Clone(); //매치된 칼라가 저장될 변수
 
@@ -100,11 +101,9 @@ namespace MVCC.View
                             {
                                 double matchScore = matches[y, x, 0];
 
-                                if (matchScore > 0.85)
+                                if (matchScore > 0.9)
                                 {
                                     colorTracking.colorCheck(matchColorCheck, totalPicxel, x, y, globals.TemplateWidth, globals.TemplateHeight); //어떤 색인지 체크                        
-                                    image_is_changed = false; //지금은 test라 여기다해놈.
-                                    //변화감지 함수 구현하면 이거 지우고 암에껄로 해야함(왠지 이거 바꾸는것은 장애물변화랑 같이 해야될듯)                              
                                     y += img1.Height; //x축 다음 y축(세로)이 변화기 때문에 속도를 높이기 위해 검출된 y좌표 + 이미지 사이즈 함.                             
                                 }
                             }
@@ -127,9 +126,8 @@ namespace MVCC.View
                     for (int i = 0; i < 4; i++)
                     {                       
                         //AddUGV(i.ToString(), tracking_rect[i].X, tracking_rect[i].Y);
-                        if (tracking_rect[i].X != 0 && tracking_rect[i].Y != 0)
-                        {
-                            //frame.Draw(tracking_rect[i], new Bgr(255, 255, 255), 3);
+                        if (tracking_rect[i].Width != 0 && tracking_rect[i].Height != 0)
+                        {                     
                             Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
                             {
                                 for (int j = 0 ; j < mapViewModel.MVCCItemList.Count; j ++)
@@ -152,7 +150,6 @@ namespace MVCC.View
                         }
                         else
                         {
-
                             Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
                             {
                                 mapViewModel.RemoveUGV("A" + i);
@@ -170,24 +167,7 @@ namespace MVCC.View
                             colorTracking.change_chk_reset(i);
                         }
                     }
-
-                    //손 색 지우기
-                    //colorTracking.clean_hand(frame, hand_image_arr);
-
-                    System.Drawing.Rectangle map_rect = new System.Drawing.Rectangle(frame.Width / 8, frame.Height / 6, frame.Width / 8 * 6, frame.Height / 6 * 4);
-                    frame.Draw(map_rect, new Bgr(0, 255, 0), 3);
-
-                    //System.Drawing.Rectangle map_outside_rect = new System.Drawing.Rectangle(frame.Width / 8 - 30, frame.Height / 6 - 30, frame.Width / 8 * 6 + 30 * 2, frame.Height / 6 * 4 + 30 * 2);
-                    //frame.Draw(map_outside_rect, new Bgr(0, 255, 255), 3);
-
-                    /*
-                    Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
-                    {
-                        InputImage4.Source = frame.ToBitmapSource(); //원본 영상 + 트래킹결과                          
-                    }));
-                    */
-
-
+                        
                     obstacle_check = true; //장애물이미지와 싱크 맞추기 위해 설정
                 }
             }
@@ -204,8 +184,8 @@ namespace MVCC.View
             Image<Bgr, Byte> blob_image;
             Image<Gray, Byte> greyThreshImg = null;
 
-            int[,] Map_obstacle = new int[globals.ImageHeight / globals.y_grid, globals.ImageWidth / globals.x_grid]; //Map의 장애물의 정보 
-            int[,] pre_Map_obstacle = new int[globals.ImageHeight / globals.y_grid, globals.ImageWidth / globals.x_grid]; //이전 Map의 장애물의 정보 
+            int[,] Map_obstacle = new int[globals.rect_height / globals.y_grid, globals.rect_width / globals.x_grid]; //Map의 장애물의 정보 
+            int[,] pre_Map_obstacle = new int[globals.rect_height / globals.y_grid, globals.rect_width / globals.x_grid]; //이전 Map의 장애물의 정보 
 
             int obstacle_count = 0, pre_obstacle_count = 0; //배열의 1표시를 세기 위해
             //int blob_count = 0, 
@@ -223,66 +203,49 @@ namespace MVCC.View
                 if (obstacle_check == true) //frame의 추적 영상 처리가 끝나고 처리
                 {
                     blob_image = obstacle_image.Clone();
-                    cannyRes = obstacleDetection.cannyEdge(obstacle_image, tracking_rect, blob_image); //차량 부분 지우고 외곽선따고, blob위한 이미지 만듬
-
-                    gridImage = obstacle_image.Clone();
-                    //obstacleDetection.drowGrid(cannyRes, gridImage, Map_obstacle); //Map 정보 만듬
+                   
                     blob_info[1] = greyThreshImg;
-                    blob_info = obstacleDetection.detectBlob(blob_image, Map_obstacle, blob_info);
+                    blob_info = obstacleDetection.detectBlob(blob_image, Map_obstacle, blob_info, tracking_rect);
                     obstacleDetection.drow_bloded_Grid(blob_image, Map_obstacle, blob_info);
-                    
 
-
-                    for (int i = 0; i < globals.ImageWidth / globals.x_grid; i++)
-                        for (int j = 0; j < globals.ImageHeight / globals.y_grid; j++)
+                    for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
+                        for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
                             if (Map_obstacle[j, i] == 1)
                                 obstacle_count++;
-
-                    //frame_count++; //프레임수 셈
-
-                    System.Drawing.Rectangle map_rect = new System.Drawing.Rectangle(220, 10, 200, 380);
-                    gridImage.Draw(map_rect, new Bgr(0, 255, 0), 3); //장애물 생김
-
 
                     if (pre_blob_count != (int)blob_info[0])
                     {
                         if (frist_change_check == false)
-                        {
-                            System.Console.WriteLine(" Map 변화 생김!!! pre_blob_count = " + pre_blob_count + " blob_count = " + blob_info[0]);
-                            map_rect = new System.Drawing.Rectangle(220, 10, 200, 380);
-                            blob_image.Draw(map_rect, new Bgr(0, 0, 255), 2); //장애물 생김
-                        }
-
+                            Console.WriteLine(" Map 변화 생김!!! pre_blob_count = " + pre_blob_count + " blob_count = " + blob_info[0]);
+             
                         frist_change_check = false;
                         image_is_changed = true;
                     }
                     else
                     {
                         int moving_check_count = 0;
-                        for (int i = 0; i < globals.ImageWidth / globals.x_grid; i++)
-                            for (int j = 0; j < globals.ImageHeight / globals.y_grid; j++)
+
+                        for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
+                            for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
                                 if (Map_obstacle[j, i] != pre_Map_obstacle[j, i])
                                     moving_check_count++;
 
                         if (moving_check_count >= 3)
-                            System.Console.WriteLine("장애물 옮기는 중!");
+                           Console.WriteLine("장애물 옮기는 중!");
                     }
 
                     pre_blob_count = (int)blob_info[0];
                     pre_obstacle_count = obstacle_count;
                     obstacle_count = 0;
                     pre_Map_obstacle = (int[,])Map_obstacle.Clone(); //비교를 위해 이전 Map정보 설정
-                    Array.Clear(Map_obstacle, 0, globals.ImageHeight / globals.y_grid * globals.ImageWidth / globals.x_grid);
-                    pre_image = cannyRes.Clone(); //차영상을 위한 이전프레임 설정
-
-
+                    Array.Clear(Map_obstacle, 0, globals.rect_height / globals.y_grid * globals.rect_width / globals.x_grid);
+                    pre_image = ((Image<Gray, Byte>)blob_info[1]).Clone(); //차영상을 위한 이전프레임 설정
 
                     Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
                     {
                         building_List = obstacleDetection.get_building();                                         
                         mapViewModel.AddBuilding(building_List);
-
-                        
+                    
                         for (int i = 0; i < building_List.Count; i++)
                         {
                             Building remov_tmp = building_List[i];
@@ -291,11 +254,9 @@ namespace MVCC.View
                                 building_List.Remove(remov_tmp);
                                 mapViewModel.RemoveBuilding(remov_tmp.Id);
                             }
-                        }
-                        
+                        }                    
                         refreshView();                
-                    }));          
-             
+                    }));                    
                 }
             }
 
