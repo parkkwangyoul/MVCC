@@ -46,6 +46,7 @@ namespace MVCC.View
         // Globals Class
         private Globals globals = Globals.Instance;
 
+        #region 카메라, thread start
         /**
       * 카메라를 켬
       * */
@@ -67,7 +68,10 @@ namespace MVCC.View
             thread.DoWork += obstacleDection;
             thread.RunWorkerAsync();
         }
+        #endregion 카메라 and thread start
 
+        #region color 트레킹
+        //색상 트레킹
         private void colorTracking(object sender, DoWorkEventArgs e)
         {
             ColorTracking colorTracking = new ColorTracking(); //트래킹클래스선언
@@ -172,81 +176,60 @@ namespace MVCC.View
                 }
             }
         }
+        #endregion color 트레킹
 
+        #region obstacle 검출
+        //장애물 검출
         private void obstacleDection(object sender, DoWorkEventArgs e)
         {
             ObstacleDetection obstacleDetection = new ObstacleDetection();
 
-            Image<Gray, Byte> cannyRes; //트래킹돈 부분을 제외한 원본 이미지
-            Image<Bgr, Byte> gridImage; //장애물을 표시하는 이미지(배열에도 저장함)
-            Image<Gray, Byte> pre_image = null; //이전 이미지 저장
-            Image<Gray, Byte> dst_image = null; //차영상의 대한 결과 저장
-            Image<Bgr, Byte> blob_image;
-            Image<Gray, Byte> greyThreshImg = null;
-
             int[,] Map_obstacle = new int[globals.rect_height / globals.y_grid, globals.rect_width / globals.x_grid]; //Map의 장애물의 정보 
             int[,] pre_Map_obstacle = new int[globals.rect_height / globals.y_grid, globals.rect_width / globals.x_grid]; //이전 Map의 장애물의 정보 
-
-            int obstacle_count = 0, pre_obstacle_count = 0; //배열의 1표시를 세기 위해
-            //int blob_count = 0, 
-            int pre_blob_count = 0;
-
-            object[] blob_info = new object[3];
-
-            int frame_count = 0; //frame 카운터를 샘(차영상에서 지연을 주기 위해)
-            bool frist_change_check = true;
-
+            int blob_count = 0, pre_blob_count = 0; //blob count의 변화감지를 위해      
+            bool frist_change_check = false;
             List<Building> building_List = new List<Building>();
 
             while (true)
             {
                 if (obstacle_check == true) //frame의 추적 영상 처리가 끝나고 처리
                 {
-                    blob_image = obstacle_image.Clone();
+                    blob_count = obstacleDetection.detectBlob(obstacle_image, Map_obstacle, tracking_rect); //장애물 검출
 
-                    blob_info[1] = greyThreshImg;
-                    blob_info = obstacleDetection.detectBlob(blob_image, Map_obstacle, blob_info, tracking_rect);
-                    obstacleDetection.drow_bloded_Grid(blob_image, Map_obstacle, blob_info);
 
-                    for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
-                        for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
-                            if (Map_obstacle[j, i] == 1)
-                                obstacle_count++;
-
-                    if (pre_blob_count != (int)blob_info[0])
+                    if (frist_change_check == true) //제일 처음 변화감지는 건너 뜀
                     {
-                        if (frist_change_check == false)
-                            Console.WriteLine(" Map 변화 생김!!! pre_blob_count = " + pre_blob_count + " blob_count = " + blob_info[0]);
+                        if (pre_blob_count != blob_count) //이전 blob과 현재 blob의 카운터가 다르면 Map에 장애물 수 생김 
+                        {
+                            Console.WriteLine("Map의 장애물 수 변화 !!! pre_blob_count = " + pre_blob_count + " blob_count = " + blob_count);
+                            image_is_changed = true; //Map변화가 감지 됬으니 탬플릿 매칭 시작
+                        }
 
-                        frist_change_check = false;
-                        image_is_changed = true;
-                    }
-                    else
-                    {
+                        //장애물이 옮겨짐을 검사. 옮겨지고 있어도 차량은 정지 해야함
                         int moving_check_count = 0;
 
                         for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
                             for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
-                                if (Map_obstacle[j, i] != pre_Map_obstacle[j, i])
-                                    moving_check_count++;
+                                if (Map_obstacle[j, i] != 2 || pre_Map_obstacle[j, i] != 2)
+                                    if (Map_obstacle[j, i] != pre_Map_obstacle[j, i])
+                                        moving_check_count++;
 
-                        if (moving_check_count >= 53)
+                        if (moving_check_count >= 5) //배열이 5개 이상 차이날 경우 장애물이 옮겨지고 있음
                             Console.WriteLine("장애물 옮기는 중!");
                     }
+                    else
+                        frist_change_check = true;
 
-                    pre_blob_count = (int)blob_info[0];
-                    pre_obstacle_count = obstacle_count;
-                    obstacle_count = 0;
+                    pre_blob_count = blob_count; //현재 blob_count를 이전 blob_count에 저장
                     pre_Map_obstacle = (int[,])Map_obstacle.Clone(); //비교를 위해 이전 Map정보 설정
                     Array.Clear(Map_obstacle, 0, globals.rect_height / globals.y_grid * globals.rect_width / globals.x_grid);
-                    pre_image = ((Image<Gray, Byte>)blob_info[1]).Clone(); //차영상을 위한 이전프레임 설정
 
                     Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
                     {
                         building_List = obstacleDetection.get_building();
                         mapViewModel.AddBuilding(building_List);
 
-                        for (int i = 0; i < building_List.Count; i++)
+                        for (int i = 0; i < building_List.Count; i++) //DisapperCheck 가 false경우 추적에서 사라진거므로 list에 제거
                         {
                             Building remov_tmp = building_List[i];
                             if (remov_tmp.DisapperCheck == false)
@@ -265,7 +248,7 @@ namespace MVCC.View
 
                             if (building.Id.Equals(building.Id))
                             {
-                                foreach (Building temp_building in building_List)
+                                foreach (Building temp_building in building_List) //list의 정보를 다 갱신
                                 {
                                     if (temp_building.Id.Equals(building.Id))
                                     {
@@ -283,8 +266,34 @@ namespace MVCC.View
                     }));
                 }
             }
-
         }
+        #endregion obstacle 검출
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         public MapView()
         {
