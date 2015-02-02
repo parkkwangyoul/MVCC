@@ -120,7 +120,7 @@ namespace MVCC.ViewModel
 
         //private List<Point> mainTouchPoint = new List<Point>();
 
-        #region AddUGVCommand
+        #region UGVCommand
    
         /* *
          * UGV를 넣는 코드가 들어가면 된다. (영상인식으로 들어온 UGV)
@@ -132,8 +132,13 @@ namespace MVCC.ViewModel
             {
                 bool addUGVFlag = false;
 
-                foreach (UGV existUGV in MVCCItemList)
+                for(int i = 0 ; i < MVCCItemList.Count; i ++)
                 {
+                    if(!(MVCCItemList[i] is UGV))
+                        continue;
+
+                    UGV existUGV = MVCCItemList[i] as UGV;
+
                     if(existUGV.Id.Equals(ugv.Id)){
                         addUGVFlag = true;
                         break;
@@ -151,7 +156,50 @@ namespace MVCC.ViewModel
             }
         }
 
-        #endregion AddUGVCommand
+        public void RemoveUGV(string ugvId)
+        {
+            UGV removeUGV = new UGV();
+
+            for (int i = 0; i < MVCCItemList.Count; i++)
+            {
+                if (!(MVCCItemList[i] is UGV))
+                    continue;
+
+                UGV tempUGV = MVCCItemList[i] as UGV;
+
+                if (tempUGV.Id.Equals(ugvId))
+                {
+                    removeUGV = tempUGV;
+
+                    MVCCItemList.Remove(removeUGV);
+                    break;
+                }
+            }
+
+            // 없어진 UGV 상태 제거
+            foreach (State state in MVCCItemStateList)
+            {
+                if (state.ugv.Equals(removeUGV))
+                {
+                    MVCCItemStateList.Remove(state);
+                    break;
+                }
+            }
+
+            foreach (Group group in MVCCGroupList)
+            {
+                foreach (UGV tempUGV in group.MemberList)
+                {
+                    if (tempUGV.Equals(removeUGV))
+                    {
+                        MVCCGroupList.Remove(group);
+                        break;
+                    }
+                }
+            }
+        }
+
+        #endregion UGVCommand
 
         #region AddBuildingCommand
         public void AddBuilding(List<Building> buildingList)
@@ -184,46 +232,27 @@ namespace MVCC.ViewModel
             }
         }
 
-        #endregion AddBuildingCommand
-
-
-        public void RemoveUGV(string ugvId)
+        //chu 추가
+        public void RemoveBuilding(string ugvId)
         {
-            UGV removeUGV = new UGV();
+            Building removeUGV = new Building();
 
-            // MVCC List에서 없어진 UGV 삭제
-            foreach (UGV tempUGV in MVCCItemList)
+            for (int i = 0; i < MVCCItemList.Count; i++)
             {
-                if (tempUGV.Id.Equals(ugvId))
+                if (!(MVCCItemList[i] is Building))
+                    continue;
+
+                Building tempBuilding = MVCCItemList[i] as Building;
+
+                if (tempBuilding.Id.Equals(ugvId))
                 {
-                    removeUGV = tempUGV;
+                    removeUGV = tempBuilding;
 
                     MVCCItemList.Remove(removeUGV);
                     break;
                 }
             }
-
-            // 없어진 UGV 상태 제거
-            foreach (State state in MVCCItemStateList)
-            {
-                if (state.ugv.Equals(removeUGV))
-                {
-                    MVCCItemStateList.Remove(state);
-                    break;
-                }
-            }
-
-            foreach (Group group in MVCCGroupList)
-            {
-                foreach (UGV tempUGV in group.MemberList)
-                {
-                    if (tempUGV.Equals(removeUGV))
-                    {
-                        MVCCGroupList.Remove(group);
-                        break;
-                    }
-                }
-            }
         }
+        #endregion AddBuildingCommand
     }
 }

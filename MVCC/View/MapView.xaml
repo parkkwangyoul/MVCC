@@ -8,8 +8,8 @@
              xmlns:uc="clr-namespace:MVCC.CustomControl"
              xmlns:model="clr-namespace:MVCC.Model"
              mc:Ignorable="d" 
-             d:DesignHeight="500" d:DesignWidth="750" 
-             DataContext="{Binding Source={StaticResource Locator}, Path=MapViewModel}" >
+             d:DesignHeight="700" 
+             DataContext="{Binding Source={StaticResource Locator}, Path=MapViewModel}" Width="1100" >
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -81,7 +81,7 @@
                 <ItemsControl
                     ItemTemplateSelector="{StaticResource MyDataTemplateSeletor}"
                     ItemsSource="{Binding Source={StaticResource MVCCItemSrc}}"
-                    Margin="10" BorderBrush="#78C8FF" BorderThickness="1">
+                    Width="640" Height="480" Margin="112,10,90,-15" BorderBrush="#78C8FF" BorderThickness="1">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <Canvas MouseLeftButtonDown="SelectUGV" Background="Transparent">

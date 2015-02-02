@@ -13,20 +13,33 @@ namespace MVCC.Utill
 {
     class ObstacleDetection
     {
-        int sub_check;
-        int sub_count;
-        int blob_indenti_count;
+        int blob_indenti_count; //blob된 장애물의 고유번호를 위해 
+        int[] obstacle_color_count = new int[4]; //color의 count를 세기 위해 [0]purple [1] black [2] yellow [3]
+
         Globals globals = Globals.Instance; //globalsal 변수를 위해
-        List<Object> blob_indenti_list = new List<Object>();
-        List<Building> building_list = new List<Building>();
-
-        //윤곽선 검출, blob할 이미지 만들기
-        public Image<Gray, Byte> cannyEdge(Image<Bgr, Byte> img, Rectangle[] tracking_rect, Image<Bgr, Byte> blob_image)
+        List<Building> building_list = new List<Building>(); //blob된 장애물 정보 저장
+       
+        //영상에서 차량을 제외 한 후 blob을 검출하고 색상을 통해 장애물 판별
+        public int detectBlob(Image<Bgr, Byte> blob_image, int[,] Map_obstacle, Rectangle[] tracking_rect)
         {
-            Image<Gray, Byte> canny = img.Convert<Gray, Byte>().PyrDown().PyrUp();
-            CvInvoke.cvCanny(canny, canny, 65, 30, 3);
+            int blob_count = 0;
 
-            Image<Bgr, Byte> sub_ROI_image = canny.Convert<Bgr, Byte>();
+            Image<Bgr, Byte> _blobsImg = blob_image.Clone();
+            Image<Gray, Byte> graySoft = _blobsImg.Convert<Gray, Byte>().PyrDown().PyrUp();
+            Image<Gray, Byte> gray = graySoft.SmoothGaussian(3);
+            gray = gray.AddWeighted(graySoft, 1.3, -0.5, 0);
+            Image<Gray, Byte> bin = gray.ThresholdBinary(new Gray(90), new Gray(255));
+
+            Gray cannyThreshold = new Gray(149);
+            Gray cannyThresholdLinking = new Gray(149);
+            Gray circleAccumulatorThreshold = new Gray(1000);
+            Image<Gray, Byte> greyThreshImg = bin.Canny(cannyThreshold.Intensity, cannyThresholdLinking.Intensity);
+
+            CvBlobs resultingImgBlobs = new CvBlobs();
+            CvBlobDetector bDetect = new CvBlobDetector();
+            bDetect.Detect(greyThreshImg, resultingImgBlobs);
+
+            Image<Bgr, Byte> temp_img = greyThreshImg.Convert<Bgr, Byte>();
 
             //영상에서 차량 범위를 빼고 ROI만들기
             for (int i = 0; i < 4; i++)
@@ -40,131 +53,130 @@ namespace MVCC.Utill
                 if (pos_y < 0)
                     pos_y = 0;
 
-                if (pos_x + tracking_rect[i].Width > img.Width)
-                    pos_x = img.Width - tracking_rect[i].Width;
-                if (pos_y + tracking_rect[i].Height > img.Height)
-                    pos_y = img.Height - tracking_rect[i].Height;
+                if (pos_x + tracking_rect[i].Width > globals.rect_width)
+                    pos_x = globals.rect_width - tracking_rect[i].Width;
+                if (pos_y + tracking_rect[i].Height > globals.rect_height)
+                    pos_y = globals.rect_height - tracking_rect[i].Height;
 
                 for (int x = pos_x; x < pos_x + tracking_rect[i].Width; x++)
+                {
                     for (int y = pos_y; y < pos_y + tracking_rect[i].Height; y++)
                     {
-                        sub_ROI_image[y, x] = new Bgr(0, 0, 0);
-                        blob_image[y, x] = new Bgr(0, 0, 0); //canny 할떄
-                        blob_image[y, x] = new Bgr(255, 255, 255); //blob에서 하얀색으로 할때
+                        temp_img[y, x] = new Bgr(0, 0, 0);
+                        if (x % globals.x_grid == 0 && y % globals.y_grid == 0)
+                        {
+                            int t_x = x;
+                            int t_y = y;
+
+                            if (t_x != 0)
+                                t_x = x / globals.x_grid;
+
+                            if (t_y != 0)
+                                t_y = y / globals.y_grid;
+
+                            Map_obstacle[t_y, t_x] = 2; // 잡힌 차량은 Map에 2라고 표시
+                        }
                     }
+                }
             }
 
-            return sub_ROI_image.Convert<Gray, Byte>();
-        }
+            int[] temp_color_count = new int[4]; //[0]purple [1] black [2] yellow [3]
+            temp_color_count = (int[])obstacle_color_count.Clone();
+            int temp_blob_count = building_list.Count;
 
-        public object[] detectBlob(Image<Bgr, Byte> blob_image, int[,] Map_obstacle, object[] blob_info)
-        {
-            int blob_count = 0;
+            List<Building> tmp_list = new List<Building>(); //몇개 있는지 확인후에 제거 하면서 검사 하기 위해
+            for (int i = 0; i < building_list.Count; i++)
+                tmp_list.Add(new Building(building_list[i].Id, building_list[i].Width, building_list[i].Height, building_list[i].X, building_list[i].Y, building_list[i].BuildingColor, building_list[i].DisapperCheck));
 
-            Object[] blob_indenti = new Object[6]; // [0]indetifier [2]color [3] width [4] height [5] x [6] y  
-            
-            //라온제나 좁은 곳간 test 범위 지정
-            for (int x = 0; x < globals.ImageWidth; x++)
-                for (int y = 0; y < globals.ImageHeight; y++)
-                    if (!(x >= 221 && x < 220 + 200 && y >= 11 && y < 10 + 380))
-                        blob_image[y, x] = new Bgr(255, 255, 255);
-
-            Image<Bgr, Byte> _blobsImg = blob_image.Clone();
-            Image<Gray, Byte> greyImg = _blobsImg.Convert<Gray, Byte>().PyrDown().PyrUp();
-            //Image<Gray, Byte> greyThreshImg = greyImg.ThresholdBinaryInv(new Gray(87), new Gray(255));
-
-            blob_info[1] = greyImg.ThresholdBinaryInv(new Gray(87), new Gray(255));
-
-            CvBlobs resultingImgBlobs = new CvBlobs();
-            CvBlobDetector bDetect = new CvBlobDetector();
-            bDetect.Detect((Image<Gray, Byte>)blob_info[1], resultingImgBlobs);
-
-            Image<Bgr, Byte> temp_img = ((Image<Gray, Byte>)blob_info[1]).Convert<Bgr, Byte>();
-
+            //blob 검출
             foreach (CvBlob targetBlob in resultingImgBlobs.Values)
             {
-                if (targetBlob.Area > 100 && targetBlob.Area < 1500)
-                {           
-                    string temp;
-                    bool is_check = false;
-                    if ((temp = obstacle_colorCheck(blob_image, targetBlob.Area, targetBlob.BoundingBox.X, targetBlob.BoundingBox.Y, targetBlob.BoundingBox.Width, targetBlob.BoundingBox.Height)) == "null")
+                if (targetBlob.Area > 100 && targetBlob.Area < 700)
+                {
+                    string color_str;
+                    int color_index = -1;
+                    //검출된 색이 장애물인지
+                    if ((color_str = obstacle_colorCheck(blob_image, targetBlob.Area, targetBlob.BoundingBox.X, targetBlob.BoundingBox.Y, targetBlob.BoundingBox.Width, targetBlob.BoundingBox.Height)) == "null")
                     {
-                        for (int x = (int)targetBlob.BoundingBox.X; x < (int)targetBlob.BoundingBox.X + targetBlob.BoundingBox.Width; x++)
-                            for (int y = (int)targetBlob.BoundingBox.Y; y < (int)targetBlob.BoundingBox.Y + targetBlob.BoundingBox.Height; y++)
+                        for (int x = targetBlob.BoundingBox.X; x < targetBlob.BoundingBox.X + targetBlob.BoundingBox.Width; x++)
+                            for (int y = targetBlob.BoundingBox.Y; y < targetBlob.BoundingBox.Y + targetBlob.BoundingBox.Height; y++)
                                 temp_img[y, x] = new Bgr(0, 0, 0);
-                        continue;
+                        continue; //장애물색상이 아니면 검정으로 색칠
                     }
 
+                    for (int x = targetBlob.BoundingBox.X; x < targetBlob.BoundingBox.X + targetBlob.BoundingBox.Width; x++)
+                        for (int y = targetBlob.BoundingBox.Y; y < targetBlob.BoundingBox.Y + targetBlob.BoundingBox.Height; y++)
+                            temp_img[y, x] = new Bgr(255, 255, 255); //검출된 부분은 다 하얀색으로 색칠
 
-                    foreach (Building building in building_list)
+                    if (color_str == "purple")
+                        color_index = 0;
+                    else if (color_str == "black")
+                        color_index = 1;
+                    else if (color_str == "yellow")
+                        color_index = 2;
+
+                    if (temp_color_count[color_index] == 0) //검출된 색의 color_count가 0 일땐 list에 추가함
                     {
-                        if (targetBlob.BoundingBox.X - targetBlob.BoundingBox.Width / 2 < building.X 
-                            && building.X  < targetBlob.BoundingBox.X + targetBlob.BoundingBox.Width / 2
-                            && targetBlob.BoundingBox.Y - targetBlob.BoundingBox.Height / 2 < building.Y 
-                            && building.Y < targetBlob.BoundingBox.Y + targetBlob.BoundingBox.Height / 2
-                            && building.BuildingColor == temp)
+                        building_list.Add(new Building("B" + blob_indenti_count++, (double)targetBlob.BoundingBox.Width, (double)targetBlob.BoundingBox.Height, targetBlob.BoundingBox.X, targetBlob.BoundingBox.Y, color_str, true));
+                        obstacle_color_count[color_index]++; //obstacle_color_count 증가
+                    }
+                    else if (temp_color_count[color_index] != 0) //color_count가 0이 아니면 list에 있으니 정보 갱신만 함
+                    {
+                        for (int i = 0; i < tmp_list.Count; i++)
                         {
-                            building.X = targetBlob.BoundingBox.X;
-                            building.Y = targetBlob.BoundingBox.Y;
+                            Building remov_tmp = tmp_list[i];
 
-                            building.Width = targetBlob.BoundingBox.Width;
-                            building.Height = targetBlob.BoundingBox.Height;
-                            is_check = true;
-                            break;
+                            if (remov_tmp.BuildingColor == color_str)
+                            {
+                                tmp_list.Remove(remov_tmp); //tmp_list에서 하나 삭제
+                                temp_color_count[color_index]--; // temp_color_count 하나 감소 
+
+                                foreach (Building building in building_list) //building_list의 정보 갱신
+                                {
+                                    if (building.BuildingColor == color_str && building.DisapperCheck == false) //building.DisapperCheck가 false인 경우 정보 갱신
+                                    {
+                                        building.X = targetBlob.BoundingBox.X;
+                                        building.Y = targetBlob.BoundingBox.Y;
+                                        building.Width = targetBlob.BoundingBox.Width;
+                                        building.Height = targetBlob.BoundingBox.Height;
+                                        building.DisapperCheck = true; //갱신했으면 building.DisapperChecf를 true로 
+                                        break;
+                                    }
+                                }
+                                break;
+                            }
                         }
                     }
 
-                    if (is_check == true)
-                        continue;
-                    /*
-                    blob_indenti[0] = blob_indenti_count++;
-                    blob_indenti[1] = temp;            
-                    blob_indenti[2] = targetBlob.BoundingBox.Width;
-                    blob_indenti[3] = targetBlob.BoundingBox.Height;
-                    blob_indenti[5] = (int)targetBlob.BoundingBox.X;
-                    blob_indenti[6] = (int)targetBlob.BoundingBox.Y;           
-                    blob_indenti_list.Add(blob_indenti);
-                    */
-                    building_list.Add(new Building("B" + blob_indenti_count++, (double)targetBlob.BoundingBox.Width, (double)targetBlob.BoundingBox.Height, targetBlob.BoundingBox.X, targetBlob.BoundingBox.Y, temp));
-
-                    //Console.WriteLine("building List : " + building_list.Count);
-
-                   
-                    blob_image.Draw(targetBlob.BoundingBox, new Bgr(0, 255, 0), 1);
                     blob_count++;
                 }
-                else
-                //if(targetBlob.Area < 50)
+                else //범위를 벗어난 크기는 검정으로 색칠            
                 {
-                    for (int x = (int)targetBlob.BoundingBox.X; x < (int)targetBlob.BoundingBox.X + targetBlob.BoundingBox.Width; x++)
-                        for (int y = (int)targetBlob.BoundingBox.Y; y < (int)targetBlob.BoundingBox.Y + targetBlob.BoundingBox.Height; y++)
+                    for (int x = targetBlob.BoundingBox.X; x < targetBlob.BoundingBox.X + targetBlob.BoundingBox.Width; x++)
+                        for (int y = targetBlob.BoundingBox.Y; y < targetBlob.BoundingBox.Y + targetBlob.BoundingBox.Height; y++)
                             temp_img[y, x] = new Bgr(0, 0, 0);
                 }
             }
 
-            blob_info[1] = temp_img.Convert<Gray, Byte>();
-            blob_info[0] = blob_count;
-            blob_info[2] = blob_indenti_list;
+            drow_bloded_Grid(Map_obstacle, temp_img); //Map 배열에 장애물 표시
 
-            return blob_info;
+            return blob_count;
         }
 
-        public List<Building> get_building()
-        {
-            return building_list;
-        }
-
-        //보라 0 101 133 67 137 188
+        //감지된 blob들 중 장애물 색상 검색
         public string obstacle_colorCheck(Image<Bgr, Byte> image, int totalPicxel, int x, int y, int width, int height)
         {
-            if (obstacle_YccColorCheck(image, totalPicxel, x, y, width, height, 0, 101, 133, 67, 137, 188) == 1) //보라
+            if (obstacle_YccColorCheck(image, totalPicxel, x, y, width, height, 0, 95, 136, 255, 184, 173) == 1) //보라 8섹션
                 return "purple";
-            else if (obstacle_YccColorCheck(image, totalPicxel, x, y, width, height, 0, 133, 20, 255, 160, 97) == 1) //노랑
+            else if (obstacle_YccColorCheck(image, totalPicxel, x, y, width, height, 0, 122, 106, 65, 140, 141) == 1) //검정 8섹션
+                return "black";
+            else if (obstacle_YccColorCheck(image, totalPicxel, x, y, width, height, 0, 120, 13, 255, 168, 103) == 1) //노랑 8섹션
                 return "yellow";
             else
                 return "null";
         }
 
+        //장애물 색상이 맞는지 판별
         public int obstacle_YccColorCheck(Image<Bgr, Byte> iamge, int totalPicxel, int pos_x, int pos_y, int img_width, int img_height, int min1, int min2, int min3, int max1, int max2, int max3)
         {
             int pixCount = 0;
@@ -193,58 +205,25 @@ namespace MVCC.Utill
                         pixCount++;
                         if (totalPicxel / 10 <= pixCount) //일정 픽섹 이상시 색상배열 변경후 종료
                             return 1;
+
+                        if (x > pos_x / 5 + x && y > pos_y / 5 + y) //좌표의 1/5 넘으면 없는걸로
+                            return -1;
                     }
                 }
             }
 
-            System.Console.WriteLine("totalPicxel = " + totalPicxel + "pixCount = " + pixCount + " pos_x = " + pos_x + " pos_y = " + pos_y);
             return -1;
         }
 
-        //그리드 그림 (그냥 canny만 했을때)
-        public int drowGrid(Image<Gray, Byte> canny_img, Image<Bgr, Byte> img, int[,] Map_obstacle)
-        {
-            /*
-            //가로 줄 (y는 세로 간격)
-            for (int y = glo.y_grid; y < img.Height; y += glo.y_grid)
-            {
-                Point start = new Point(0, y);
-                Point end = new Point(img.Width - 1, y);
-                LineSegment2D line = new LineSegment2D(start, end);
-                img.Draw(line, new Bgr(0, 255, 0), 1);
-            }
-
-            //세로 줄 (x는 가로 간격)
-            for (int x = glo.x_grid; x < img.Width; x += glo.x_grid)
-            {
-                Point start = new Point(x, 0);
-                Point end = new Point(x, img.Height - 1);
-                LineSegment2D line = new LineSegment2D(start, end);
-                img.Draw(line, new Bgr(0, 255, 0), 1);
-            }
-            */
-
-            return obstacle_grid_fill(canny_img, img, Map_obstacle);
-
-        }
-
-        public void drow_bloded_Grid(Image<Bgr, Byte> img, int[,] Map_obstacle, object[] blob_info)
+        //장애물 정보를 Map에 표시
+        public void drow_bloded_Grid(int[,] Map_obstacle, Image<Bgr, Byte> count_img)
         {
             bool grid_check = false;
-            Image<Bgr, Byte> count_img = ((Image<Gray, Byte>)blob_info[1]).Convert<Bgr, Byte>();
-
-
-            for (int x = 0; x < img.Width; x++)
+          
+            for (int x = 0; x < globals.rect_width; x++)
             {
-                for (int y = 0; y < img.Height; y++)
+                for (int y = 0; y < globals.rect_height; y++)
                 {
-
-                    /*
-                              for (int x = 221; x < 220 + 200; x++)
-                              {
-                                  for (int y = 11; y < 10 + 380; y++)
-                                  {
-                                 */
                     if (count_img[y, x].Equals(new Bgr(255, 255, 255)))
                     {
                         for (int pos_x = x - globals.x_grid; pos_x < x; pos_x++)
@@ -266,9 +245,7 @@ namespace MVCC.Utill
                                     else
                                         t_y = pos_y / globals.y_grid;
 
-                                    Map_obstacle[t_y, t_x] = 1;
-                                    Rectangle rect = new Rectangle(pos_x, pos_y, globals.x_grid, globals.y_grid);
-                                    img.Draw(rect, new Bgr(0, 0, 255), 1);
+                                    Map_obstacle[t_y, t_x] = 1; // 장애물은 Map에 1로 표시
                                     grid_check = true;
 
                                     y = pos_y + globals.y_grid;
@@ -285,103 +262,35 @@ namespace MVCC.Utill
                     }
                 }
             }
-
-
         }
 
-        //장애물 있는곳 그리드 색칠하기
-        public int obstacle_grid_fill(Image<Gray, Byte> canny_img, Image<Bgr, Byte> img, int[,] Map_obstacle)
+        //building_list 정보 넘겨주고 building_list 정보 갱신함
+        public List<Building> get_building()
         {
-            Image<Bgr, Byte> colorCount = canny_img.Convert<Bgr, Byte>(); //픽셀수 세기 위해
-            int count = 0;
-            bool grid_check = false;
+            List<Building> tmp_list = new List<Building>(); //building_list 넘겨주기 위한 tmp_list 만듬
 
-            for (int x = 0; x < canny_img.Width; x++)
+            for (int i = 0; i < building_list.Count; i++) //list 복사
+                tmp_list.Add(new Building(building_list[i].Id, building_list[i].Width, building_list[i].Height, building_list[i].X, building_list[i].Y, building_list[i].BuildingColor, building_list[i].DisapperCheck));
+
+            for (int i = 0; i < building_list.Count; i++)
             {
-                for (int y = 0; y < canny_img.Height; y++)
+                Building remov_tmp = building_list[i];
+
+                if (remov_tmp.DisapperCheck == false) //false인건 색이 사라졌단 소리 이므로 building_list에 제거 후 obstacle_color_count를 감소
                 {
-                    if (!colorCount[y, x].Equals(new Bgr(0, 0, 0)))
-                    {
-                        for (int pos_x = x - globals.x_grid; pos_x < x; pos_x++)
-                        {
-                            for (int pos_y = y - globals.y_grid; pos_y < y; pos_y++)
-                            {
-                                if (pos_x % globals.x_grid == 0 && pos_y % globals.y_grid == 0)
-                                {
-                                    int t_x = pos_x;
-                                    int t_y = pos_y;
-
-                                    if (pos_x < 0)
-                                        t_x = 0;
-                                    else
-                                        t_x = pos_x / globals.x_grid;
-
-                                    if (pos_y < 0)
-                                        t_y = 0;
-                                    else
-                                        t_y = pos_y / globals.y_grid;
-
-                                    Map_obstacle[t_y, t_x] = 1;
-                                    Rectangle rect = new Rectangle(pos_x, pos_y, globals.x_grid, globals.y_grid);
-                                    img.Draw(rect, new Bgr(0, 0, 255), 1);
-                                    grid_check = true;
-
-                                    y = pos_y + globals.y_grid;
-                                }
-                                if (grid_check == true)
-                                    break;
-                            }
-                            if (grid_check == true)
-                            {
-                                grid_check = false;
-                                break;
-                            }
-                        }
-                    }
+                    building_list.Remove(remov_tmp);
+                    if (remov_tmp.BuildingColor == "purple")
+                        obstacle_color_count[0]--;
+                    else if (remov_tmp.BuildingColor == "black")
+                        obstacle_color_count[1]--;
+                    else if (remov_tmp.BuildingColor == "yellow")
+                        obstacle_color_count[2]--;
                 }
-            }
-            return count;
-        }
-
-
-        //영상 변화를 확인하는 함수
-        public Image<Gray, Byte> sub_image(Image<Gray, Byte> cannyRes, Image<Gray, Byte> pre_image, Image<Gray, Byte> dst_image)
-        {
-            Image<Bgr, Byte> pix_img;
-            int pix_count = 0;
-
-            dst_image = cannyRes - pre_image;
-            pix_img = dst_image.Convert<Bgr, Byte>();
-
-            for (int x = 0; x < cannyRes.Width; x++)
-            {
-                for (int y = 0; y < cannyRes.Height; y++)
-                {
-                    if (!pix_img[y, x].Equals(new Bgr(0, 0, 0)))
-                        pix_count++;
-                }
-            }
-            sub_check++;
-
-            if (sub_check > 1)
-            {
-                if (sub_count + 200 <= pix_count)
-                    System.Console.WriteLine(" 장애물생김!!! pix_count = " + pix_count + " sub_count = " + sub_count);
-                else if (sub_count - 200 >= pix_count)
-                    System.Console.WriteLine(" 장애물없어짐!!! pix_count = " + pix_count + " sub_count = " + sub_count + "\n");
-
-                if (sub_check >= 1000)
-                    sub_check = 1;
+                else
+                    remov_tmp.DisapperCheck = false; //true였다면 false로 바꿔줌 
             }
 
-            sub_count = pix_count;
-
-            //System.Windows.MessageBox.Show("pix_count = " + pix_count);
-            //System.Console.WriteLine("pix_count = " + pix_count);
-
-            return dst_image;
-
+            return tmp_list;
         }
     }
-
 }

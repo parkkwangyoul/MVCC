@@ -115,6 +115,29 @@ namespace MVCC
             }
         }
 
+        //경계 사각형 너비
+        private int _rect_width = 560;
+
+        public int rect_width
+        {
+            get { return _rect_width; }
+            set
+            {
+                _rect_width = value;
+            }
+        }
+
+        //경계 사각형 높이
+        private int _rect_height = 360;
+        public int rect_height
+        {
+            get { return _rect_height; }
+            set
+            {
+                _rect_height = value;
+            }
+        }
+
         private Dictionary<string, UGV> _UGVSettingDictionary;
         public Dictionary<string, UGV> UGVSettingDictionary
         {
