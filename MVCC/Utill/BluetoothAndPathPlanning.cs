@@ -41,6 +41,16 @@ namespace MVCC.Utill
         public static char[,] unit_10th = new char[24, 40];
         public static char[,] unit_1st = new char[24, 40];
 
+        public static int current_perspective = 0;
+        public static int next_perspective = 0;
+
+        public static int[] follow_command = new int[24 + 40];
+        public static int[] movement = new int[24 + 40];
+        public static int path_count = 0;
+        public static int path_num = 0;
+
+        public static int movement_count = 0;
+
         public class coordinate
         {
 
@@ -584,7 +594,375 @@ namespace MVCC.Utill
 	        }
         }
 
-        
+         // Movement Command
+        public static void follow_path(int start_point_x, int start_point_y, int dest_point_x, int dest_point_y)
+        {
+
+            int relative_position_x = dest_point_x - start_point_x;
+            int relative_position_y = dest_point_y - start_point_y;
+
+            int current_weight = result_grid[start_point_y,start_point_x];
+
+            //grid[start_point_y,start_point_x] = 5;
+
+            if ((relative_position_x == 0) && (relative_position_y == 0))
+            {
+
+                //grid[dest_point_y,dest_point_x] = 5;
+
+                return;
+            }
+            // Case 1 : 우측 아래 도착점에서 좌측 위 시작점으로 거슬러 가는 경우
+            else if ((relative_position_x <= 0) && (relative_position_y <= 0))
+            {
+                try
+                {
+                    ////////////////////////////////////////////////////////////////////////////////
+                    if ((result_grid[start_point_y - 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x - 1) >= 0))
+                    {
+
+                        follow_command[current_weight] = 3; //7 - 4;
+                        path_count++;
+                        follow_path(start_point_x - 1, start_point_y - 1, dest_point_x, dest_point_y);
+                    }
+                    else if ((result_grid[start_point_y, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0))
+                    {
+
+                        follow_command[current_weight] = 2; //6 - 4;
+                        path_count++;
+                        follow_path(start_point_x - 1, start_point_y, dest_point_x, dest_point_y);
+                    }
+                    else if ((result_grid[start_point_y - 1, start_point_x] == (current_weight - 1)) && ((start_point_y - 1) >= 0))
+                    {
+
+                        follow_command[current_weight] = 4; //0 + 4;
+                        path_count++;
+                        follow_path(start_point_x, start_point_y - 1, dest_point_x, dest_point_y);
+                    }
+
+                    ////////////////////////////////////////////////////////////////////////////////
+                    else if ((result_grid[start_point_y - 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x + 1) <= (column - 1)))
+                    {
+
+                        follow_command[current_weight] = 5; //1 + 4;
+                        path_count++;
+                        follow_path(start_point_x + 1, start_point_y - 1, dest_point_x, dest_point_y);
+                    }
+                    else if ((result_grid[start_point_y, start_point_x + 1] == (current_weight - 1)) && ((start_point_x + 1) <= (column - 1)))
+                    {
+
+                        follow_command[current_weight] = 6; //2 + 4;
+                        path_count++;
+                        follow_path(start_point_x + 1, start_point_y, dest_point_x, dest_point_y);
+                    }
+                    else if ((result_grid[start_point_y + 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)) && ((start_point_x + 1) <= (column - 1)))
+                    {
+
+                        follow_command[current_weight] = 7; //3 + 4;
+                        path_count++;
+                        follow_path(start_point_x + 1, start_point_y + 1, dest_point_x, dest_point_y);
+                    }
+                    else if ((result_grid[start_point_y + 1, start_point_x] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)))
+                    {
+
+                        follow_command[current_weight] = 0; //4 - 4;
+                        path_count++;
+                        follow_path(start_point_x, start_point_y + 1, dest_point_x, dest_point_y);
+                    }
+                    else if ((result_grid[start_point_y + 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0) && ((start_point_y + 1) <= (row - 1)))
+                    {
+
+                        follow_command[current_weight] = 1; //5 - 4;
+                        path_count++;
+                        follow_path(start_point_x - 1, start_point_y + 1, dest_point_x, dest_point_y);
+                    }
+                }
+                catch(IndexOutOfRangeException) { }
+            }
+            // Case 2 : 좌측 위 도착점에서 우측 아래 시작점으로 거슬러 가는 경우
+            else if ((relative_position_x >= 0) && (relative_position_y >= 0))
+            {
+                try
+                {
+                    ////////////////////////////////////////////////////////////////////////////////
+                    if ((result_grid[start_point_y + 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)) && ((start_point_x + 1) <= (column - 1)))
+                    {
+
+                        follow_command[current_weight] = 7; //3 + 4;
+                        path_count++;
+                        follow_path(start_point_x + 1, start_point_y + 1, dest_point_x, dest_point_y);
+                    }
+                    else if ((result_grid[start_point_y, start_point_x + 1] == (current_weight - 1)) && ((start_point_x + 1) <= (column - 1)))
+                    {
+
+                        follow_command[current_weight] = 6; //2 + 4;
+                        path_count++;
+                        follow_path(start_point_x + 1, start_point_y, dest_point_x, dest_point_y);
+                    }
+                    else if ((result_grid[start_point_y + 1, start_point_x] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)))
+                    {
+
+                        follow_command[current_weight] = 0; //4 - 4;
+                        path_count++;
+                        follow_path(start_point_x, start_point_y + 1, dest_point_x, dest_point_y);
+                    }
+
+                    ////////////////////////////////////////////////////////////////////////////////
+                    else if ((result_grid[start_point_y + 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0) && ((start_point_y + 1) <= (row - 1)))
+                    {
+
+                        follow_command[current_weight] = 1; // 5 - 4;
+                        path_count++;
+                        follow_path(start_point_x - 1, start_point_y + 1, dest_point_x, dest_point_y);
+                    }
+                    else if ((result_grid[start_point_y, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0))
+                    {
+
+                        follow_command[current_weight] = 2; //6 - 4;
+                        path_count++;
+                        follow_path(start_point_x - 1, start_point_y, dest_point_x, dest_point_y);
+                    }
+                    else if ((result_grid[start_point_y - 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x - 1) >= 0))
+                    {
+
+                        follow_command[current_weight] = 3; //7 - 4;
+                        path_count++;
+                        follow_path(start_point_x - 1, start_point_y - 1, dest_point_x, dest_point_y);
+                    }
+                    else if ((result_grid[start_point_y - 1, start_point_x] == (current_weight - 1)) && ((start_point_y - 1) >= 0))
+                    {
+
+                        follow_command[current_weight] = 4; //0 + 4;
+                        path_count++;
+                        follow_path(start_point_x, start_point_y - 1, dest_point_x, dest_point_y);
+                    }
+                    else if ((result_grid[start_point_y - 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x + 1) <= (column - 1)))
+                    {
+
+                        follow_command[current_weight] = 5; //1 + 4;
+                        path_count++;
+                        follow_path(start_point_x + 1, start_point_y - 1, dest_point_x, dest_point_y);
+                    }
+                }
+                catch { }
+            }
+            // Case 3 : 좌측 아래 도착점에서 우측 위 시작점으로 거슬러 가는 경우
+            else if ((relative_position_x <= 0) && (relative_position_y >= 0))
+            {
+                try
+                {
+                    ////////////////////////////////////////////////////////////////////////////////
+                    if ((result_grid[start_point_y - 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x + 1) <= (column - 1)))
+                    {
+
+                        follow_command[current_weight] = 5; //1 + 4;
+                        path_count++;
+                        follow_path(start_point_x + 1, start_point_y - 1, dest_point_x, dest_point_y);
+                    }
+                    else if ((result_grid[start_point_y, start_point_x + 1] == (current_weight - 1)) && ((start_point_x + 1) <= (column - 1)))
+                    {
+
+                        follow_command[current_weight] = 6; //2 + 4;
+                        path_count++;
+                        follow_path(start_point_x + 1, start_point_y, dest_point_x, dest_point_y);
+                    }
+                    else if ((result_grid[start_point_y - 1, start_point_x] == (current_weight - 1)) && ((start_point_y - 1) >= 0))
+                    {
+
+                        follow_command[current_weight] = 4; //0 + 4;
+                        path_count++;
+                        follow_path(start_point_x, start_point_y - 1, dest_point_x, dest_point_y);
+                    }
+
+                    ////////////////////////////////////////////////////////////////////////////////
+                    else if ((result_grid[start_point_y + 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)) && ((start_point_x + 1) <= (column - 1)))
+                    {
+
+                        follow_command[current_weight] = 7; //3 + 4;
+                        path_count++;
+                        follow_path(start_point_x + 1, start_point_y + 1, dest_point_x, dest_point_y);
+                    }
+                    else if ((result_grid[start_point_y + 1, start_point_x] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)))
+                    {
+
+                        follow_command[current_weight] = 0; //4 - 4;
+                        path_count++;
+                        follow_path(start_point_x, start_point_y + 1, dest_point_x, dest_point_y);
+                    }
+                    else if ((result_grid[start_point_y + 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0) && ((start_point_y + 1) <= (row - 1)))
+                    {
+
+                        follow_command[current_weight] = 1; //5 - 4;
+                        path_count++;
+                        follow_path(start_point_x - 1, start_point_y + 1, dest_point_x, dest_point_y);
+                    }
+                    else if ((result_grid[start_point_y, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0))
+                    {
+
+                        follow_command[current_weight] = 2; //6 - 4;
+                        path_count++;
+                        follow_path(start_point_x - 1, start_point_y, dest_point_x, dest_point_y);
+                    }
+                    else if ((result_grid[start_point_y - 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x - 1) >= 0))
+                    {
+
+                        follow_command[current_weight] = 3; //7 - 4;
+                        path_count++;
+                        follow_path(start_point_x - 1, start_point_y - 1, dest_point_x, dest_point_y);
+                    }
+                }
+                catch { }
+            }
+            // Case 4 : 우측 위 도착점에서 좌측 아래 시작점으로 거슬러 가는 경우
+            else if ((relative_position_x >= 0) && (relative_position_y <= 0))
+            {
+                try
+                {
+                    ////////////////////////////////////////////////////////////////////////////////
+                    if ((result_grid[start_point_y + 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0) && ((start_point_y + 1) <= (row - 1)))
+                    {
+
+                        follow_command[current_weight] = 1; //5 - 4;
+                        path_count++;
+                        follow_path(start_point_x - 1, start_point_y + 1, dest_point_x, dest_point_y);
+                    }
+                    else if ((result_grid[start_point_y, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0))
+                    {
+
+                        follow_command[current_weight] = 2; //6 - 4;
+                        path_count++;
+                        follow_path(start_point_x - 1, start_point_y, dest_point_x, dest_point_y);
+                    }
+                    else if ((result_grid[start_point_y + 1, start_point_x] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)))
+                    {
+
+                        follow_command[current_weight] = 0; //4 - 4;
+                        path_count++;
+                        follow_path(start_point_x, start_point_y + 1, dest_point_x, dest_point_y);
+                    }
+
+                    ////////////////////////////////////////////////////////////////////////////////
+                    else if ((result_grid[start_point_y - 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x - 1) >= 0))
+                    {
+
+                        follow_command[current_weight] = 3; //7 - 4;
+                        path_count++;
+                        follow_path(start_point_x - 1, start_point_y - 1, dest_point_x, dest_point_y);
+                    }
+                    else if ((result_grid[start_point_y - 1, start_point_x] == (current_weight - 1)) && ((start_point_y - 1) >= 0))
+                    {
+
+                        follow_command[current_weight] = 4; //0 + 4;
+                        path_count++;
+                        follow_path(start_point_x, start_point_y - 1, dest_point_x, dest_point_y);
+                    }
+                    else if ((result_grid[start_point_y - 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x + 1) <= (column - 1)))
+                    {
+
+                        follow_command[current_weight] = 5; //1 + 4;
+                        path_count++;
+                        follow_path(start_point_x + 1, start_point_y - 1, dest_point_x, dest_point_y);
+                    }
+                    else if ((result_grid[start_point_y, start_point_x + 1] == (current_weight - 1)) && ((start_point_x + 1) <= (column - 1)))
+                    {
+
+                        follow_command[current_weight] = 6; //2 + 4;
+                        path_count++;
+                        follow_path(start_point_x + 1, start_point_y, dest_point_x, dest_point_y);
+                    }
+                    else if ((result_grid[start_point_y + 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)) && ((start_point_x + 1) <= (column - 1)))
+                    {
+
+                        follow_command[current_weight] = 7; //3 + 4;
+                        path_count++;
+                        follow_path(start_point_x + 1, start_point_y + 1, dest_point_x, dest_point_y);
+                    }
+                }
+                catch { }
+            }
+        }
+
+        public static int path_following(int current_direction, int next_direction)
+        {
+
+            int degree = 0;
+
+            degree = next_direction - current_direction;
+
+            return degree;
+        }
+
+        public static void Movement_Command()
+        {
+
+            if (path_following(follow_command[path_num], follow_command[path_num + 1]) == 0)
+            {
+
+                movement[path_num] = 0;
+                path_num++;
+
+            }
+            else if ((path_following(follow_command[path_num], follow_command[path_num + 1]) == 1))
+            { // || (path_following(follow_command[path_num], follow_command[path_num+1]) == -1) ){
+
+                movement[path_num] = 1;
+                path_num++;
+
+            }
+            else if ((path_following(follow_command[path_num], follow_command[path_num + 1]) == 2) || (path_following(follow_command[path_num], follow_command[path_num + 1]) == -6))
+            {
+
+                movement[path_num] = 2;
+                path_num++;
+
+            }
+            else if ((path_following(follow_command[path_num], follow_command[path_num + 1]) == 3) || (path_following(follow_command[path_num], follow_command[path_num + 1]) == -5))
+            {
+
+                movement[path_num] = 3;
+                path_num++;
+
+            }
+            else if ((path_following(follow_command[path_num], follow_command[path_num + 1]) == 4) || (path_following(follow_command[path_num], follow_command[path_num + 1]) == -4))
+            {
+
+                movement[path_num] = 4;
+                path_num++;
+
+            }
+            else if ((path_following(follow_command[path_num], follow_command[path_num + 1]) == 5) || (path_following(follow_command[path_num], follow_command[path_num + 1]) == -3))
+            {
+
+                movement[path_num] = 5;
+                path_num++;
+
+            }
+            else if ((path_following(follow_command[path_num], follow_command[path_num + 1]) == 6) || (path_following(follow_command[path_num], follow_command[path_num + 1]) == -2))
+            {
+
+                movement[path_num] = 6;
+                path_num++;
+
+            }
+
+            else if ((path_following(follow_command[path_num], follow_command[path_num + 1]) == 7) || (path_following(follow_command[path_num], follow_command[path_num + 1]) == -1))
+            {
+
+                movement[path_num] = 7;
+                path_num++;
+
+            }
+
+            else if ((path_following(follow_command[path_num], follow_command[path_num + 1]) == -7) && (follow_command[path_num] == 7) && (follow_command[path_num + 1] == 0))
+            {
+
+                movement[path_num] = 8;
+                path_num++;
+
+            }
+
+            return;
+        }
 
         #endregion
 
@@ -611,7 +989,6 @@ namespace MVCC.Utill
             
 
             serialport.PortName = settingUGV.ComPort;
-
             serialport.BaudRate = settingUGV.Baudrate;
             serialport.DataBits = settingUGV.Databit;
             serialport.StopBits = getStopBit(settingUGV.Stopbit);
@@ -619,6 +996,11 @@ namespace MVCC.Utill
             serialport.WriteTimeout = 200;
 
             serialport.Open();
+
+            if (serialport.IsOpen)
+            {
+                ugv.IsBluetoothConnected = true;
+            }
 
             while (serialport.IsOpen)
             {
@@ -841,33 +1223,31 @@ namespace MVCC.Utill
 
                         #endregion
 
-                        #region Weight_Calculation
-                        for (i = 0; i < row; i++)
-                        {
-                            for (j = 0; j < column; j++)
-                            {
+                        #region Path_Following
 
-                                if (result_grid[i, j] < 10)
-                                {
-                                    unit_100th[i, j] = '0';
-                                    unit_10th[i, j] = '0';
-                                    unit_1st[i, j] = result_grid[i, j].ToString()[0];
-                                }
-                                else if (result_grid[i, j] < 100)
-                                {
-                                    unit_100th[i, j] = '0';
-                                    unit_10th[i, j] = result_grid[i, j].ToString()[0];
-                                    unit_1st[i, j] = result_grid[i, j].ToString()[1];
-                                }
-                                else if (result_grid[i, j] < 1000)
-                                {
-                                    unit_100th[i, j] = result_grid[i, j].ToString()[0];
-                                    unit_10th[i, j] = result_grid[i, j].ToString()[1];
-                                    unit_1st[i, j] = result_grid[i, j].ToString()[2];
-                                }
-                                //Console.WriteLine("{0} {1} : {2} {3} {4}", i, j, unit_100th[i, j], unit_10th[i, j], unit_1st[i, j]);
-                            }
+                        path_num = 0;
+                        path_count = 0;
+
+                        follow_path(dest_x, dest_y, start_x, start_y);
+                        follow_command[0] = current_perspective;
+
+                        for (i = 0; i < path_count; i++)
+                        {
+                            Movement_Command();
                         }
+
+                        for (i = 0; i < path_count; i++)
+                        {
+                            Console.Write("{0}", follow_command[i]);
+                        }
+                        Console.WriteLine("");
+
+                        for (i = 0; i < path_count; i++)
+                        {
+                            Console.Write("{0}", movement[i].ToString());
+                        }
+                        Console.WriteLine("");
+
                         #endregion
 
                         write_data = "g";
@@ -886,28 +1266,13 @@ namespace MVCC.Utill
                 {
                     try
                     {
-                        #region Transmit_Weight_Grid
-                        for (i = 0; i < row; i++)
+                        #region Transmit_Movement_Command
+                        for (i = 0; i < path_count; i++)
                         {
-                            for (j = 0; j < column; j++)
-                            {
-                                serialport.WriteLine(unit_100th[i, j].ToString());
-                            }
+                            serialport.WriteLine((movement[i]).ToString());
                         }
-                        for (i = 0; i < row; i++)
-                        {
-                            for (j = 0; j < column; j++)
-                            {
-                                serialport.WriteLine(unit_10th[i, j].ToString());
-                            }
-                        }
-                        for (i = 0; i < row; i++)
-                        {
-                            for (j = 0; j < column; j++)
-                            {
-                                serialport.WriteLine(unit_1st[i, j].ToString());
-                            }
-                        }
+                        serialport.WriteLine("e");
+
                         Console.WriteLine("TX Complete");
                         #endregion
 
@@ -923,6 +1288,17 @@ namespace MVCC.Utill
                         Console.WriteLine(serialport.ReadExisting());
                     }
                 }
+                else if(write_data == "i"){
+
+                    write_data = "q";
+                }
+
+                else if (write_data == "q")
+                {
+                    Console.WriteLine("Serial Communication Terminated");
+                    serialport.Close();
+                }
+                Console.Out.Flush();
             }
         }
 
