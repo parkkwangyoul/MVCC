@@ -13,6 +13,7 @@
         AllowsTransparency="true" ResizeMode="CanResizeWithGrip" 
         BorderThickness="1" BorderBrush="#FF78C8FF"
         WindowStyle="None" WindowStartupLocation="CenterScreen"
+        Icon="/Resource/MVCC_WorkLine_Icon.png"
         DataContext="{Binding Main, Source={StaticResource Locator}}">
     <Window.Resources>
         <ResourceDictionary>
