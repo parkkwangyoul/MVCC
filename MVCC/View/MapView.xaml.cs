@@ -46,6 +46,8 @@ namespace MVCC.View
         // Globals Class
         private Globals globals = Globals.Instance;
 
+        private BluetoothAndPathPlanning bluetoothAndPathPlanning;
+
         #region 카메라, thread start
         /**
       * 카메라를 켬
@@ -270,31 +272,6 @@ namespace MVCC.View
         #endregion obstacle 검출
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         public MapView()
         {
             InitializeComponent();
@@ -306,6 +283,58 @@ namespace MVCC.View
             (FindResource("UGVStateSrc") as CollectionViewSource).Source = mapViewModel.MVCCItemStateList;
 
             (FindResource("UGVGroupSrc") as CollectionViewSource).Source = mapViewModel.MVCCGroupList;
+
+            bluetoothAndPathPlanning = new BluetoothAndPathPlanning();
+        }
+
+        // UGV에게 이동 명령을 내림
+        private void MoveUGV(object sender, MouseButtonEventArgs e)
+        {
+            // 개인용
+            UGV individualUGV = null;
+
+            // 그룹용
+            List<UGV> GroupList = new List<UGV>();
+            string groupName = "";
+
+            //모드 검사용
+            string mode = "N";
+
+            for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
+            {
+                if (!(mapViewModel.MVCCItemList[i] is UGV))
+                    continue;
+
+                UGV tempUGV = mapViewModel.MVCCItemList[i] as UGV;
+
+                // 개인이 선택된 것인지 검사
+                if (tempUGV.IsClicked)
+                {
+                    individualUGV = tempUGV;
+
+                    mode = "I";
+
+                    break;
+                }
+                else if (tempUGV.IsGroupClicked)
+                {
+                    if (groupName == null || groupName.Equals(tempUGV.GroupName))
+                    {
+                        GroupList.Add(tempUGV);
+                    }
+
+                    mode = "G";
+                }
+            }
+
+            // 개인
+            if (mode.Equals("I"))
+            {               
+
+                bluetoothAndPathPlanning.connect(individualUGV);
+            }
+
+
         }
 
         // UGV를 선택하는 모드

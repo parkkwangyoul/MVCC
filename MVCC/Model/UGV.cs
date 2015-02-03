@@ -116,14 +116,14 @@ namespace MVCC.Model
          * Bluetooth 관련 속성들 
          **/
 
-        private string comPort;
+        private string comPort = "COM1";
         public string ComPort
         {
             get { return comPort; }
             set { comPort = value; }
         }
 
-        private int baudrate;
+        private int baudrate = 9600;
         public int Baudrate
         {
             get { return baudrate; }
@@ -133,7 +133,7 @@ namespace MVCC.Model
             }
         }
 
-        private int databit;
+        private int databit = 8;
         public int Databit
         {
             get { return databit; }
@@ -143,13 +143,13 @@ namespace MVCC.Model
             }
         }
 
-        private string portName;
-        public string PortName
+        private int stopbit = 1;
+        public int Stopbit
         {
-            get { return portName; }
+            get { return stopbit; }
             set
             {
-                portName = value;
+                stopbit = value;
             }
         }
 

@@ -20,9 +20,12 @@ namespace MVCC.View
     /// </summary>
     public partial class SettingView : UserControl
     {
+        Globals globals = Globals.Instance;        
+
         public SettingView()
         {
-            InitializeComponent();              
+            InitializeComponent();
         }
+
     }
 }

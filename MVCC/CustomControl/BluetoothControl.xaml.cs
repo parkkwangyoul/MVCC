@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using MVCC.Model;
+
 namespace MVCC.CustomControl
 {
     /// <summary>
@@ -20,6 +22,7 @@ namespace MVCC.CustomControl
     /// </summary>
     public partial class BluetoothControl : UserControl
     {
+        Globals globals = Globals.Instance;
 
         List<string> ComportList = new List<string>();
 
@@ -32,7 +35,7 @@ namespace MVCC.CustomControl
         public BluetoothControl()
         {
             InitializeComponent();
-
+            
             init();
 
             COMportComboBox.ItemsSource = ComportList;
@@ -41,7 +44,61 @@ namespace MVCC.CustomControl
 
             DataBitComboBox.ItemsSource = DataBitList;
 
-            StopBitComboBox.ItemsSource = StopBitList;
+            StopBitComboBox.ItemsSource = StopBitList;         
+        }
+
+        private void setCOMPort(object sender, SelectionChangedEventArgs e)
+        {
+            if (globals.UGVSettingDictionary.FirstOrDefault(x => x.Key.Equals(SettingId.Text)).Value == null)
+            {
+                globals.UGVSettingDictionary.Add(SettingId.Text, new UGV(SettingId.Text));
+            }
+
+            globals.UGVSettingDictionary[SettingId.Text].ComPort = COMportComboBox.SelectedItem.ToString();
+
+            //MessageBox.Show(globals.UGVSettingDictionary[SettingId.Text].Id + " : " + globals.UGVSettingDictionary[SettingId.Text].ComPort);
+        }
+        private void setBaudrate(object sender, SelectionChangedEventArgs e)
+        {
+            if (globals.UGVSettingDictionary.FirstOrDefault(x => x.Key.Equals(SettingId.Text)).Value == null)
+            {
+                globals.UGVSettingDictionary.Add(SettingId.Text, new UGV(SettingId.Text));
+            }
+
+            int value;
+            int.TryParse(BaudrateComboBox.SelectedItem.ToString(), out value);
+
+            globals.UGVSettingDictionary[SettingId.Text].Baudrate = value;
+
+            //MessageBox.Show(globals.UGVSettingDictionary[SettingId.Text].Id + " : " + globals.UGVSettingDictionary[SettingId.Text].ComPort);
+        }
+        private void setDatabit(object sender, SelectionChangedEventArgs e)
+        {
+            if (globals.UGVSettingDictionary.FirstOrDefault(x => x.Key.Equals(SettingId.Text)).Value == null)
+            {
+                globals.UGVSettingDictionary.Add(SettingId.Text, new UGV(SettingId.Text));
+            }
+
+            int value;
+            int.TryParse(DataBitComboBox.SelectedItem.ToString(), out value);
+
+            globals.UGVSettingDictionary[SettingId.Text].Databit = value;
+
+            //MessageBox.Show(globals.UGVSettingDictionary[SettingId.Text].Id + " : " + globals.UGVSettingDictionary[SettingId.Text].ComPort);
+        }
+        private void setStopbit(object sender, SelectionChangedEventArgs e)
+        {
+            if (globals.UGVSettingDictionary.FirstOrDefault(x => x.Key.Equals(SettingId.Text)).Value == null)
+            {
+                globals.UGVSettingDictionary.Add(SettingId.Text, new UGV(SettingId.Text));
+            }
+
+            int value;
+            int.TryParse(StopBitComboBox.SelectedItem.ToString(), out value);
+
+            globals.UGVSettingDictionary[SettingId.Text].Stopbit = value;
+
+            //MessageBox.Show(globals.UGVSettingDictionary[SettingId.Text].Id + " : " + globals.UGVSettingDictionary[SettingId.Text].ComPort);
         }
 
         public void init()
@@ -89,7 +146,7 @@ namespace MVCC.CustomControl
             BaudrateList.Add(2400);
             BaudrateList.Add(4800);
             BaudrateList.Add(7200);
-            BaudrateList.Add(6900);
+            BaudrateList.Add(9600);
             BaudrateList.Add(14400);
             BaudrateList.Add(19200);
             BaudrateList.Add(38900);
@@ -97,5 +154,6 @@ namespace MVCC.CustomControl
             BaudrateList.Add(115200);
             BaudrateList.Add(128000);
         }
+
     }
 }

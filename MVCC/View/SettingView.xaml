@@ -35,19 +35,15 @@
             <RowDefinition Height="5*" />
         </Grid.RowDefinitions>
         
-        <Grid Grid.Row="0">
+        <Grid Grid.Row="0" x:Name="SettingGrid">
             <ItemsControl ItemTemplateSelector="{StaticResource MyDataTemplateSeletor}"
                           ItemsSource="{Binding MVCCBluetoothSettingList}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate >    
-                        <StackPanel></StackPanel>
+                        <StackPanel x:Name="MVCCBluetoothSettingPanel"></StackPanel>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
         </Grid>
-
-        <Border Grid.Row="4" Width="50" Height="25" BorderBrush="#C9C9C9" BorderThickness="1" HorizontalAlignment="Right" Margin="0 0 10 0" Cursor="Hand">
-            <TextBlock TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Save"  Background="Transparent" Cursor="Hand" />
-        </Border>
     </Grid>
 </UserControl>

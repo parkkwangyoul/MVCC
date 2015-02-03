@@ -5,8 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:base="clr-namespace:System.Windows;assembly=PresentationFramework"
              mc:Ignorable="d" 
-             d:DesignHeight="200" d:DesignWidth="300">
-    
+             d:DesignHeight="150" d:DesignWidth="800">
+
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -25,7 +25,7 @@
                 <RowDefinition Height="90*" />
             </Grid.RowDefinitions>
 
-            <TextBlock Text="{Binding Id}" Grid.Row="0" VerticalAlignment="Center" Margin="10 0 0 0" />
+            <TextBlock Name="SettingId" Text="{Binding Id}" Grid.Row="0" VerticalAlignment="Center" Margin="10 0 0 0" />
 
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
@@ -42,7 +42,9 @@
                             <ColumnDefinition Width="100*" />
                         </Grid.ColumnDefinitions>
                         <TextBlock VerticalAlignment="Center" Text="COM Port :" Grid.Column="0" />
-                        <ComboBox HorizontalAlignment="Left" Margin="10 0 0 0" Width="200" SelectedValue="{Binding ComPort}" Grid.Column="1" x:Name="COMportComboBox" SelectedIndex="0">
+                        <ComboBox HorizontalAlignment="Left" Margin="10 0 0 0" Width="200" 
+                                  SelectedItem="{Binding ComPort}" Grid.Column="1" x:Name="COMportComboBox" 
+                                  SelectionChanged="setCOMPort">
                             <ComboBox.ItemContainerStyle>
                                 <Style TargetType="ComboBoxItem">
                                     <Setter Property="Background" Value="#2D2D30"/>
@@ -60,7 +62,10 @@
                             <ColumnDefinition Width="100*" />
                         </Grid.ColumnDefinitions>
                         <TextBlock VerticalAlignment="Center" Text="Baudrate :" Grid.Column="0" />
-                        <ComboBox HorizontalAlignment="Left"  Background="Transparent" Margin="10 0 0 0" Width="200" SelectedValue="{Binding Baudrate}" Grid.Column="1" x:Name="BaudrateComboBox" SelectedIndex="0" >
+                        <ComboBox HorizontalAlignment="Left"  Background="Transparent" 
+                                  Margin="10 0 0 0" Width="200" SelectedItem="{Binding Baudrate}" 
+                                  Grid.Column="1" x:Name="BaudrateComboBox" SelectedIndex="0"
+                                  SelectionChanged="setBaudrate">
                             <ComboBox.ItemContainerStyle>
                                 <Style TargetType="ComboBoxItem">
                                     <Setter Property="Background" Value="#2D2D30"/>
@@ -78,7 +83,10 @@
                             <ColumnDefinition Width="100*" />
                         </Grid.ColumnDefinitions>
                         <TextBlock VerticalAlignment="Center" Text="Data Bit :" Grid.Column="0" />
-                        <ComboBox HorizontalAlignment="Left" Background="Transparent" Margin="10 0 0 0" Width="200" SelectedValue="{Binding Databit}" Grid.Column="1" x:Name="DataBitComboBox" SelectedIndex="0">
+                        <ComboBox HorizontalAlignment="Left" Background="Transparent" Margin="10 0 0 0" 
+                                  Width="200" SelectedItem="{Binding Databit}" Grid.Column="1" 
+                                  x:Name="DataBitComboBox" SelectedIndex="0"
+                                  SelectionChanged="setDatabit">
                             <ComboBox.ItemContainerStyle>
                                 <Style TargetType="ComboBoxItem">
                                     <Setter Property="Background" Value="#2D2D30"/>
@@ -92,10 +100,14 @@
                     <Grid Margin="10 2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="100" />
-                            <ColumnDefinition Width="100*" />
+                            <ColumnDefinition Width="90*" />
+                            <ColumnDefinition Width="439*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock VerticalAlignment="Center" Text="Stop Bit :" Grid.Column="0" />
-                        <ComboBox HorizontalAlignment="Left" Background="Transparent" Margin="10 0 0 0" Width="200" SelectedValue="{Binding PortName}" Grid.Column="1" x:Name="StopBitComboBox"  SelectedIndex="0">
+                        <TextBlock VerticalAlignment="Center" Text="Stop Bit :" Grid.Column="0" Margin="0,3" />
+                        <ComboBox HorizontalAlignment="Left" Background="Transparent" Margin="10 0 0 0" 
+                                  Width="200" SelectedItem="{Binding Stopbit}" Grid.Column="1"
+                                  x:Name="StopBitComboBox"  SelectedIndex="0" Grid.ColumnSpan="2"
+                                  SelectionChanged="setStopbit">
                             <ComboBox.ItemContainerStyle>
                                 <Style TargetType="ComboBoxItem">
                                     <Setter Property="Background" Value="#2D2D30"/>
