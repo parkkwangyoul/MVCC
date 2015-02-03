@@ -24,15 +24,16 @@ namespace MVCC.Utill
         {
             int blob_count = 0;
 
-            Image<Bgr, Byte> _blobsImg = blob_image.Clone();
-            Image<Gray, Byte> graySoft = _blobsImg.Convert<Gray, Byte>().PyrDown().PyrUp();
+            Image<Gray, Byte> graySoft = blob_image.Clone().Convert<Gray, Byte>().PyrDown().PyrUp();
             Image<Gray, Byte> gray = graySoft.SmoothGaussian(3);
-            gray = gray.AddWeighted(graySoft, 1.3, -0.5, 0);
-            Image<Gray, Byte> bin = gray.ThresholdBinary(new Gray(90), new Gray(255));
+            //gray = gray.AddWeighted(graySoft, 1.3, -0.6, 0);
+            //Image<Gray, Byte> bin = gray.ThresholdBinary(new Gray(70), new Gray(255));
+
+            gray = gray.AddWeighted(graySoft, 0.95, -0.1, 0);
+            Image<Gray, Byte> bin = gray.ThresholdBinary(new Gray(85), new Gray(255));
 
             Gray cannyThreshold = new Gray(149);
             Gray cannyThresholdLinking = new Gray(149);
-            Gray circleAccumulatorThreshold = new Gray(1000);
             Image<Gray, Byte> greyThreshImg = bin.Canny(cannyThreshold.Intensity, cannyThresholdLinking.Intensity);
 
             CvBlobs resultingImgBlobs = new CvBlobs();

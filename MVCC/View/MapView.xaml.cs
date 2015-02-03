@@ -164,6 +164,7 @@ namespace MVCC.View
                         }
                     }
 
+                    
                     //색상 트레킹중에 하나가 사라졌는지..(test임!! 나중엔.. 이걸로 말고 장애물 변화를 해야함. 밑에 image_is_changed는 장애물변화될떄!!!!)
                     for (int i = 0; i < 4; i++)
                     {
@@ -173,7 +174,7 @@ namespace MVCC.View
                             colorTracking.change_chk_reset(i);
                         }
                     }
-
+                    
                     obstacle_check = true; //장애물이미지와 싱크 맞추기 위해 설정
                 }
             }
