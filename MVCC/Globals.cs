@@ -12,6 +12,13 @@ namespace MVCC
 {
     public class Globals
     {
+        public int[,] Map_obstacle;
+        public int[,] pre_Map_obstacle;
+
+
+
+
+
         private static Globals _Instance;
         public static Globals Instance
         {

@@ -186,10 +186,10 @@ namespace MVCC.View
         private void obstacleDection(object sender, DoWorkEventArgs e)
         {
             ObstacleDetection obstacleDetection = new ObstacleDetection();
-
-            int[,] Map_obstacle = new int[globals.rect_height / globals.y_grid, globals.rect_width / globals.x_grid]; //Map의 장애물의 정보 
-            int[,] pre_Map_obstacle = new int[globals.rect_height / globals.y_grid, globals.rect_width / globals.x_grid]; //이전 Map의 장애물의 정보 
-            int blob_count = 0, pre_blob_count = 0; //blob count의 변화감지를 위해      
+            globals.Map_obstacle = new int[globals.rect_height / globals.y_grid, globals.rect_width / globals.x_grid]; //Map의 장애물의 정보 
+            globals.pre_Map_obstacle = new int[globals.rect_height / globals.y_grid, globals.rect_width / globals.x_grid]; //이전 Map의 장애물의 정보 
+         
+           int blob_count = 0, pre_blob_count = 0; //blob count의 변화감지를 위해      
             bool frist_change_check = false;
             List<Building> building_List = new List<Building>();
 
@@ -197,7 +197,7 @@ namespace MVCC.View
             {
                 if (obstacle_check == true) //frame의 추적 영상 처리가 끝나고 처리
                 {
-                    blob_count = obstacleDetection.detectBlob(obstacle_image, Map_obstacle, tracking_rect); //장애물 검출
+                    blob_count = obstacleDetection.detectBlob(obstacle_image, globals.Map_obstacle, tracking_rect); //장애물 검출
 
 
                     if (frist_change_check == true) //제일 처음 변화감지는 건너 뜀
@@ -213,8 +213,8 @@ namespace MVCC.View
 
                         for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
                             for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
-                                if (Map_obstacle[j, i] != 2 || pre_Map_obstacle[j, i] != 2)
-                                    if (Map_obstacle[j, i] != pre_Map_obstacle[j, i])
+                                if (globals.Map_obstacle[j, i] != 2 || globals.pre_Map_obstacle[j, i] != 2)
+                                    if (globals.Map_obstacle[j, i] != globals.pre_Map_obstacle[j, i])
                                         moving_check_count++;
 
                         if (moving_check_count >= 5) //배열이 5개 이상 차이날 경우 장애물이 옮겨지고 있음
@@ -224,8 +224,8 @@ namespace MVCC.View
                         frist_change_check = true;
 
                     pre_blob_count = blob_count; //현재 blob_count를 이전 blob_count에 저장
-                    pre_Map_obstacle = (int[,])Map_obstacle.Clone(); //비교를 위해 이전 Map정보 설정
-                    Array.Clear(Map_obstacle, 0, globals.rect_height / globals.y_grid * globals.rect_width / globals.x_grid);
+                    globals.pre_Map_obstacle = (int[,])globals.Map_obstacle.Clone(); //비교를 위해 이전 Map정보 설정
+                    Array.Clear(globals.Map_obstacle, 0, globals.rect_height / globals.y_grid * globals.rect_width / globals.x_grid);
 
                     Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
                     {

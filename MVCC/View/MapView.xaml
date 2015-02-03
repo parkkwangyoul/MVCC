@@ -81,7 +81,7 @@
                 <ItemsControl
                     ItemTemplateSelector="{StaticResource MyDataTemplateSeletor}"
                     ItemsSource="{Binding Source={StaticResource MVCCItemSrc}}"
-                    Width="600" Height="380" BorderBrush="#78C8FF" BorderThickness="1">
+                    Width="600" Height="360" BorderBrush="#78C8FF" BorderThickness="1">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <Canvas MouseLeftButtonDown="SelectUGV" MouseRightButtonDown="MoveUGV" Background="Transparent">

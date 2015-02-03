@@ -51,6 +51,11 @@ namespace MVCC.Utill
 
         public static int movement_count = 0;
 
+        public static int start_x = 0;
+        public static int start_y = 0;
+        public static int dest_x = 0;
+        public static int dest_y = 0;
+        public static int size_ = 0; 
         public class coordinate
         {
 
@@ -1004,7 +1009,26 @@ namespace MVCC.Utill
 
             while (serialport.IsOpen)
             {
+                bool check = true;
 
+                for (i = 0; i < 24; i++)
+                {
+                    for (j = 0; j < 40; j++)
+                    {
+                        grid[i, j] = globals.Map_obstacle[i,j].ToString()[0];
+                        if(check == true && globals.Map_obstacle[i,j] == 2)
+                        {
+                            start_x = j;
+                            start_y = i;
+
+                            dest_x = 35;
+                            dest_y = 3;
+
+                            check = false;
+                        }
+        
+                    }
+                }
 
                 write_data = "f";
                 /*
@@ -1068,18 +1092,12 @@ namespace MVCC.Utill
                         string destination_y;
                         string size;
 
-                        int start_x = 0; ;
-                        int start_y = 0; ;
-                        int dest_x = 0; ;
-                        int dest_y = 0; ;
-                        int size_ = 0; ;
-
                         char[] start_x_ = new char[3] { '0', '0', '0' };
                         char[] start_y_ = new char[3] { '0', '0', '0' };
                         char[] dest_x_ = new char[3] { '0', '0', '0' };
                         char[] dest_y_ = new char[3] { '0', '0', '0' };
                         char[] s_ = new char[3] { '0', '0', '0' };
-
+                        /*
                         Console.Write("starting_point.x : ");
                         starting_point_x = Console.ReadLine();
 
@@ -1102,7 +1120,7 @@ namespace MVCC.Utill
                         dest_y = Int32.Parse(destination_y);
 
                         size_ = Int32.Parse(size);
-
+                        */
                         start_x_[2] = (char)((start_x / 100) + 48);         // Hundredth
                         start_x_[1] = (char)(((start_x / 10) % 10) + 48);     // Tenth
                         start_x_[0] = (char)((start_x % 10) + 48);          // First
