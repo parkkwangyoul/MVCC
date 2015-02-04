@@ -1077,7 +1077,7 @@ namespace MVCC.Utill
             if (serialport.IsOpen)
             {
                 ugv.IsBluetoothConnected = true;
-                state.BluetoothPath = "/Resource/bluetooth_on.png";
+                state.BluetoothOnOff = true;
             }
 
             while (serialport.IsOpen)
@@ -1344,6 +1344,16 @@ namespace MVCC.Utill
                             Movement_Command();
                         }
 
+                        #region Transmit_Movement_Command
+                        for (i = 0; i < path_count; i++)
+                        {
+                            serialport.WriteLine((movement[i]).ToString());
+                        }
+                        serialport.WriteLine("e");
+
+                        Console.WriteLine("TX Complete");
+                        #endregion
+
                         for (i = 0; i < path_count; i++)
                         {
                             Console.Write("{0}", follow_command[i]);
@@ -1358,16 +1368,6 @@ namespace MVCC.Utill
 
                         #endregion
 
-                        #region Transmit_Movement_Command
-                        for (i = 0; i < path_count; i++)
-                        {
-                            serialport.WriteLine((movement[i]).ToString());
-                        }
-                        serialport.WriteLine("e");
-
-                        Console.WriteLine("TX Complete");
-                        #endregion
-
                         //                        write_data = "i";
 
                         //                        serialport.WriteLine(write_data[0].ToString());
@@ -1375,8 +1375,20 @@ namespace MVCC.Utill
                         //write_data = "q";
 
                         serialport.Close();
+
+                        for (i = 0; i < row; i++)
+                        {
+                            for (j = 0; j < column; j++)
+                            {
+                                Console.Write("{0} ", grid[i, j]);
+                            }
+                            Console.WriteLine(" ");
+                        }
+
+
+
                         ugv.IsBluetoothConnected = false;
-                        state.BluetoothPath = "/Resource/bluetooth_off.png";
+                        state.BluetoothOnOff = false;
 
                     }
                     catch (TimeoutException)
@@ -1411,7 +1423,7 @@ namespace MVCC.Utill
                 {
                     serialport.Close();
                     ugv.IsBluetoothConnected = false;
-                    state.BluetoothPath = "/Resource/bluetooth_off.png";
+                    state.BluetoothOnOff = false;
                 }
                 Console.Out.Flush();
             }

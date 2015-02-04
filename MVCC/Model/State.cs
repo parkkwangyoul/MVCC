@@ -46,12 +46,12 @@ namespace MVCC.Model
         }
 
         // 블루투스 상태 색깔을 나타냄
-        private string bluetoothPath = "/Resource/bluetooth_off.png";
+        //private string bluetoothPath = "/Resource/bluetooth_off.png";
         public string BluetoothPath
         {
             get
             {
-                if (bluetoothOnOff)
+                if (!bluetoothOnOff)
                     return "/Resource/bluetooth_off.png";
                 else
                     return "/Resource/bluetooth_on.png";
