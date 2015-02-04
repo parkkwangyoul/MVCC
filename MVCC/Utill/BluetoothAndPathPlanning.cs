@@ -18,6 +18,8 @@ namespace MVCC.Utill
 
         private Globals globals = Globals.Instance;
 
+        private int a;
+
         #region Path_Planning_Part
 
         public int abs(int value)
