@@ -35,6 +35,51 @@ namespace MVCC.Model
             }
         }
 
+        // 주행 상태를 나타냄
+        private bool isDriving = false;
+        public bool IsDriving
+        {
+            get { return isDriving; }
+            set
+            {
+                isDriving = value;
+            }
+        }
+
+        // 현재 지나고 있는 좌표
+        private int[,] currentPoint;
+        public int[,] CurrentPoint
+        {
+            get { return currentPoint; }
+            set
+            {
+                currentPoint = value;
+            }
+        }
+
+        // 지정된 도착 X좌표를 나타냄
+        private int endPointX;
+        public int EndPointX
+        {
+            get { return endPointX; }
+            set
+            {
+                endPointX = value;
+            }
+        }
+
+        // 지정된 도착 Y좌표를 나타냄
+        private int endPointY;
+        public int EndPointY
+        {
+            get { return endPointY; }
+            set
+            {
+                endPointY = value;
+            }
+        }
+
+        // 블루투수 상태
         private bool bluetoothOnOff = false;
         public bool BluetoothOnOff
         {

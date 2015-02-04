@@ -78,17 +78,84 @@
             </Grid>
 
             <Grid Grid.Row="1" x:Name="MapGrid">
-                <ItemsControl
-                    ItemTemplateSelector="{StaticResource MyDataTemplateSeletor}"
-                    ItemsSource="{Binding Source={StaticResource MVCCItemSrc}}"
-                    Width="600" Height="360" BorderBrush="#78C8FF" BorderThickness="1">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <Canvas MouseLeftButtonDown="SelectUGV" MouseRightButtonDown="MoveUGV" Background="Transparent">
-                            </Canvas>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
+                <Border Width="600" Height="360" BorderBrush="#78C8FF" BorderThickness="1">
+                    <Grid x:Name="MapItemControlWrapGrid">
+                        <Line X1="0" Y1="15" X2="600" Y2="15" Stroke="Gray" />
+                        <Line X1="0" Y1="30" X2="600" Y2="30" Stroke="Gray" />
+                        <Line X1="0" Y1="45" X2="600" Y2="45" Stroke="Gray" />
+                        <Line X1="0" Y1="60" X2="600" Y2="60" Stroke="Gray" />
+                        <Line X1="0" Y1="75" X2="600" Y2="75" Stroke="Gray" />
+                        <Line X1="0" Y1="90" X2="600" Y2="90" Stroke="Gray" />
+                        <Line X1="0" Y1="105" X2="600" Y2="105" Stroke="Gray" />
+                        <Line X1="0" Y1="120" X2="600" Y2="120" Stroke="Gray" />
+                        <Line X1="0" Y1="135" X2="600" Y2="135" Stroke="Gray" />
+                        <Line X1="0" Y1="150" X2="600" Y2="150" Stroke="Gray" />
+                        <Line X1="0" Y1="165" X2="600" Y2="165" Stroke="Gray" />
+                        <Line X1="0" Y1="180" X2="600" Y2="180" Stroke="Gray" />
+                        <Line X1="0" Y1="195" X2="600" Y2="195" Stroke="Gray" />
+                        <Line X1="0" Y1="210" X2="600" Y2="210" Stroke="Gray" />
+                        <Line X1="0" Y1="225" X2="600" Y2="225" Stroke="Gray" />
+                        <Line X1="0" Y1="240" X2="600" Y2="240" Stroke="Gray" />
+                        <Line X1="0" Y1="255" X2="600" Y2="255" Stroke="Gray" />
+                        <Line X1="0" Y1="270" X2="600" Y2="270" Stroke="Gray" />
+                        <Line X1="0" Y1="285" X2="600" Y2="285" Stroke="Gray" />
+                        <Line X1="0" Y1="300" X2="600" Y2="300" Stroke="Gray" />
+                        <Line X1="0" Y1="315" X2="600" Y2="315" Stroke="Gray" />
+                        <Line X1="0" Y1="330" X2="600" Y2="330" Stroke="Gray" />
+                        <Line X1="0" Y1="345" X2="600" Y2="345" Stroke="Gray" />
+                        <Line X1="0" Y1="360" X2="600" Y2="360" Stroke="Gray" />
+                        <Line X1="15" Y1="0" X2="15" Y2="360" Stroke="Gray" />
+                        <Line X1="30" Y1="0" X2="30" Y2="360" Stroke="Gray" />
+                        <Line X1="45" Y1="0" X2="45" Y2="360" Stroke="Gray" />
+                        <Line X1="60" Y1="0" X2="60" Y2="360" Stroke="Gray" />
+                        <Line X1="75" Y1="0" X2="75" Y2="360" Stroke="Gray" />
+                        <Line X1="90" Y1="0" X2="90" Y2="360" Stroke="Gray" />
+                        <Line X1="105" Y1="0" X2="105" Y2="360" Stroke="Gray" />
+                        <Line X1="120" Y1="0" X2="120" Y2="360" Stroke="Gray" />
+                        <Line X1="135" Y1="0" X2="135" Y2="360" Stroke="Gray" />
+                        <Line X1="150" Y1="0" X2="150" Y2="360" Stroke="Gray" />
+                        <Line X1="165" Y1="0" X2="165" Y2="360" Stroke="Gray" />
+                        <Line X1="180" Y1="0" X2="180" Y2="360" Stroke="Gray" />
+                        <Line X1="195" Y1="0" X2="195" Y2="360" Stroke="Gray" />
+                        <Line X1="210" Y1="0" X2="210" Y2="360" Stroke="Gray" />
+                        <Line X1="225" Y1="0" X2="225" Y2="360" Stroke="Gray" />
+                        <Line X1="240" Y1="0" X2="240" Y2="360" Stroke="Gray" />
+                        <Line X1="255" Y1="0" X2="255" Y2="360" Stroke="Gray" />
+                        <Line X1="270" Y1="0" X2="270" Y2="360" Stroke="Gray" />
+                        <Line X1="285" Y1="0" X2="285" Y2="360" Stroke="Gray" />
+                        <Line X1="300" Y1="0" X2="300" Y2="360" Stroke="Gray" />
+                        <Line X1="315" Y1="0" X2="315" Y2="360" Stroke="Gray" />
+                        <Line X1="330" Y1="0" X2="330" Y2="360" Stroke="Gray" />
+                        <Line X1="345" Y1="0" X2="345" Y2="360" Stroke="Gray" />
+                        <Line X1="360" Y1="0" X2="360" Y2="360" Stroke="Gray" />
+                        <Line X1="375" Y1="0" X2="375" Y2="360" Stroke="Gray" />
+                        <Line X1="390" Y1="0" X2="390" Y2="360" Stroke="Gray" />
+                        <Line X1="405" Y1="0" X2="405" Y2="360" Stroke="Gray" />
+                        <Line X1="420" Y1="0" X2="420" Y2="360" Stroke="Gray" />
+                        <Line X1="435" Y1="0" X2="435" Y2="360" Stroke="Gray" />
+                        <Line X1="450" Y1="0" X2="450" Y2="360" Stroke="Gray" />
+                        <Line X1="465" Y1="0" X2="465" Y2="360" Stroke="Gray" />
+                        <Line X1="480" Y1="0" X2="480" Y2="360" Stroke="Gray" />
+                        <Line X1="495" Y1="0" X2="495" Y2="360" Stroke="Gray" />
+                        <Line X1="510" Y1="0" X2="510" Y2="360" Stroke="Gray" />
+                        <Line X1="525" Y1="0" X2="525" Y2="360" Stroke="Gray" />
+                        <Line X1="540" Y1="0" X2="540" Y2="360" Stroke="Gray" />
+                        <Line X1="555" Y1="0" X2="555" Y2="360" Stroke="Gray" />
+                        <Line X1="570" Y1="0" X2="570" Y2="360" Stroke="Gray" />
+                        <Line X1="585" Y1="0" X2="585" Y2="360" Stroke="Gray" />
+                        <Line X1="600" Y1="0" X2="600" Y2="360" Stroke="Gray" />
+                        <ItemsControl
+                        ItemTemplateSelector="{StaticResource MyDataTemplateSeletor}"
+                        ItemsSource="{Binding Source={StaticResource MVCCItemSrc}}" Margin="-10,0,10,0">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <Canvas MouseLeftButtonDown="SelectUGV" MouseRightButtonDown="MoveUGV" Background="Transparent" Margin="1,0,-1,0">
+                                    </Canvas>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </Grid>
+                </Border>
             </Grid>
         </Grid>
 
