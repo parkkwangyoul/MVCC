@@ -1108,7 +1108,7 @@ namespace MVCC.Utill
 
         private void bluetoothConnect(object sender, DoWorkEventArgs e)
         {
-            string write_data;
+            string write_data = ugv.Command;
             string read_data;
 
             string input_grid;
@@ -1152,16 +1152,16 @@ namespace MVCC.Utill
                         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
 
+            while (!serialport.IsOpen) ;
+
             if (serialport.IsOpen)
             {
                 ugv.IsBluetoothConnected = true;
                 state.BluetoothOnOff = true;
-            }
 
-            while (serialport.IsOpen)
-            {
                 bool check = true;
 
+                // critical section
                 while (globals.mutex) ;
 
                 globals.mutex = true;
@@ -1187,7 +1187,7 @@ namespace MVCC.Utill
                             dest_x = state.EndPointX;
                             dest_y = state.EndPointY;
 
-                            size_ = 4;
+                            size_ = 7;
 
                             check = false;
                         }
@@ -1212,7 +1212,7 @@ namespace MVCC.Utill
 
                 globals.mutex = false;
 
-                write_data = "f";
+                // critical section end
 
                 serialport.WriteLine((write_data[0]).ToString());
                 /*
@@ -1478,16 +1478,6 @@ namespace MVCC.Utill
                         }
                         Console.WriteLine("");
 
-                        
-
-                        //                        write_data = "i";
-
-                        //                        serialport.WriteLine(write_data[0].ToString());
-
-                        //write_data = "q";
-
-                        serialport.Close();
-
                         for (i = 0; i < row; i++)
                         {
                             for (j = 0; j < column; j++)
@@ -1496,11 +1486,6 @@ namespace MVCC.Utill
                             }
                             Console.WriteLine(" ");
                         }
-
-
-
-                        ugv.IsBluetoothConnected = false;
-                        state.BluetoothOnOff = false;
 
                     }
                     catch (TimeoutException)

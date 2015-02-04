@@ -153,6 +153,17 @@ namespace MVCC.Model
             }
         }
 
+        // 명령 전송
+        private string command;
+        public string Command
+        {
+            get { return command; }
+            set
+            {
+                command = value;
+            }
+        }
+
         #endregion Bluetoot Property
 
         public override string ToString() { return "UGV"; }

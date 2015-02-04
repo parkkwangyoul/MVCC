@@ -367,6 +367,8 @@ namespace MVCC.View
                 individualUGVState.EndPointX = endPointX;
                 individualUGVState.EndPointY = endPointY;
 
+                individualUGV.Command = "f";
+
                 bluetoothAndPathPlanning.connect(individualUGV, individualUGVState);
 
                 refreshView();
