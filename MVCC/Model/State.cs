@@ -35,14 +35,26 @@ namespace MVCC.Model
             }
         }
 
+        private bool bluetoothOnOff = false;
+        public bool BluetoothOnOff
+        {
+            get { return bluetoothOnOff; }
+            set
+            {
+                bluetoothOnOff = value;
+            }
+        }
+
         // 블루투스 상태 색깔을 나타냄
         private string bluetoothPath = "/Resource/bluetooth_off.png";
         public string BluetoothPath
         {
-            get { return bluetoothPath; }
-            set
+            get
             {
-                bluetoothPath = value;
+                if (bluetoothOnOff)
+                    return "/Resource/bluetooth_off.png";
+                else
+                    return "/Resource/bluetooth_on.png";
             }
         }
 

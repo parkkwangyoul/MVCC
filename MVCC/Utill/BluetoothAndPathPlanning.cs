@@ -18,6 +18,8 @@ namespace MVCC.Utill
 
         private Globals globals = Globals.Instance;
 
+        private int a;
+
         #region Path_Planning_Part
 
         public int abs(int value)
@@ -1034,7 +1036,7 @@ namespace MVCC.Utill
             if (serialport.IsOpen)
             {
                 ugv.IsBluetoothConnected = true;
-                state.BluetoothPath = "/Resource/bluetooth_on.png";
+                state.BluetoothOnOff = true;
             }
 
             while (serialport.IsOpen)
@@ -1331,7 +1333,7 @@ namespace MVCC.Utill
 
                         serialport.Close();
                         ugv.IsBluetoothConnected = false;
-                        state.BluetoothPath = "/Resource/bluetooth_off.png";
+                        state.BluetoothOnOff = false;
 
                     }
                     catch (TimeoutException)
@@ -1365,7 +1367,7 @@ namespace MVCC.Utill
                 {
                     serialport.Close();
                     ugv.IsBluetoothConnected = false;
-                    state.BluetoothPath = "/Resource/bluetooth_off.png";
+                    state.BluetoothOnOff = false;
                 }
                 Console.Out.Flush();
             }
