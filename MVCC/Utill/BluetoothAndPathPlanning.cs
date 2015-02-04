@@ -14,6 +14,8 @@ namespace MVCC.Utill
     class BluetoothAndPathPlanning
     {
         private UGV ugv;
+        private State state;
+
         private Globals globals = Globals.Instance;
 
         #region Path_Planning_Part
@@ -158,7 +160,7 @@ namespace MVCC.Utill
                 {
                     if (grid[vehicle_1.outer_2.y + i, vehicle_1.outer_2.x + 1] == '0') { count++; }
                 }
-                catch(IndexOutOfRangeException){}
+                catch (IndexOutOfRangeException) { Console.WriteLine("a"); return false; }
 	        }
 
 	        if(count == size){
@@ -195,7 +197,7 @@ namespace MVCC.Utill
                 {
                     if (grid[vehicle_1.outer_1.y + i, vehicle_1.outer_1.x - 1] == '0') { count++; }
                 }
-                catch(IndexOutOfRangeException){}
+                catch (IndexOutOfRangeException) { Console.WriteLine("a"); return false; }
 	        }
 
 	        if(count == size){
@@ -234,7 +236,7 @@ namespace MVCC.Utill
                 {
                     if (grid[vehicle_1.outer_1.y - 1, vehicle_1.outer_1.x + i] == '0') { count++; }
                 }
-                catch(IndexOutOfRangeException){}
+                catch (IndexOutOfRangeException) { Console.WriteLine("a"); return false; }
 	        }
 
 	        if(count == size){
@@ -272,7 +274,7 @@ namespace MVCC.Utill
                 {
                     if (grid[vehicle_1.outer_3.y + 1, vehicle_1.outer_3.x + i] == '0') { count++; }
                 }
-                catch(IndexOutOfRangeException){}
+                catch (IndexOutOfRangeException) { Console.WriteLine("a"); return false; }
 	        }
 
 	        if(count == size){
@@ -971,9 +973,10 @@ namespace MVCC.Utill
 
         #endregion
 
-        public void connect(UGV ugv)
+        public void connect(UGV ugv, State state)
         {
-            ugv = this.ugv;
+            this.ugv = ugv;
+            this.state = state;
 
             //색 트레킹 쓰레드
             BackgroundWorker thread = new BackgroundWorker();
@@ -990,7 +993,7 @@ namespace MVCC.Utill
 
             SerialPort serialport = new SerialPort();
 
-            UGV settingUGV = globals.UGVSettingDictionary[ugv.Id];
+            UGV settingUGV = globals.UGVSettingDictionary[convertId(ugv.Id)];
             
 
             serialport.PortName = settingUGV.ComPort;
@@ -1002,35 +1005,94 @@ namespace MVCC.Utill
 
             serialport.Open();
 
+            int[,] map = {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
+
             if (serialport.IsOpen)
             {
                 ugv.IsBluetoothConnected = true;
+                state.BluetoothPath = "/Resource/bluetooth_on.png";
             }
 
             while (serialport.IsOpen)
             {
                 bool check = true;
 
+                while (globals.mutex) ;
+
+                globals.mutex = true;
+
+                for (i = 0; i < 24; i++ ) {
+
+                    for (j = 0; j < 40; j++ )
+                    {
+                        grid[i,j] = '0';
+                    }
+                }
+
                 for (i = 0; i < 24; i++)
                 {
                     for (j = 0; j < 40; j++)
                     {
-                        grid[i, j] = globals.Map_obstacle[i,j].ToString()[0];
-                        if(check == true && globals.Map_obstacle[i,j] == 2)
+
+                        grid[i, j] = globals.Map_obstacle[i, j].ToString()[0];
+
+                        if (check == true && globals.Map_obstacle[i, j] == 2)
                         {
-                            start_x = j;
+
+                            start_x = j; 
                             start_y = i;
 
                             dest_x = 35;
                             dest_y = 3;
 
+                            size_ = 4;
+
                             check = false;
                         }
-        
+                        if (globals.Map_obstacle[i, j] == 2) {
+
+                            grid[i, j] = '0';
+                        }
                     }
                 }
 
+                for (i = 0; i < 24; i++)
+                {
+                    for (j = 0; j < 40; j++)
+                    {
+                        Console.Write("{0} ", grid[i,j]);
+                    }
+                    Console.WriteLine(" ");
+                }
+
+                globals.mutex = false;
+
                 write_data = "f";
+
+                serialport.WriteLine((write_data[0]).ToString());
                 /*
                 if (write_data == "a")
                 {
@@ -1205,24 +1267,6 @@ namespace MVCC.Utill
                         graph_reconstruct(node, dest_x, dest_y, start_x, start_y);
 
 
-                        for (i = 0; i < 24; i++)
-                        {
-                            for (j = 0; j < 40; j++)
-                            {
-
-                                //Console.WriteLine("Node[{0}][{1}]", i, j);
-                                for (k = 0; k < 8; k++)
-                                {
-
-                                    if (node[i, j].children[k] != null)
-                                    {
-
-                                        //Console.WriteLine("Child[{0}] : {1} {2}", k, node[i, j].children[k].outer_1.x, node[i, j].children[k].outer_1.y);
-                                    }
-                                }
-                            }
-                        }
-
                         Console.WriteLine("Graph Reconstruction Complete");
                         #endregion
 
@@ -1268,7 +1312,25 @@ namespace MVCC.Utill
 
                         #endregion
 
-                        write_data = "g";
+                        #region Transmit_Movement_Command
+                        for (i = 0; i < path_count; i++)
+                        {
+                            serialport.WriteLine((movement[i]).ToString());
+                        }
+                        serialport.WriteLine("e");
+
+                        Console.WriteLine("TX Complete");
+                        #endregion
+
+//                        write_data = "i";
+
+//                        serialport.WriteLine(write_data[0].ToString());
+
+                        //write_data = "q";
+
+                        serialport.Close();
+                        ugv.IsBluetoothConnected = false;
+                        state.BluetoothPath = "/Resource/bluetooth_off.png";
 
                     }
                     catch (TimeoutException)
@@ -1284,19 +1346,7 @@ namespace MVCC.Utill
                 {
                     try
                     {
-                        #region Transmit_Movement_Command
-                        for (i = 0; i < path_count; i++)
-                        {
-                            serialport.WriteLine((movement[i]).ToString());
-                        }
-                        serialport.WriteLine("e");
 
-                        Console.WriteLine("TX Complete");
-                        #endregion
-
-                        read_data = "\0";
-
-                        write_data = "i";
                     }
                     catch (TimeoutException)
                     {
@@ -1308,13 +1358,13 @@ namespace MVCC.Utill
                 }
                 else if(write_data == "i"){
 
-                    write_data = "q";
                 }
 
                 else if (write_data == "q")
                 {
-                    Console.WriteLine("Serial Communication Terminated");
                     serialport.Close();
+                    ugv.IsBluetoothConnected = false;
+                    state.BluetoothPath = "/Resource/bluetooth_off.png";
                 }
                 Console.Out.Flush();
             }
@@ -1328,6 +1378,24 @@ namespace MVCC.Utill
                 return StopBits.One;
 
             return StopBits.One;
+        }
+
+        private string convertId(string id)
+        {
+            switch (id)
+            {
+                case "A0":
+                    return "Vehicle 0";
+                case "A1":
+                    return "Vehicle 1";
+                case "A2":
+                    return "Vehicle 2";
+                case "A3":
+                    return "Vehicle 3";
+
+                default:
+                    return "Vehicle 0";
+            }
         }
     }
 }

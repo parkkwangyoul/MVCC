@@ -107,7 +107,7 @@ namespace MVCC.View
                             {
                                 double matchScore = matches[y, x, 0];
 
-                                if (matchScore > 0.9)
+                                if (matchScore > 0.7)
                                 {
                                     colorTracking.colorCheck(matchColorCheck, totalPicxel, x, y, globals.TemplateWidth, globals.TemplateHeight); //어떤 색인지 체크                        
                                     y += img1.Height; //x축 다음 y축(세로)이 변화기 때문에 속도를 높이기 위해 검출된 y좌표 + 이미지 사이즈 함.                             
@@ -225,7 +225,15 @@ namespace MVCC.View
 
                     pre_blob_count = blob_count; //현재 blob_count를 이전 blob_count에 저장
                     globals.pre_Map_obstacle = (int[,])globals.Map_obstacle.Clone(); //비교를 위해 이전 Map정보 설정
-                    Array.Clear(globals.Map_obstacle, 0, globals.rect_height / globals.y_grid * globals.rect_width / globals.x_grid);
+                    //Array.Clear(globals.Map_obstacle, 0, globals.rect_height / globals.y_grid * globals.rect_width / globals.x_grid);
+
+                    if (!globals.mutex)
+                    {
+                        Console.WriteLine("너가 문제냐");
+                        for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
+                            for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
+                                globals.Map_obstacle[j, i] = 0;
+                    }
 
                     Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
                     {
@@ -293,14 +301,16 @@ namespace MVCC.View
         {
             // 개인용
             UGV individualUGV = null;
+            State individualUGVState = null;
 
             // 그룹용
             List<UGV> GroupList = new List<UGV>();
             string groupName = "";
-
+            
             //모드 검사용
             string mode = "N";
 
+            // UGV 
             for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
             {
                 if (!(mapViewModel.MVCCItemList[i] is UGV))
@@ -328,11 +338,23 @@ namespace MVCC.View
                 }
             }
 
+            //State
+            for(int i = 0 ; i < mapViewModel.MVCCItemStateList.Count; i ++){
+                State tempState = mapViewModel.MVCCItemStateList[i];
+
+                if(mode.Equals("I")){
+                    if(tempState.ugv.Id.Equals(individualUGV.Id)){
+                        individualUGVState = tempState;
+                    }
+                }
+            }
+
             // 개인
             if (mode.Equals("I"))
-            {               
+            {
+                bluetoothAndPathPlanning.connect(individualUGV, individualUGVState);
 
-                bluetoothAndPathPlanning.connect(individualUGV);
+                refreshView();
             }
 
 

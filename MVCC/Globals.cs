@@ -15,7 +15,7 @@ namespace MVCC
         public int[,] Map_obstacle;
         public int[,] pre_Map_obstacle;
 
-
+        public bool mutex = false;
 
 
 
@@ -101,7 +101,7 @@ namespace MVCC
         }
 
         //x축 gird 간격
-        private int _x_grid = 20;
+        private int _x_grid = 15;
         public int x_grid
         {
             get { return _x_grid; }
@@ -112,7 +112,7 @@ namespace MVCC
         }
 
         //y축 gird 간격
-        private int _y_grid = 20;
+        private int _y_grid = 15;
         public int y_grid
         {
             get { return _y_grid; }
@@ -123,7 +123,7 @@ namespace MVCC
         }
 
         //경계 사각형 너비
-        private int _rect_width = 560;
+        private int _rect_width = 600;
 
         public int rect_width
         {
