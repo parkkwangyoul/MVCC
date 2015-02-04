@@ -59,7 +59,7 @@ namespace MVCC.Utill
         public static int start_y = 0;
         public static int dest_x = 0;
         public static int dest_y = 0;
-        public static int size_ = 0; 
+        public static int size_ = 0;
         public class coordinate
         {
 
@@ -101,16 +101,16 @@ namespace MVCC.Utill
 
                 current_perspective = perspective;
 
-                outer_1.x = x; 
+                outer_1.x = x;
                 outer_1.y = y;
 
-                outer_2.x = x + size_ - 1; 
+                outer_2.x = x + size_ - 1;
                 outer_2.y = y;
 
-                outer_3.x = x; 
+                outer_3.x = x;
                 outer_3.y = y + size_ - 1;
 
-                outer_4.x = x + size_ - 1; 
+                outer_4.x = x + size_ - 1;
                 outer_4.y = y + size_ - 1;
 
                 path_num = num;
@@ -132,8 +132,9 @@ namespace MVCC.Utill
         public static vehicle vehicle_1 = new vehicle();
 
         public static vehicle[,] node = new vehicle[24, 40];
+        public static vehicle vehicle_compare = new vehicle();
 
-        public static vehicle[] q = new vehicle[24*40];
+        public static vehicle[] q = new vehicle[24 * 40];
 
         public static int row = 24;
         public static int column = 40;
@@ -152,37 +153,39 @@ namespace MVCC.Utill
         public static bool right_move_check(vehicle vehicle_1)
         {
 
-	        int i = 0;
-	        int count = 0;
-	        int size = vehicle_1.size;
+            int i = 0;
+            int count = 0;
+            int size = vehicle_1.size;
 
-	        for(i=0; i<size; i++){
+            for (i = 0; i < size; i++)
+            {
 
                 try
                 {
                     if (grid[vehicle_1.outer_2.y + i, vehicle_1.outer_2.x + 1] == '0') { count++; }
                 }
-                catch (IndexOutOfRangeException) { Console.WriteLine("a"); return false; }
-	        }
+                catch (IndexOutOfRangeException) { }
+            }
 
-	        if(count == size){
+            if (count == size)
+            {
 
-		        return true;
-	        }
-	        else{ return false; }
+                return true;
+            }
+            else { return false; }
         }
 
         public static vehicle right_movement(vehicle vehicle_1)
         {
 
-	        int size = vehicle_1.size;
+            int size = vehicle_1.size;
 
-	        vehicle_1.outer_2.x = vehicle_1.outer_2.x + 1;
-	        vehicle_1.outer_3.x = vehicle_1.outer_3.x + 1;
-	        vehicle_1.outer_1.x = vehicle_1.outer_1.x + 1;
-	        vehicle_1.outer_4.x = vehicle_1.outer_4.x + 1;
+            vehicle_1.outer_2.x = vehicle_1.outer_2.x + 1;
+            vehicle_1.outer_3.x = vehicle_1.outer_3.x + 1;
+            vehicle_1.outer_1.x = vehicle_1.outer_1.x + 1;
+            vehicle_1.outer_4.x = vehicle_1.outer_4.x + 1;
 
-	        return vehicle_1;
+            return vehicle_1;
         }
         /////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////
@@ -190,36 +193,38 @@ namespace MVCC.Utill
         public static bool left_move_check(vehicle vehicle_1)
         {
 
-	        int i = 0;
-	        int count = 0;
-	        int size = vehicle_1.size;
+            int i = 0;
+            int count = 0;
+            int size = vehicle_1.size;
 
-	        for(i=0; i<size; i++){
+            for (i = 0; i < size; i++)
+            {
                 try
                 {
                     if (grid[vehicle_1.outer_1.y + i, vehicle_1.outer_1.x - 1] == '0') { count++; }
                 }
-                catch (IndexOutOfRangeException) { Console.WriteLine("a"); return false; }
-	        }
+                catch (IndexOutOfRangeException) { }
+            }
 
-	        if(count == size){
+            if (count == size)
+            {
 
-		        return true;
-	        }
-	        else{ return false; }
+                return true;
+            }
+            else { return false; }
         }
 
         public static vehicle left_movement(vehicle vehicle_1)
         {
 
-	        int size = vehicle_1.size;
+            int size = vehicle_1.size;
 
-	        vehicle_1.outer_1.x = vehicle_1.outer_1.x - 1;
-	        vehicle_1.outer_2.x = vehicle_1.outer_2.x - 1;
-	        vehicle_1.outer_3.x = vehicle_1.outer_3.x - 1;
-	        vehicle_1.outer_4.x = vehicle_1.outer_4.x - 1;
+            vehicle_1.outer_1.x = vehicle_1.outer_1.x - 1;
+            vehicle_1.outer_2.x = vehicle_1.outer_2.x - 1;
+            vehicle_1.outer_3.x = vehicle_1.outer_3.x - 1;
+            vehicle_1.outer_4.x = vehicle_1.outer_4.x - 1;
 
-	        return vehicle_1;
+            return vehicle_1;
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////
@@ -228,37 +233,39 @@ namespace MVCC.Utill
         public static bool up_move_check(vehicle vehicle_1)
         {
 
-	        int i = 0;
-	        int count = 0;
-	        int size = vehicle_1.size;
+            int i = 0;
+            int count = 0;
+            int size = vehicle_1.size;
 
-	        for(i=0; i<size; i++){
+            for (i = 0; i < size; i++)
+            {
 
                 try
                 {
                     if (grid[vehicle_1.outer_1.y - 1, vehicle_1.outer_1.x + i] == '0') { count++; }
                 }
-                catch (IndexOutOfRangeException) { Console.WriteLine("a"); return false; }
-	        }
+                catch (IndexOutOfRangeException) { }
+            }
 
-	        if(count == size){
+            if (count == size)
+            {
 
-		        return true;
-	        }
-	        else{ return false; }
+                return true;
+            }
+            else { return false; }
         }
 
         public static vehicle up_movement(vehicle vehicle_1)
         {
 
-	        int size = vehicle_1.size;
+            int size = vehicle_1.size;
 
-	        vehicle_1.outer_1.y = vehicle_1.outer_1.y - 1;
-	        vehicle_1.outer_2.y = vehicle_1.outer_2.y - 1;
-	        vehicle_1.outer_3.y = vehicle_1.outer_3.y - 1;
-	        vehicle_1.outer_4.y = vehicle_1.outer_4.y - 1;
+            vehicle_1.outer_1.y = vehicle_1.outer_1.y - 1;
+            vehicle_1.outer_2.y = vehicle_1.outer_2.y - 1;
+            vehicle_1.outer_3.y = vehicle_1.outer_3.y - 1;
+            vehicle_1.outer_4.y = vehicle_1.outer_4.y - 1;
 
-	        return vehicle_1;
+            return vehicle_1;
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////
@@ -267,36 +274,38 @@ namespace MVCC.Utill
         public static bool down_move_check(vehicle vehicle_1)
         {
 
-	        int i = 0;
-	        int count = 0;
-	        int size = vehicle_1.size;
+            int i = 0;
+            int count = 0;
+            int size = vehicle_1.size;
 
-	        for(i=0; i<size; i++){
+            for (i = 0; i < size; i++)
+            {
                 try
                 {
                     if (grid[vehicle_1.outer_3.y + 1, vehicle_1.outer_3.x + i] == '0') { count++; }
                 }
-                catch (IndexOutOfRangeException) { Console.WriteLine("a"); return false; }
-	        }
+                catch (IndexOutOfRangeException) { }
+            }
 
-	        if(count == size){
+            if (count == size)
+            {
 
-		        return true;
-	        }
-	        else{ return false; }
+                return true;
+            }
+            else { return false; }
         }
 
         public static vehicle down_movement(vehicle vehicle_1)
         {
 
-	        int size = vehicle_1.size;
+            int size = vehicle_1.size;
 
-	        vehicle_1.outer_1.y = vehicle_1.outer_1.y + 1;
-	        vehicle_1.outer_2.y = vehicle_1.outer_2.y + 1;
-	        vehicle_1.outer_3.y = vehicle_1.outer_3.y + 1;
-	        vehicle_1.outer_4.y = vehicle_1.outer_4.y + 1;
+            vehicle_1.outer_1.y = vehicle_1.outer_1.y + 1;
+            vehicle_1.outer_2.y = vehicle_1.outer_2.y + 1;
+            vehicle_1.outer_3.y = vehicle_1.outer_3.y + 1;
+            vehicle_1.outer_4.y = vehicle_1.outer_4.y + 1;
 
-	        return vehicle_1;
+            return vehicle_1;
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////
@@ -305,15 +314,15 @@ namespace MVCC.Utill
         public static bool diagonal_right_up_check(vehicle vehicle_1)
         {
 
-	        int size = vehicle_1.size;
+            int size = vehicle_1.size;
 
-	        if(vehicle_1.outer_2.x + 1 == 39 || vehicle_1.outer_2.y == 23){ return false; }
+            if (vehicle_1.outer_2.x + 1 == 39 || vehicle_1.outer_2.y == 23) { return false; }
 
             if (right_move_check(vehicle_1) && up_move_check(vehicle_1) && (grid[vehicle_1.outer_2.y - 1, vehicle_1.outer_2.x + 1] == '0'))
             {
                 return true;
-	        }
-	        else{ return false; }
+            }
+            else { return false; }
 
             return false;
         }
@@ -321,21 +330,21 @@ namespace MVCC.Utill
         public static vehicle move_diagonal_right_up(vehicle vehicle_1)
         {
 
-	        int size = vehicle_1.size;
+            int size = vehicle_1.size;
 
-	        vehicle_1.outer_1.x = vehicle_1.outer_1.x + 1;
-	        vehicle_1.outer_1.y = vehicle_1.outer_1.y - 1;
+            vehicle_1.outer_1.x = vehicle_1.outer_1.x + 1;
+            vehicle_1.outer_1.y = vehicle_1.outer_1.y - 1;
 
-	        vehicle_1.outer_2.x = vehicle_1.outer_2.x + 1;
-	        vehicle_1.outer_2.y = vehicle_1.outer_2.y - 1;
+            vehicle_1.outer_2.x = vehicle_1.outer_2.x + 1;
+            vehicle_1.outer_2.y = vehicle_1.outer_2.y - 1;
 
-	        vehicle_1.outer_3.x = vehicle_1.outer_3.x + 1;
-	        vehicle_1.outer_3.y = vehicle_1.outer_3.y - 1;
+            vehicle_1.outer_3.x = vehicle_1.outer_3.x + 1;
+            vehicle_1.outer_3.y = vehicle_1.outer_3.y - 1;
 
-	        vehicle_1.outer_4.x = vehicle_1.outer_4.x + 1;
-	        vehicle_1.outer_4.y = vehicle_1.outer_4.y - 1;
+            vehicle_1.outer_4.x = vehicle_1.outer_4.x + 1;
+            vehicle_1.outer_4.y = vehicle_1.outer_4.y - 1;
 
-	        return vehicle_1;
+            return vehicle_1;
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////
@@ -344,15 +353,16 @@ namespace MVCC.Utill
         public static bool diagonal_right_down_check(vehicle vehicle_1)
         {
 
-	        int size = vehicle_1.size;
+            int size = vehicle_1.size;
 
-	        if(vehicle_1.outer_2.x + 1 == 39 || vehicle_1.outer_2.y == 23){ return false; }
+            if (vehicle_1.outer_2.x + 1 == 39 || vehicle_1.outer_2.y == 23) { return false; }
 
-	        if(right_move_check(vehicle_1) && down_move_check(vehicle_1) && (grid[vehicle_1.outer_4.y + 1, vehicle_1.outer_4.x + 1] == '0')){
+            if (right_move_check(vehicle_1) && down_move_check(vehicle_1) && (grid[vehicle_1.outer_4.y + 1, vehicle_1.outer_4.x + 1] == '0'))
+            {
 
                 return true;
-	        }
-	        else{ return false; }
+            }
+            else { return false; }
 
             return false;
         }
@@ -360,21 +370,21 @@ namespace MVCC.Utill
         public static vehicle move_diagonal_right_down(vehicle vehicle_1)
         {
 
-	        int size = vehicle_1.size;
+            int size = vehicle_1.size;
 
-	        vehicle_1.outer_1.x = vehicle_1.outer_1.x + 1;
-	        vehicle_1.outer_1.y = vehicle_1.outer_1.y + 1;
+            vehicle_1.outer_1.x = vehicle_1.outer_1.x + 1;
+            vehicle_1.outer_1.y = vehicle_1.outer_1.y + 1;
 
-	        vehicle_1.outer_2.x = vehicle_1.outer_2.x + 1;
-	        vehicle_1.outer_2.y = vehicle_1.outer_2.y + 1;
+            vehicle_1.outer_2.x = vehicle_1.outer_2.x + 1;
+            vehicle_1.outer_2.y = vehicle_1.outer_2.y + 1;
 
-	        vehicle_1.outer_3.x = vehicle_1.outer_3.x + 1;
-	        vehicle_1.outer_3.y = vehicle_1.outer_3.y + 1;
+            vehicle_1.outer_3.x = vehicle_1.outer_3.x + 1;
+            vehicle_1.outer_3.y = vehicle_1.outer_3.y + 1;
 
-	        vehicle_1.outer_4.x = vehicle_1.outer_4.x + 1;
-	        vehicle_1.outer_4.y = vehicle_1.outer_4.y + 1;
+            vehicle_1.outer_4.x = vehicle_1.outer_4.x + 1;
+            vehicle_1.outer_4.y = vehicle_1.outer_4.y + 1;
 
-	        return vehicle_1;
+            return vehicle_1;
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////
@@ -383,15 +393,15 @@ namespace MVCC.Utill
         public static bool diagonal_left_up_check(vehicle vehicle_1)
         {
 
-	        int size = vehicle_1.size;
+            int size = vehicle_1.size;
 
-	        if(vehicle_1.outer_2.x + 1 == 39 || vehicle_1.outer_2.y == 23){ return false; }
+            if (vehicle_1.outer_2.x + 1 == 39 || vehicle_1.outer_2.y == 23) { return false; }
 
             if (left_move_check(vehicle_1) && up_move_check(vehicle_1) && (grid[vehicle_1.outer_1.y - 1, vehicle_1.outer_1.x - 1] == '0'))
             {
                 return true;
-	        }
-	        else{ return false; }
+            }
+            else { return false; }
 
             return false;
         }
@@ -399,21 +409,21 @@ namespace MVCC.Utill
         public static vehicle move_diagonal_left_up(vehicle vehicle_1)
         {
 
-	        int size = vehicle_1.size;
+            int size = vehicle_1.size;
 
-	        vehicle_1.outer_1.x = vehicle_1.outer_1.x - 1;
-	        vehicle_1.outer_1.y = vehicle_1.outer_1.y - 1;
+            vehicle_1.outer_1.x = vehicle_1.outer_1.x - 1;
+            vehicle_1.outer_1.y = vehicle_1.outer_1.y - 1;
 
-	        vehicle_1.outer_2.x = vehicle_1.outer_2.x - 1;
-	        vehicle_1.outer_2.y = vehicle_1.outer_2.y - 1;
+            vehicle_1.outer_2.x = vehicle_1.outer_2.x - 1;
+            vehicle_1.outer_2.y = vehicle_1.outer_2.y - 1;
 
-	        vehicle_1.outer_3.x = vehicle_1.outer_3.x - 1;
-	        vehicle_1.outer_3.y = vehicle_1.outer_3.y - 1;
+            vehicle_1.outer_3.x = vehicle_1.outer_3.x - 1;
+            vehicle_1.outer_3.y = vehicle_1.outer_3.y - 1;
 
-	        vehicle_1.outer_4.x = vehicle_1.outer_4.x - 1;
-	        vehicle_1.outer_4.y = vehicle_1.outer_4.y - 1;
+            vehicle_1.outer_4.x = vehicle_1.outer_4.x - 1;
+            vehicle_1.outer_4.y = vehicle_1.outer_4.y - 1;
 
-	        return vehicle_1;
+            return vehicle_1;
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////
@@ -422,15 +432,16 @@ namespace MVCC.Utill
         public static bool diagonal_left_down_check(vehicle vehicle_1)
         {
 
-	        int size = vehicle_1.size;
+            int size = vehicle_1.size;
 
-	        if(vehicle_1.outer_2.x + 1 == 39 || vehicle_1.outer_2.y == 23){ return false; }
+            if (vehicle_1.outer_2.x + 1 == 39 || vehicle_1.outer_2.y == 23) { return false; }
 
-	        if(left_move_check(vehicle_1) && down_move_check(vehicle_1) && (grid[vehicle_1.outer_3.y + 1, vehicle_1.outer_3.x - 1] == '0')){
-            
+            if (left_move_check(vehicle_1) && down_move_check(vehicle_1) && (grid[vehicle_1.outer_3.y + 1, vehicle_1.outer_3.x - 1] == '0'))
+            {
+
                 return true;
-	        }
-	        else{ return false; }
+            }
+            else { return false; }
 
             return false;
         }
@@ -438,21 +449,21 @@ namespace MVCC.Utill
         public static vehicle move_diagonal_left_down(vehicle vehicle_1)
         {
 
-	        int size = vehicle_1.size;
+            int size = vehicle_1.size;
 
-	        vehicle_1.outer_1.x = vehicle_1.outer_1.x - 1;
-	        vehicle_1.outer_1.y = vehicle_1.outer_1.y + 1;
+            vehicle_1.outer_1.x = vehicle_1.outer_1.x - 1;
+            vehicle_1.outer_1.y = vehicle_1.outer_1.y + 1;
 
-	        vehicle_1.outer_2.x = vehicle_1.outer_2.x - 1;
-	        vehicle_1.outer_2.y = vehicle_1.outer_2.y + 1;
+            vehicle_1.outer_2.x = vehicle_1.outer_2.x - 1;
+            vehicle_1.outer_2.y = vehicle_1.outer_2.y + 1;
 
-	        vehicle_1.outer_3.x = vehicle_1.outer_3.x - 1;
-	        vehicle_1.outer_3.y = vehicle_1.outer_3.y + 1;
+            vehicle_1.outer_3.x = vehicle_1.outer_3.x - 1;
+            vehicle_1.outer_3.y = vehicle_1.outer_3.y + 1;
 
-	        vehicle_1.outer_4.x = vehicle_1.outer_4.x - 1;
-	        vehicle_1.outer_4.y = vehicle_1.outer_4.y + 1;
+            vehicle_1.outer_4.x = vehicle_1.outer_4.x - 1;
+            vehicle_1.outer_4.y = vehicle_1.outer_4.y + 1;
 
-	        return vehicle_1;
+            return vehicle_1;
         }
 
         public static vehicle[,] node_init(vehicle[,] in_node)
@@ -545,79 +556,105 @@ namespace MVCC.Utill
         public static void find_path_BFS(vehicle node_1, int target_x, int target_y)
         {
 
-	        int i = 0;
-	        int j = 0;
-	        int l = 0;
+            int i = 0;
+            int j = 0;
+            int l = 0;
 
-	        vehicle root;
-	        vehicle pop;
+            vehicle root;
+            vehicle pop;
 
-	        i=0; j=0;
+            i = 0; j = 0;
 
-	        root = node[node_1.outer_1.y, node_1.outer_1.x];
+            root = node[node_1.outer_1.y, node_1.outer_1.x];
 
-	        q_level++;		// q_level 0에서 시작 / -1 : q가 비워짐
-	        q[q_level] = root;
+            q_level++;		// q_level 0에서 시작 / -1 : q가 비워짐
+            q[q_level] = root;
 
-	        while(q_level != -1){
+            while (q_level != -1)
+            {
 
-		        l++;
+                l++;
 
-		        pop = q[0];
-		
-		        node[q[0].outer_1.y, q[0].outer_1.x].visited = 1;
-		        q_level--;
-		        for(i=0; i<=q_level; i++){
-			
-			        q[i] = q[i+1];
-		        }
+                pop = q[0];
 
-		        if((pop.outer_1.x == target_x) && (pop.outer_1.y == target_y)){
+                node[q[0].outer_1.y, q[0].outer_1.x].visited = 1;
+                q_level--;
+                for (i = 0; i <= q_level; i++)
+                {
+
+                    q[i] = q[i + 1];
+                }
+
+                if ((pop.outer_1.x == target_x) && (pop.outer_1.y == target_y))
+                {
 
                     Console.WriteLine("x : {0} y : {1}", pop.outer_1.x, pop.outer_1.y);
                     Console.WriteLine("Vehicle has arrived at the destination");
-			        break;
-		        }
-		        for(i=0; i<8; i++){
-			
-			        if( (pop.children[i] != null) && ( node[(pop.children[i]).outer_1.y, (pop.children[i]).outer_1.x].visited == 0) ){
+                    break;
+                }
+                for (i = 0; i < 8; i++)
+                {
 
-				        node[(pop.children[i]).outer_1.y, (pop.children[i]).outer_1.x].weight = node[pop.outer_1.y, pop.outer_1.x].weight + 1;
+                    if ((pop.children[i] != null) && (node[(pop.children[i]).outer_1.y, (pop.children[i]).outer_1.x].visited == 0))
+                    {
 
-				        q_level++;
+                        node[(pop.children[i]).outer_1.y, (pop.children[i]).outer_1.x].weight = node[pop.outer_1.y, pop.outer_1.x].weight + 1;
 
-				        q[q_level] = node[pop.outer_1.y, pop.outer_1.x].children[i];
-				
-				        node[q[q_level].outer_1.y, q[q_level].outer_1.x].visited = 1;
-			        }
-		        }
-	        }
+                        q_level++;
 
-	        for(i=0; i<row; i++){
-	
-		        for(j=0; j<column; j++){
-					
-			        result_grid[i, j] = node[i, j].weight;
-				
-		        }
-	        }
+                        q[q_level] = node[pop.outer_1.y, pop.outer_1.x].children[i];
+
+                        node[q[q_level].outer_1.y, q[q_level].outer_1.x].visited = 1;
+                    }
+                }
+            }
+
+            for (i = 0; i < row; i++)
+            {
+
+                for (j = 0; j < column; j++)
+                {
+
+                    result_grid[i, j] = node[i, j].weight;
+
+                }
+            }
         }
 
-         // Movement Command
+        // Movement Command
         public static void follow_path(int start_point_x, int start_point_y, int dest_point_x, int dest_point_y)
         {
 
             int relative_position_x = dest_point_x - start_point_x;
             int relative_position_y = dest_point_y - start_point_y;
 
-            int current_weight = result_grid[start_point_y,start_point_x];
+            int current_weight = result_grid[start_point_y, start_point_x];
 
-            //grid[start_point_y,start_point_x] = 5;
+            vehicle_compare.size = vehicle_1.size;
+
+            vehicle_compare.outer_1.x = start_point_x;
+            vehicle_compare.outer_1.y = start_point_y;
+
+            vehicle_compare.outer_2.x = start_point_x + vehicle_1.size - 1;
+            vehicle_compare.outer_2.y = start_point_y;
+
+            vehicle_compare.outer_3.x = start_point_x;
+            vehicle_compare.outer_3.y = start_point_y + vehicle_1.size - 1;
+
+            vehicle_compare.outer_4.x = start_point_x + vehicle_1.size - 1;
+            vehicle_compare.outer_4.y = start_point_y + vehicle_1.size - 1;
+
+            vehicle_compare.visited = 1;
+
+            vehicle_compare.weight = 0;
+
+            Console.WriteLine("{0}", current_weight);
+            grid[start_point_y, start_point_x] = '5';
 
             if ((relative_position_x == 0) && (relative_position_y == 0))
             {
 
-                //grid[dest_point_y,dest_point_x] = 5;
+                grid[dest_point_y, dest_point_x] = '5';
 
                 return;
             }
@@ -627,21 +664,15 @@ namespace MVCC.Utill
                 try
                 {
                     ////////////////////////////////////////////////////////////////////////////////
-                    if ((result_grid[start_point_y - 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x - 1) >= 0))
-                    {
 
-                        follow_command[current_weight] = 3; //7 - 4;
-                        path_count++;
-                        follow_path(start_point_x - 1, start_point_y - 1, dest_point_x, dest_point_y);
-                    }
-                    else if ((result_grid[start_point_y, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0))
+                    if (left_move_check(vehicle_compare) && (result_grid[start_point_y, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0))
                     {
 
                         follow_command[current_weight] = 2; //6 - 4;
                         path_count++;
                         follow_path(start_point_x - 1, start_point_y, dest_point_x, dest_point_y);
                     }
-                    else if ((result_grid[start_point_y - 1, start_point_x] == (current_weight - 1)) && ((start_point_y - 1) >= 0))
+                    else if (up_move_check(vehicle_compare) && (result_grid[start_point_y - 1, start_point_x] == (current_weight - 1)) && ((start_point_y - 1) >= 0))
                     {
 
                         follow_command[current_weight] = 4; //0 + 4;
@@ -649,36 +680,44 @@ namespace MVCC.Utill
                         follow_path(start_point_x, start_point_y - 1, dest_point_x, dest_point_y);
                     }
 
+                    else if (diagonal_left_up_check(vehicle_compare) && (result_grid[start_point_y - 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x - 1) >= 0))
+                    {
+
+                        follow_command[current_weight] = 3; //7 - 4;
+                        path_count++;
+                        follow_path(start_point_x - 1, start_point_y - 1, dest_point_x, dest_point_y);
+                    }
+
                     ////////////////////////////////////////////////////////////////////////////////
-                    else if ((result_grid[start_point_y - 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x + 1) <= (column - 1)))
+                    else if (diagonal_right_up_check(vehicle_compare) && (result_grid[start_point_y - 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x + 1) <= (column - 1)))
                     {
 
                         follow_command[current_weight] = 5; //1 + 4;
                         path_count++;
                         follow_path(start_point_x + 1, start_point_y - 1, dest_point_x, dest_point_y);
                     }
-                    else if ((result_grid[start_point_y, start_point_x + 1] == (current_weight - 1)) && ((start_point_x + 1) <= (column - 1)))
+                    else if (right_move_check(vehicle_compare) && (result_grid[start_point_y, start_point_x + 1] == (current_weight - 1)) && ((start_point_x + 1) <= (column - 1)))
                     {
 
                         follow_command[current_weight] = 6; //2 + 4;
                         path_count++;
                         follow_path(start_point_x + 1, start_point_y, dest_point_x, dest_point_y);
                     }
-                    else if ((result_grid[start_point_y + 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)) && ((start_point_x + 1) <= (column - 1)))
+                    else if (diagonal_right_down_check(vehicle_compare) && (result_grid[start_point_y + 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)) && ((start_point_x + 1) <= (column - 1)))
                     {
 
                         follow_command[current_weight] = 7; //3 + 4;
                         path_count++;
                         follow_path(start_point_x + 1, start_point_y + 1, dest_point_x, dest_point_y);
                     }
-                    else if ((result_grid[start_point_y + 1, start_point_x] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)))
+                    else if (down_move_check(vehicle_compare) && (result_grid[start_point_y + 1, start_point_x] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)))
                     {
 
                         follow_command[current_weight] = 0; //4 - 4;
                         path_count++;
                         follow_path(start_point_x, start_point_y + 1, dest_point_x, dest_point_y);
                     }
-                    else if ((result_grid[start_point_y + 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0) && ((start_point_y + 1) <= (row - 1)))
+                    else if (diagonal_left_down_check(vehicle_compare) && (result_grid[start_point_y + 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0) && ((start_point_y + 1) <= (row - 1)))
                     {
 
                         follow_command[current_weight] = 1; //5 - 4;
@@ -686,7 +725,7 @@ namespace MVCC.Utill
                         follow_path(start_point_x - 1, start_point_y + 1, dest_point_x, dest_point_y);
                     }
                 }
-                catch(IndexOutOfRangeException) { }
+                catch (IndexOutOfRangeException) { Console.WriteLine("Catch"); }
             }
             // Case 2 : 좌측 위 도착점에서 우측 아래 시작점으로 거슬러 가는 경우
             else if ((relative_position_x >= 0) && (relative_position_y >= 0))
@@ -694,58 +733,59 @@ namespace MVCC.Utill
                 try
                 {
                     ////////////////////////////////////////////////////////////////////////////////
-                    if ((result_grid[start_point_y + 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)) && ((start_point_x + 1) <= (column - 1)))
-                    {
 
-                        follow_command[current_weight] = 7; //3 + 4;
-                        path_count++;
-                        follow_path(start_point_x + 1, start_point_y + 1, dest_point_x, dest_point_y);
-                    }
-                    else if ((result_grid[start_point_y, start_point_x + 1] == (current_weight - 1)) && ((start_point_x + 1) <= (column - 1)))
+                    if (right_move_check(vehicle_compare) && (result_grid[start_point_y, start_point_x + 1] == (current_weight - 1)) && ((start_point_x + 1) <= (column - 1)))
                     {
 
                         follow_command[current_weight] = 6; //2 + 4;
                         path_count++;
                         follow_path(start_point_x + 1, start_point_y, dest_point_x, dest_point_y);
                     }
-                    else if ((result_grid[start_point_y + 1, start_point_x] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)))
+                    else if (down_move_check(vehicle_compare) && (result_grid[start_point_y + 1, start_point_x] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)))
                     {
 
                         follow_command[current_weight] = 0; //4 - 4;
                         path_count++;
                         follow_path(start_point_x, start_point_y + 1, dest_point_x, dest_point_y);
                     }
+                    else if (diagonal_right_down_check(vehicle_compare) && (result_grid[start_point_y + 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)) && ((start_point_x + 1) <= (column - 1)))
+                    {
+
+                        follow_command[current_weight] = 7; //3 + 4;
+                        path_count++;
+                        follow_path(start_point_x + 1, start_point_y + 1, dest_point_x, dest_point_y);
+                    }
 
                     ////////////////////////////////////////////////////////////////////////////////
-                    else if ((result_grid[start_point_y + 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0) && ((start_point_y + 1) <= (row - 1)))
+                    else if (diagonal_left_down_check(vehicle_compare) && (result_grid[start_point_y + 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0) && ((start_point_y + 1) <= (row - 1)))
                     {
 
                         follow_command[current_weight] = 1; // 5 - 4;
                         path_count++;
                         follow_path(start_point_x - 1, start_point_y + 1, dest_point_x, dest_point_y);
                     }
-                    else if ((result_grid[start_point_y, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0))
+                    else if (left_move_check(vehicle_compare) && (result_grid[start_point_y, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0))
                     {
 
                         follow_command[current_weight] = 2; //6 - 4;
                         path_count++;
                         follow_path(start_point_x - 1, start_point_y, dest_point_x, dest_point_y);
                     }
-                    else if ((result_grid[start_point_y - 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x - 1) >= 0))
+                    else if (diagonal_left_up_check(vehicle_compare) && (result_grid[start_point_y - 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x - 1) >= 0))
                     {
 
                         follow_command[current_weight] = 3; //7 - 4;
                         path_count++;
                         follow_path(start_point_x - 1, start_point_y - 1, dest_point_x, dest_point_y);
                     }
-                    else if ((result_grid[start_point_y - 1, start_point_x] == (current_weight - 1)) && ((start_point_y - 1) >= 0))
+                    else if (up_move_check(vehicle_compare) && (result_grid[start_point_y - 1, start_point_x] == (current_weight - 1)) && ((start_point_y - 1) >= 0))
                     {
 
                         follow_command[current_weight] = 4; //0 + 4;
                         path_count++;
                         follow_path(start_point_x, start_point_y - 1, dest_point_x, dest_point_y);
                     }
-                    else if ((result_grid[start_point_y - 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x + 1) <= (column - 1)))
+                    else if (diagonal_left_down_check(vehicle_compare) && (result_grid[start_point_y - 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x + 1) <= (column - 1)))
                     {
 
                         follow_command[current_weight] = 5; //1 + 4;
@@ -753,7 +793,7 @@ namespace MVCC.Utill
                         follow_path(start_point_x + 1, start_point_y - 1, dest_point_x, dest_point_y);
                     }
                 }
-                catch { }
+                catch { Console.WriteLine("Catch"); }
             }
             // Case 3 : 좌측 아래 도착점에서 우측 위 시작점으로 거슬러 가는 경우
             else if ((relative_position_x <= 0) && (relative_position_y >= 0))
@@ -761,66 +801,67 @@ namespace MVCC.Utill
                 try
                 {
                     ////////////////////////////////////////////////////////////////////////////////
-                    if ((result_grid[start_point_y - 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x + 1) <= (column - 1)))
+
+                    if (right_move_check(vehicle_compare) && (result_grid[start_point_y, start_point_x + 1] == (current_weight - 1)) && ((start_point_x + 1) <= (column - 1)))
                     {
 
-                        follow_command[current_weight] = 5; //1 + 4;
-                        path_count++;
-                        follow_path(start_point_x + 1, start_point_y - 1, dest_point_x, dest_point_y);
-                    }
-                    else if ((result_grid[start_point_y, start_point_x + 1] == (current_weight - 1)) && ((start_point_x + 1) <= (column - 1)))
-                    {
-
-                        follow_command[current_weight] = 6; //2 + 4;
+                        follow_command[current_weight] = 2; //2 + 4;
                         path_count++;
                         follow_path(start_point_x + 1, start_point_y, dest_point_x, dest_point_y);
                     }
-                    else if ((result_grid[start_point_y - 1, start_point_x] == (current_weight - 1)) && ((start_point_y - 1) >= 0))
+                    else if (up_move_check(vehicle_compare) && (result_grid[start_point_y - 1, start_point_x] == (current_weight - 1)) && ((start_point_y - 1) >= 0))
                     {
 
-                        follow_command[current_weight] = 4; //0 + 4;
+                        follow_command[current_weight] = 0; //0 + 4;
                         path_count++;
                         follow_path(start_point_x, start_point_y - 1, dest_point_x, dest_point_y);
                     }
-
-                    ////////////////////////////////////////////////////////////////////////////////
-                    else if ((result_grid[start_point_y + 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)) && ((start_point_x + 1) <= (column - 1)))
+                    else if (diagonal_right_up_check(vehicle_compare) && (result_grid[start_point_y - 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x + 1) <= (column - 1)))
                     {
 
-                        follow_command[current_weight] = 7; //3 + 4;
+                        follow_command[current_weight] = 1; //1 + 4;
+                        path_count++;
+                        follow_path(start_point_x + 1, start_point_y - 1, dest_point_x, dest_point_y);
+                    }
+
+                    ////////////////////////////////////////////////////////////////////////////////
+                    else if (diagonal_right_up_check(vehicle_compare) && (result_grid[start_point_y + 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)) && ((start_point_x + 1) <= (column - 1)))
+                    {
+
+                        follow_command[current_weight] = 3; //3 + 4;
                         path_count++;
                         follow_path(start_point_x + 1, start_point_y + 1, dest_point_x, dest_point_y);
                     }
-                    else if ((result_grid[start_point_y + 1, start_point_x] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)))
+                    else if (up_move_check(vehicle_compare) && (result_grid[start_point_y + 1, start_point_x] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)))
                     {
 
-                        follow_command[current_weight] = 0; //4 - 4;
+                        follow_command[current_weight] = 4; //4 - 4;
                         path_count++;
                         follow_path(start_point_x, start_point_y + 1, dest_point_x, dest_point_y);
                     }
-                    else if ((result_grid[start_point_y + 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0) && ((start_point_y + 1) <= (row - 1)))
+                    else if (diagonal_left_down_check(vehicle_compare) && (result_grid[start_point_y + 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0) && ((start_point_y + 1) <= (row - 1)))
                     {
 
-                        follow_command[current_weight] = 1; //5 - 4;
+                        follow_command[current_weight] = 5; //5 - 4;
                         path_count++;
                         follow_path(start_point_x - 1, start_point_y + 1, dest_point_x, dest_point_y);
                     }
-                    else if ((result_grid[start_point_y, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0))
+                    else if (left_move_check(vehicle_compare) && (result_grid[start_point_y, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0))
                     {
 
-                        follow_command[current_weight] = 2; //6 - 4;
+                        follow_command[current_weight] = 6; //6 - 4;
                         path_count++;
                         follow_path(start_point_x - 1, start_point_y, dest_point_x, dest_point_y);
                     }
-                    else if ((result_grid[start_point_y - 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x - 1) >= 0))
+                    else if (diagonal_left_up_check(vehicle_compare) && (result_grid[start_point_y - 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x - 1) >= 0))
                     {
 
-                        follow_command[current_weight] = 3; //7 - 4;
+                        follow_command[current_weight] = 7; //7 - 4;
                         path_count++;
                         follow_path(start_point_x - 1, start_point_y - 1, dest_point_x, dest_point_y);
                     }
                 }
-                catch { }
+                catch { Console.WriteLine("Catch"); }
             }
             // Case 4 : 우측 위 도착점에서 좌측 아래 시작점으로 거슬러 가는 경우
             else if ((relative_position_x >= 0) && (relative_position_y <= 0))
@@ -828,66 +869,67 @@ namespace MVCC.Utill
                 try
                 {
                     ////////////////////////////////////////////////////////////////////////////////
-                    if ((result_grid[start_point_y + 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0) && ((start_point_y + 1) <= (row - 1)))
+
+                    if (left_move_check(vehicle_compare) && (result_grid[start_point_y, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0))
                     {
 
-                        follow_command[current_weight] = 1; //5 - 4;
-                        path_count++;
-                        follow_path(start_point_x - 1, start_point_y + 1, dest_point_x, dest_point_y);
-                    }
-                    else if ((result_grid[start_point_y, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0))
-                    {
-
-                        follow_command[current_weight] = 2; //6 - 4;
+                        follow_command[current_weight] = 6; //6 - 4;
                         path_count++;
                         follow_path(start_point_x - 1, start_point_y, dest_point_x, dest_point_y);
                     }
-                    else if ((result_grid[start_point_y + 1, start_point_x] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)))
+                    else if (down_move_check(vehicle_compare) && (result_grid[start_point_y + 1, start_point_x] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)))
                     {
 
-                        follow_command[current_weight] = 0; //4 - 4;
+                        follow_command[current_weight] = 4; //4 - 4;
                         path_count++;
                         follow_path(start_point_x, start_point_y + 1, dest_point_x, dest_point_y);
                     }
-
-                    ////////////////////////////////////////////////////////////////////////////////
-                    else if ((result_grid[start_point_y - 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x - 1) >= 0))
+                    else if (diagonal_left_down_check(vehicle_compare) && (result_grid[start_point_y + 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0) && ((start_point_y + 1) <= (row - 1)))
                     {
 
-                        follow_command[current_weight] = 3; //7 - 4;
+                        follow_command[current_weight] = 5; //5 - 4;
+                        path_count++;
+                        follow_path(start_point_x - 1, start_point_y + 1, dest_point_x, dest_point_y);
+                    }
+
+                    ////////////////////////////////////////////////////////////////////////////////
+                    else if (diagonal_left_up_check(vehicle_compare) && (result_grid[start_point_y - 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x - 1) >= 0))
+                    {
+
+                        follow_command[current_weight] = 7; //7 - 4;
                         path_count++;
                         follow_path(start_point_x - 1, start_point_y - 1, dest_point_x, dest_point_y);
                     }
-                    else if ((result_grid[start_point_y - 1, start_point_x] == (current_weight - 1)) && ((start_point_y - 1) >= 0))
+                    else if (up_move_check(vehicle_compare) && (result_grid[start_point_y - 1, start_point_x] == (current_weight - 1)) && ((start_point_y - 1) >= 0))
                     {
 
-                        follow_command[current_weight] = 4; //0 + 4;
+                        follow_command[current_weight] = 0; //0 + 4;
                         path_count++;
                         follow_path(start_point_x, start_point_y - 1, dest_point_x, dest_point_y);
                     }
-                    else if ((result_grid[start_point_y - 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x + 1) <= (column - 1)))
+                    else if (diagonal_right_up_check(vehicle_compare) && (result_grid[start_point_y - 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x + 1) <= (column - 1)))
                     {
 
-                        follow_command[current_weight] = 5; //1 + 4;
+                        follow_command[current_weight] = 1; //1 + 4;
                         path_count++;
                         follow_path(start_point_x + 1, start_point_y - 1, dest_point_x, dest_point_y);
                     }
-                    else if ((result_grid[start_point_y, start_point_x + 1] == (current_weight - 1)) && ((start_point_x + 1) <= (column - 1)))
+                    else if (right_move_check(vehicle_compare) && (result_grid[start_point_y, start_point_x + 1] == (current_weight - 1)) && ((start_point_x + 1) <= (column - 1)))
                     {
 
-                        follow_command[current_weight] = 6; //2 + 4;
+                        follow_command[current_weight] = 2; //2 + 4;
                         path_count++;
                         follow_path(start_point_x + 1, start_point_y, dest_point_x, dest_point_y);
                     }
-                    else if ((result_grid[start_point_y + 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)) && ((start_point_x + 1) <= (column - 1)))
+                    else if (diagonal_right_down_check(vehicle_compare) && (result_grid[start_point_y + 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)) && ((start_point_x + 1) <= (column - 1)))
                     {
 
-                        follow_command[current_weight] = 7; //3 + 4;
+                        follow_command[current_weight] = 3; //3 + 4;
                         path_count++;
                         follow_path(start_point_x + 1, start_point_y + 1, dest_point_x, dest_point_y);
                     }
                 }
-                catch { }
+                catch { Console.WriteLine("Catch"); }
             }
         }
 
@@ -988,7 +1030,6 @@ namespace MVCC.Utill
 
         private void bluetoothConnect(object sender, DoWorkEventArgs e)
         {
-            
             string write_data;
             string read_data;
 
@@ -997,7 +1038,7 @@ namespace MVCC.Utill
             SerialPort serialport = new SerialPort();
 
             UGV settingUGV = globals.UGVSettingDictionary[convertId(ugv.Id)];
-            
+
 
             serialport.PortName = settingUGV.ComPort;
             serialport.BaudRate = settingUGV.Baudrate;
@@ -1036,7 +1077,7 @@ namespace MVCC.Utill
             if (serialport.IsOpen)
             {
                 ugv.IsBluetoothConnected = true;
-                state.BluetoothOnOff = true;
+                state.BluetoothPath = "/Resource/bluetooth_on.png";
             }
 
             while (serialport.IsOpen)
@@ -1047,11 +1088,12 @@ namespace MVCC.Utill
 
                 globals.mutex = true;
 
-                for (i = 0; i < 24; i++ ) {
+                for (i = 0; i < 24; i++)
+                {
 
-                    for (j = 0; j < 40; j++ )
+                    for (j = 0; j < 40; j++)
                     {
-                        grid[i,j] = '0';
+                        grid[i, j] = '0';
                     }
                 }
 
@@ -1065,7 +1107,7 @@ namespace MVCC.Utill
                         if (check == true && globals.Map_obstacle[i, j] == 2)
                         {
 
-                            start_x = j; 
+                            start_x = j;
                             start_y = i;
 
                             dest_x = 35;
@@ -1075,7 +1117,8 @@ namespace MVCC.Utill
 
                             check = false;
                         }
-                        if (globals.Map_obstacle[i, j] == 2) {
+                        if (globals.Map_obstacle[i, j] == 2)
+                        {
 
                             grid[i, j] = '0';
                         }
@@ -1086,7 +1129,7 @@ namespace MVCC.Utill
                 {
                     for (j = 0; j < 40; j++)
                     {
-                        Console.Write("{0} ", grid[i,j]);
+                        Console.Write("{0} ", grid[i, j]);
                     }
                     Console.WriteLine(" ");
                 }
@@ -1325,15 +1368,15 @@ namespace MVCC.Utill
                         Console.WriteLine("TX Complete");
                         #endregion
 
-//                        write_data = "i";
+                        //                        write_data = "i";
 
-//                        serialport.WriteLine(write_data[0].ToString());
+                        //                        serialport.WriteLine(write_data[0].ToString());
 
                         //write_data = "q";
 
                         serialport.Close();
                         ugv.IsBluetoothConnected = false;
-                        state.BluetoothOnOff = false;
+                        state.BluetoothPath = "/Resource/bluetooth_off.png";
 
                     }
                     catch (TimeoutException)
@@ -1359,7 +1402,8 @@ namespace MVCC.Utill
                         Console.WriteLine(serialport.ReadExisting());
                     }
                 }
-                else if(write_data == "i"){
+                else if (write_data == "i")
+                {
 
                 }
 
@@ -1367,7 +1411,7 @@ namespace MVCC.Utill
                 {
                     serialport.Close();
                     ugv.IsBluetoothConnected = false;
-                    state.BluetoothOnOff = false;
+                    state.BluetoothPath = "/Resource/bluetooth_off.png";
                 }
                 Console.Out.Flush();
             }
