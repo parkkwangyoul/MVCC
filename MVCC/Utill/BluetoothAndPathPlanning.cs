@@ -986,6 +986,7 @@ namespace MVCC.Utill
 
         private void bluetoothConnect(object sender, DoWorkEventArgs e)
         {
+            
             string write_data;
             string read_data;
 

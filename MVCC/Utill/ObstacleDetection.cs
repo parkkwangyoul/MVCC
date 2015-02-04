@@ -120,6 +120,7 @@ namespace MVCC.Utill
                     {
                         building_list.Add(new Building("B" + blob_indenti_count++, (double)targetBlob.BoundingBox.Width, (double)targetBlob.BoundingBox.Height, targetBlob.BoundingBox.X, targetBlob.BoundingBox.Y, color_str, true));
                         obstacle_color_count[color_index]++; //obstacle_color_count 증가
+                        //Console.WriteLine("blob_indenti_count = " + blob_indenti_count + " color_str = " + color_str + " x  = " + targetBlob.BoundingBox.X + " y = " + targetBlob.BoundingBox.Y);
                     }
                     else if (temp_color_count[color_index] != 0) //color_count가 0이 아니면 list에 있으니 정보 갱신만 함
                     {

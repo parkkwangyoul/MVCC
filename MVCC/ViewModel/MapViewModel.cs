@@ -227,8 +227,8 @@ namespace MVCC.ViewModel
                     MVCCItemList.Add(building);
                 }
 
-                if (buildingList.Count == MVCCItemList.Count)
-                    break;
+                //if (buildingList.Count == MVCCItemList.Count)
+                //    break;
             }
         }
 
