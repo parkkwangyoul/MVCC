@@ -45,37 +45,40 @@ namespace MVCC.Utill
             //영상에서 차량 범위를 빼고 ROI만들기
             for (int i = 0; i < 4; i++)
             {
-                int pos_x = tracking_rect[i].X;
-                int pos_y = tracking_rect[i].Y;
-
-                //이미지가 범위를 벗어날경우 처리
-                if (pos_x < 0)
-                    pos_x = 0;
-                if (pos_y < 0)
-                    pos_y = 0;
-
-                if (pos_x + tracking_rect[i].Width > globals.rect_width)
-                    pos_x = globals.rect_width - tracking_rect[i].Width;
-                if (pos_y + tracking_rect[i].Height > globals.rect_height)
-                    pos_y = globals.rect_height - tracking_rect[i].Height;
-
-                for (int x = pos_x; x < pos_x + tracking_rect[i].Width; x++)
+                if (tracking_rect[i].Width != 0 && tracking_rect[i].Height != 0)
                 {
-                    for (int y = pos_y; y < pos_y + tracking_rect[i].Height; y++)
+                    int pos_x = tracking_rect[i].X - globals.x_grid;
+                    int pos_y = tracking_rect[i].Y - globals.y_grid;
+
+                    //이미지가 범위를 벗어날경우 처리
+                    if (pos_x < 0)
+                        pos_x = 0;
+                    if (pos_y < 0)
+                        pos_y = 0;
+
+                    if (pos_x + tracking_rect[i].Width > globals.rect_width)
+                        pos_x = globals.rect_width - tracking_rect[i].Width;
+                    if (pos_y + tracking_rect[i].Height > globals.rect_height)
+                        pos_y = globals.rect_height - tracking_rect[i].Height;
+
+                    for (int x = pos_x; x < pos_x + tracking_rect[i].Width + globals.x_grid; x++)
                     {
-                        temp_img[y, x] = new Bgr(0, 0, 0);
-                        if (x % globals.x_grid == 0 && y % globals.y_grid == 0)
+                        for (int y = pos_y; y < pos_y + tracking_rect[i].Height + globals.y_grid; y++)
                         {
-                            int t_x = x;
-                            int t_y = y;
+                            temp_img[y, x] = new Bgr(0, 0, 0);
+                            if (x % globals.x_grid == 0 && y % globals.y_grid == 0)
+                            {
+                                int t_x = x;
+                                int t_y = y;
 
-                            if (t_x != 0)
-                                t_x = x / globals.x_grid;
+                                if (t_x != 0)
+                                    t_x = x / globals.x_grid;
 
-                            if (t_y != 0)
-                                t_y = y / globals.y_grid;
+                                if (t_y != 0)
+                                    t_y = y / globals.y_grid;
 
-                            Map_obstacle[t_y, t_x] = 2; // 잡힌 차량은 Map에 2라고 표시
+                                Map_obstacle[t_y, t_x] = 2; // 잡힌 차량은 Map에 2라고 표시
+                            }
                         }
                     }
                 }
