@@ -81,8 +81,46 @@ namespace MVCC.Utill
                             }
                         }
                     }
+
+                    //차량 vs 차량 충돌 검사
+                    for (int j = 0; j < 4; j++)
+                    {
+                        int leftA, leftB;
+                        int rightA, rightB;
+                        int topA, topB;
+                        int bottomA, bottomB;
+
+                        if (i != j)
+                        {
+                            if (!(tracking_rect[j].X == 0 && tracking_rect[j].Y == 0))
+                            {
+                                leftA = tracking_rect[i].X;
+                                rightA = tracking_rect[i].X + tracking_rect[i].Width;
+                                topA = tracking_rect[i].Y;
+                                bottomA = tracking_rect[i].Y + tracking_rect[i].Height;
+
+                                leftB = tracking_rect[j].X;
+                                rightB = tracking_rect[j].X + tracking_rect[j].Width;
+                                topB = tracking_rect[j].Y;
+                                bottomB = tracking_rect[j].Y + tracking_rect[j].Height;
+
+                                if (bottomA < topB) continue; //아래
+                                if (topA > bottomB) continue; //위
+                                if (rightA < leftB) continue; //오른쪽
+                                if (leftA > rightB) continue; //왼쪽
+
+
+                                if (bottomA - topB <= 4 || bottomB - topA <= 4 || rightA - leftB <= 4 || rightB - leftA <= 4)
+                                    Console.WriteLine(i + " 차량과 " + j + " 차량이 충돌 위기");
+                                else
+                                    Console.WriteLine(i + " 차량과 " + j + " 차량이 충돌함\n");
+                            }
+                        }
+                    }
                 }
             }
+
+
 
             int[] temp_color_count = new int[4]; //[0]purple [1] black [2] yellow [3]
             temp_color_count = (int[])obstacle_color_count.Clone();
@@ -99,6 +137,28 @@ namespace MVCC.Utill
                 {
                     string color_str;
                     int color_index = -1;
+
+                    //장애물의 충돌 검사를 위해 범위 설정
+                    int xx = 10, yy = 10;
+                    int temp_x, temp_y, temp_width, temp_height;
+
+                    temp_x = targetBlob.BoundingBox.X - xx;
+                    temp_width = targetBlob.BoundingBox.Width + xx * 2;
+                    if (temp_x < 0)
+                    {
+                        temp_x = 0;
+                        temp_width = targetBlob.BoundingBox.Width + xx;
+                    }
+
+                    temp_y = targetBlob.BoundingBox.Y - yy;
+                    temp_height = targetBlob.BoundingBox.Height + yy * 2;
+                    if (temp_y < 0)
+                    {
+                        temp_y = 0;
+                        temp_height = targetBlob.BoundingBox.Height + yy;
+
+                    }
+
                     //검출된 색이 장애물인지
                     if ((color_str = obstacle_colorCheck(blob_image, targetBlob.Area, targetBlob.BoundingBox.X, targetBlob.BoundingBox.Y, targetBlob.BoundingBox.Width, targetBlob.BoundingBox.Height)) == "null")
                     {
@@ -154,6 +214,40 @@ namespace MVCC.Utill
                     }
 
                     blob_count++;
+
+                    //장애물 vs 차량 충돌 검사
+                    for (int i = 0; i < 4; i++)
+                    {
+                        int leftA, leftB;
+                        int rightA, rightB;
+                        int topA, topB;
+                        int bottomA, bottomB;
+
+                        if (!(tracking_rect[i].X == 0 && tracking_rect[i].Y == 0))
+                        {
+                            leftA = tracking_rect[i].X;
+                            rightA = tracking_rect[i].X + tracking_rect[i].Width;
+                            topA = tracking_rect[i].Y;
+                            bottomA = tracking_rect[i].Y + tracking_rect[i].Height;
+
+                            leftB = temp_x;
+                            rightB = temp_x + temp_width;
+                            topB = temp_y;
+                            bottomB = temp_y + temp_height;
+
+                            if (bottomA < topB) continue; //아래
+                            if (topA > bottomB) continue; //위
+                            if (rightA < leftB) continue; //오른쪽
+                            if (leftA > rightB) continue; //왼쪽
+
+
+                            if (bottomA - topB <= yy - 4 || bottomB - topA <= yy - 4 || rightA - leftB <= xx - 4 || rightB - leftA <= xx - 4)
+                                Console.WriteLine(i + " 번쨰 장애물과 충돌위기\n");
+                            else
+                                Console.WriteLine(i + " 번쨰 장애물과 충돌함\n");
+                            //[0]blue [1] green [2]orange [3]red
+                        }
+                    }
                 }
                 else //범위를 벗어난 크기는 검정으로 색칠            
                 {
