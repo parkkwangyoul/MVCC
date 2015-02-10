@@ -96,22 +96,22 @@ namespace MVCC.View
                     {
                         Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
                         {
-                        ugvList[i].X -= 1;
-                        ugvList[i].Y -= 1;
+                           // ugvList[i].X -= 1;
+                           // ugvList[i].Y -= 1;
 
 
-                        refreshView();
+                            refreshView();
                         }));
                     }
                     else
                     {
                         Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
                         {
-                        ugvList[i].X += 1;
-                        ugvList[i].Y += 1;
+                           // ugvList[i].X += 1;
+                            //ugvList[i].Y += 1;
 
 
-                        refreshView();
+                            refreshView();
                         }));
                     }
                 }
