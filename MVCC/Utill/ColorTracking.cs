@@ -260,17 +260,13 @@ namespace MVCC.Utill
                     else
                         direction[index] = -1;
                     
-                    
-                    //if (direction[index] == -1)
-                    //    Console.WriteLine("i = " + index + " direction = " + direction[index] + "알수 없는 각도" + " result = " + result);
-
-                    if (direction[index] != -1)
-                        Console.WriteLine("i = " + index + " direction[index] = " + direction[index] + " result = " + result);
-                    else
+                    if (direction[index] == -1)
                         Console.WriteLine("i = " + index + " direction[index] = " + direction[index] + "알수 없는 각도" + " result = " + result);
-
-                    if (index == 3)
-                        Console.WriteLine("");
+                    //else                        
+                    //    Console.WriteLine("i = " + index + " direction[index] = " + direction[index] + " result = " + result);
+                   
+                    //if (index == 3)
+                    //    Console.WriteLine("");
                 
                 }
                 else
@@ -286,6 +282,7 @@ namespace MVCC.Utill
                 rect[index] = new Rectangle(0, 0, 0, 0);  //사라졌을때 좌표를 -1로 만듬
                 color[index] = false;
                 change_check[index] = true;
+                color_count--;
             }
         }
 
