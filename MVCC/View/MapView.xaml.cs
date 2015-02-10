@@ -182,7 +182,7 @@ namespace MVCC.View
                             {
                                 double matchScore = matches[y, x, 0];
 
-                                if (matchScore > 0.82)
+                                if (matchScore >= 0.82)
                                 {
                                     colorTracking.colorCheck(matchColorCheck, totalPicxel, x, y, globals.TemplateWidth, globals.TemplateHeight); //어떤 색인지 체크                        
                                     y += img1.Height; //x축 다음 y축(세로)이 변화기 때문에 속도를 높이기 위해 검출된 y좌표 + 이미지 사이즈 함.                             
@@ -203,7 +203,7 @@ namespace MVCC.View
 
                     average_val++;
 
-                    if (average_val >= 3)
+                    if (average_val >= 0)
                     {
                         //영상에 트레킹 결과 내보내기
                         for (int i = 0; i < 4; i++)
@@ -241,7 +241,7 @@ namespace MVCC.View
                             }
                         }
 
-
+                       /*
                         //색상 트레킹중에 하나가 사라졌는지..(test임!! 나중엔.. 이걸로 말고 장애물 변화를 해야함. 밑에 image_is_changed는 장애물변화될떄!!!!)
                         for (int i = 0; i < 4; i++)
                         {
@@ -251,6 +251,7 @@ namespace MVCC.View
                                 colorTracking.change_chk_reset(i);
                             }
                         }
+                         */
                     }
                     obstacle_check = true; //장애물이미지와 싱크 맞추기 위해 설정
                 }

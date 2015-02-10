@@ -42,7 +42,7 @@ namespace MVCC.Utill
                     if (i == 0) //blue
                         YccColorCheck(i, 0, 41, 151, 255, 119, 240); //8섹션
                     else if (i == 1) //green
-                        YccColorCheck(i, 0, 75, 100, 186, 123, 143); //8섹션
+                        YccColorCheck(i, 0, 75, 100, 186, 123, 131); //8섹션
                     else if (i == 2) //orange
                         YccColorCheck(i, 0, 155, 0, 255, 216, 102); //8섹션
                     else //red
@@ -117,7 +117,7 @@ namespace MVCC.Utill
                     if (i == 0)
                         color_traking(i, 0, 41, 151, 255, 119, 240, iamge, rect); //8섹션
                     else if (i == 1)
-                        color_traking(i, 0, 75, 100, 186, 123, 143, iamge, rect); //8섹션
+                        color_traking(i, 0, 75, 100, 186, 123, 131, iamge, rect); //8섹션
                     else if (i == 2)
                         color_traking(i, 0, 155, 0, 255, 216, 102, iamge, rect); //8섹션
                     else

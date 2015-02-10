@@ -81,7 +81,7 @@ namespace MVCC.Utill
                             }
                         }
                     }
-                    /*
+                    
                     //차량 vs 차량 충돌 검사
                     for (int j = 0; j < 4; j++)
                     {
@@ -92,7 +92,7 @@ namespace MVCC.Utill
 
                         if (i != j)
                         {
-                            if (!(tracking_rect[j].X == 0 && tracking_rect[j].Y == 0))
+                            if (!(tracking_rect[j].Width == 0 && tracking_rect[j].Height == 0))
                             {
                                 leftA = tracking_rect[i].X;
                                 rightA = tracking_rect[i].X + tracking_rect[i].Width;
@@ -117,7 +117,7 @@ namespace MVCC.Utill
                             }
                         }
                     }
-                     */
+                     
                 }
             }
 
@@ -215,7 +215,7 @@ namespace MVCC.Utill
                     }
 
                     blob_count++;
-                    /*
+                    
                     //장애물 vs 차량 충돌 검사
                     for (int i = 0; i < 4; i++)
                     {
@@ -224,7 +224,7 @@ namespace MVCC.Utill
                         int topA, topB;
                         int bottomA, bottomB;
 
-                        if (!(tracking_rect[i].X == 0 && tracking_rect[i].Y == 0))
+                        if (!(tracking_rect[i].Width == 0 && tracking_rect[i].Height == 0))
                         {
                             leftA = tracking_rect[i].X;
                             rightA = tracking_rect[i].X + tracking_rect[i].Width;
@@ -248,8 +248,7 @@ namespace MVCC.Utill
                                 Console.WriteLine(i + " 번쨰 장애물과 충돌함\n");
                             //[0]blue [1] green [2]orange [3]red
                         }
-                    }
-                    */
+                    }          
                 }
                 else //범위를 벗어난 크기는 검정으로 색칠            
                 {
