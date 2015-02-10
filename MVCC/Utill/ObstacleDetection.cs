@@ -177,8 +177,8 @@ namespace MVCC.Utill
                         color_index = 0;
                     else if (color_str == "black")
                         color_index = 1;
-                    else if (color_str == "yellow")
-                        color_index = 2;
+                    //else if (color_str == "yellow")
+                    //    color_index = 2;
 
                     if (temp_color_count[color_index] == 0) //검출된 색의 color_count가 0 일땐 list에 추가함
                     {
@@ -271,8 +271,8 @@ namespace MVCC.Utill
                 return "purple";
             else if (obstacle_YccColorCheck(image, totalPicxel, x, y, width, height, 0, 122, 106, 65, 140, 141) == 1) //검정 8섹션
                 return "black";
-            else if (obstacle_YccColorCheck(image, totalPicxel, x, y, width, height, 0, 120, 13, 255, 168, 103) == 1) //노랑 8섹션
-                return "yellow";
+            //else if (obstacle_YccColorCheck(image, totalPicxel, x, y, width, height, 0, 120, 13, 255, 168, 103) == 1) //노랑 8섹션
+            //    return "yellow";
             else
                 return "null";
         }
@@ -384,8 +384,8 @@ namespace MVCC.Utill
                         obstacle_color_count[0]--;
                     else if (remov_tmp.BuildingColor == "black")
                         obstacle_color_count[1]--;
-                    else if (remov_tmp.BuildingColor == "yellow")
-                        obstacle_color_count[2]--;
+                    //else if (remov_tmp.BuildingColor == "yellow")
+                    //    obstacle_color_count[2]--;
                 }
                 else
                     remov_tmp.DisapperCheck = false; //true였다면 false로 바꿔줌 

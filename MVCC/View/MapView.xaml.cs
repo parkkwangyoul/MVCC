@@ -160,6 +160,7 @@ namespace MVCC.View
             globals.TemplateWidth = img1.Width + 30;
             globals.TemplateHeight = img1.Height + 30;
             List<UGV> ugvList = new List<UGV>();
+            int average_val = 0; //떨림 방지를 위한 count
 
             while (true)
             {
@@ -168,7 +169,7 @@ namespace MVCC.View
                     frame.ROI = new System.Drawing.Rectangle(0, 0, globals.rect_width, globals.rect_height); // 정한 범위를 ROI로 설정                 
                     obstacle_image = frame.Clone(); //원본 복사
 
-                    if (image_is_changed == true) //시작할때 바로 들어고, 변화가 감지됬을때 들어가서 탬플릿 매칭 수행
+                    if (image_is_changed == true && colorTracking.get_color_count() != 4) //시작할때 바로 들어고, 변화가 감지됬을때 들어가서 탬플릿 매칭 수행
                     {
                         image_is_changed = false; // 변화감지되면 true해서 들어옴
                         matchResImage = frame.Convert<Gray, Byte>().PyrDown().PyrUp().MatchTemplate(img1_gray, Emgu.CV.CvEnum.TM_TYPE.CV_TM_CCOEFF_NORMED); //템플릿 매칭 중간 결과 저장
@@ -181,7 +182,7 @@ namespace MVCC.View
                             {
                                 double matchScore = matches[y, x, 0];
 
-                                if (matchScore > 0.7)
+                                if (matchScore > 0.82)
                                 {
                                     colorTracking.colorCheck(matchColorCheck, totalPicxel, x, y, globals.TemplateWidth, globals.TemplateHeight); //어떤 색인지 체크                        
                                     y += img1.Height; //x축 다음 y축(세로)이 변화기 때문에 속도를 높이기 위해 검출된 y좌표 + 이미지 사이즈 함.                             
@@ -197,58 +198,60 @@ namespace MVCC.View
                         }));
                     }
 
-                    //(frame); //이건 트래킹되는 색상을 표시하기 위한 테스트 함수(블루)                  
-
                     //색상 트래킹
                     tracking_rect = colorTracking.tracking_start(frame);
 
-                    //영상에 트레킹 결과 내보내기
-                    for (int i = 0; i < 4; i++)
+                    average_val++;
+
+                    if (average_val >= 3)
                     {
-                        //AddUGV(i.ToString(), tracking_rect[i].X, tracking_rect[i].Y);
-                        if (tracking_rect[i].Width != 0 && tracking_rect[i].Height != 0)
+                        //영상에 트레킹 결과 내보내기
+                        for (int i = 0; i < 4; i++)
                         {
-                            Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
+                            //AddUGV(i.ToString(), tracking_rect[i].X, tracking_rect[i].Y);
+                            if (tracking_rect[i].Width != 0 && tracking_rect[i].Height != 0)
                             {
-                                for (int j = 0; j < mapViewModel.MVCCItemList.Count; j++)
+                                Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
                                 {
-                                    if (!(mapViewModel.MVCCItemList[j] is UGV))
-                                        continue;
-
-                                    UGV ugv = mapViewModel.MVCCItemList[j] as UGV;
-
-                                    if (ugv.Id.Equals("A" + i))
+                                    for (int j = 0; j < mapViewModel.MVCCItemList.Count; j++)
                                     {
-                                        ugv.X = tracking_rect[i].X;
-                                        ugv.Y = tracking_rect[i].Y;
-                                        break;
+                                        if (!(mapViewModel.MVCCItemList[j] is UGV))
+                                            continue;
+
+                                        UGV ugv = mapViewModel.MVCCItemList[j] as UGV;
+
+                                        if (ugv.Id.Equals("A" + i))
+                                        {
+                                            ugv.X = tracking_rect[i].X;
+                                            ugv.Y = tracking_rect[i].Y;
+                                            break;
+                                        }
                                     }
-                                }
 
-                                refreshView();
-                            }));
-                        }
-                        else
-                        {
-                            Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
+                                    refreshView();
+                                }));
+                            }
+                            else
                             {
-                                mapViewModel.RemoveUGV("A" + i);
-                                refreshView();
-                            }));
+                                Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
+                                {
+                                    mapViewModel.RemoveUGV("A" + i);
+                                    refreshView();
+                                }));
+                            }
                         }
-                    }
 
-                    
-                    //색상 트레킹중에 하나가 사라졌는지..(test임!! 나중엔.. 이걸로 말고 장애물 변화를 해야함. 밑에 image_is_changed는 장애물변화될떄!!!!)
-                    for (int i = 0; i < 4; i++)
-                    {
-                        if (colorTracking.change_chk(i) == true)
+
+                        //색상 트레킹중에 하나가 사라졌는지..(test임!! 나중엔.. 이걸로 말고 장애물 변화를 해야함. 밑에 image_is_changed는 장애물변화될떄!!!!)
+                        for (int i = 0; i < 4; i++)
                         {
-                            image_is_changed = true;
-                            colorTracking.change_chk_reset(i);
+                            if (colorTracking.change_chk(i) == true)
+                            {
+                                image_is_changed = true;
+                                colorTracking.change_chk_reset(i);
+                            }
                         }
                     }
-                    
                     obstacle_check = true; //장애물이미지와 싱크 맞추기 위해 설정
                 }
             }
