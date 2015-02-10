@@ -1151,120 +1151,118 @@ namespace MVCC.Utill
                         {0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
-
-            while (!serialport.IsOpen) ;
-
             if (serialport.IsOpen)
             {
                 ugv.IsBluetoothConnected = true;
                 state.BluetoothOnOff = true;
 
-                bool check = true;
-
-                // critical section
-                while (globals.mutex) ;
-
-                globals.mutex = true;
-
-
-                for (i = 0; i < 24; i++)
+                if (write_data.Equals("f"))
                 {
-                    for (j = 0; j < 40; j++)
+                    bool check = true;
+
+                    // critical section
+                    while (globals.mutex) ;
+
+                    globals.mutex = true;
+
+
+                    for (i = 0; i < 24; i++)
                     {
-
-                        grid[i, j] = globals.Map_obstacle[i, j].ToString()[0];
-
-                        //Console.Write("{0} ", globals.Map_obstacle[i, j].ToString()[0]);
-
-                        if (globals.Map_obstacle[i, j] == 1) { grid[i,j] = 'x'; }
-
-                        if (check == true && globals.Map_obstacle[i, j] == 2)
+                        for (j = 0; j < 40; j++)
                         {
 
-                            start_x = j;
-                            start_y = i;
+                            grid[i, j] = globals.Map_obstacle[i, j].ToString()[0];
 
-                            dest_x = state.EndPointX;
-                            dest_y = state.EndPointY;
+                            //Console.Write("{0} ", globals.Map_obstacle[i, j].ToString()[0]);
 
-                            size_ = 7;
+                            if (globals.Map_obstacle[i, j] == 1) { grid[i, j] = 'x'; }
 
-                            check = false;
+                            if (check == true && globals.Map_obstacle[i, j] == 2)
+                            {
+
+                                start_x = j;
+                                start_y = i;
+
+                                dest_x = state.EndPointX;
+                                dest_y = state.EndPointY;
+
+                                size_ = 5;
+
+                                check = false;
+                            }
+                            if (globals.Map_obstacle[i, j] == 2)
+                            {
+
+                                grid[i, j] = '0';
+                            }
                         }
-                        if (globals.Map_obstacle[i, j] == 2)
-                        {
-
-                            grid[i, j] = '0';
-                        }
+                        //Console.WriteLine(" ");
                     }
                     //Console.WriteLine(" ");
-                }
-                //Console.WriteLine(" ");
 
-                for (i = 0; i < 24; i++)
-                {
-                    for (j = 0; j < 40; j++)
+                    for (i = 0; i < 24; i++)
                     {
-                        Console.Write("{0} ", grid[i, j]);
+                        for (j = 0; j < 40; j++)
+                        {
+                            Console.Write("{0} ", grid[i, j]);
+                        }
+                        Console.WriteLine(" ");
                     }
-                    Console.WriteLine(" ");
-                }
 
-                globals.mutex = false;
+                    globals.mutex = false;
 
-                // critical section end
+                    // critical section end
 
-                serialport.WriteLine((write_data[0]).ToString());
-                /*
-                if (write_data == "a")
-                {
-
-                    try
+                    serialport.WriteLine((write_data[0]).ToString());
+                    /*
+                    if (write_data == "a")
                     {
-                        read_data = serialport.ReadTo("\r");
-                        Console.WriteLine(read_data);
-                    }
-                    catch (TimeoutException)
-                    {
-                        Console.WriteLine("TimeOutException");
 
-                        Console.Write("Buffer : ");
-                        Console.WriteLine(serialport.ReadExisting());
-                    }
-                }
-                else if (write_data == "b")
-                {
-                    try
-                    {
-                        read_data = serialport.ReadTo("\r");
-                        Console.WriteLine(read_data);
-                    }
-                    catch (TimeoutException)
-                    {
-                        Console.WriteLine("TimeOutException");
+                        try
+                        {
+                            read_data = serialport.ReadTo("\r");
+                            Console.WriteLine(read_data);
+                        }
+                        catch (TimeoutException)
+                        {
+                            Console.WriteLine("TimeOutException");
 
-                        Console.Write("Buffer : ");
-                        Console.WriteLine(serialport.ReadExisting());
+                            Console.Write("Buffer : ");
+                            Console.WriteLine(serialport.ReadExisting());
+                        }
                     }
-                }
-                else if (write_data == "c")
-                {
-                    try
+                    else if (write_data == "b")
                     {
-                        read_data = serialport.ReadTo("\r");
-                        Console.WriteLine(read_data);
-                    }
-                    catch (TimeoutException)
-                    {
-                        Console.WriteLine("TimeOutException");
+                        try
+                        {
+                            read_data = serialport.ReadTo("\r");
+                            Console.WriteLine(read_data);
+                        }
+                        catch (TimeoutException)
+                        {
+                            Console.WriteLine("TimeOutException");
 
-                        Console.Write("Buffer : ");
-                        Console.WriteLine(serialport.ReadExisting());
+                            Console.Write("Buffer : ");
+                            Console.WriteLine(serialport.ReadExisting());
+                        }
                     }
-                }
-                */
-                if (write_data == "f")
-                {
+                    else if (write_data == "c")
+                    {
+                        try
+                        {
+                            read_data = serialport.ReadTo("\r");
+                            Console.WriteLine(read_data);
+                        }
+                        catch (TimeoutException)
+                        {
+                            Console.WriteLine("TimeOutException");
+
+                            Console.Write("Buffer : ");
+                            Console.WriteLine(serialport.ReadExisting());
+                        }
+                    }
+                    */
+
                     try
                     {
 
@@ -1495,6 +1493,8 @@ namespace MVCC.Utill
                         Console.Write("Buffer : ");
                         Console.WriteLine(serialport.ReadExisting());
                     }
+
+                    disConnect(serialport);
                 }
 
                 else if (write_data == "g")
@@ -1518,12 +1518,17 @@ namespace MVCC.Utill
 
                 else if (write_data == "q")
                 {
-                    serialport.Close();
-                    ugv.IsBluetoothConnected = false;
-                    state.BluetoothOnOff = false;
+                    disConnect(serialport);
                 }
                 Console.Out.Flush();
             }
+        }
+
+        private void disConnect(SerialPort serialport)
+        {
+            serialport.Close();
+            ugv.IsBluetoothConnected = false;
+            state.BluetoothOnOff = false;
         }
 
         private StopBits getStopBit(int bit)

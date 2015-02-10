@@ -22,8 +22,18 @@
                     <ColumnDefinition Width="25*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 
-                <Image Margin="5" Source="{Binding BluetoothPath}" />
-                
+                <Image Grid.Column="0" Margin="5" Source="{Binding DrivingResourcePath}" />
+                <StackPanel Orientation="Vertical" Grid.Column="1" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="X : " />
+                        <TextBlock Text="{Binding CurrentPointX}" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Y : " />
+                        <TextBlock Text="{Binding CurrentPointY}" />
+                    </StackPanel>
+                </StackPanel>
             </Grid>
         </Grid>
     </Border>

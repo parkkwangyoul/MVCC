@@ -47,6 +47,7 @@ namespace MVCC.View
         private Globals globals = Globals.Instance;
 
         private BluetoothAndPathPlanning bluetoothAndPathPlanning;
+        List<UGV> ugvList = new List<UGV>();
 
         #region 카메라, thread start
         /**
@@ -54,6 +55,79 @@ namespace MVCC.View
       * */
         private void CamOn(object sender, RoutedEventArgs e)
         {
+            // 카메라 없을때, 테스트용        
+            MockCameraOn();
+            // 카메라 연결했을때
+            //CameraOnAndDetectThings();
+        }
+
+        #region TestMock
+        private void MockCameraOn()
+        {
+
+            for (int i = 0; i < 4; i++)
+            {
+                UGV ugv = new UGV("A" + i, 50, 50, 50 + 50 * i, 50 + 50 * i, "Green");
+
+                ugvList.Add(ugv);
+            }
+            
+            mapViewModel.AddUGV(ugvList);
+
+            test_thread();
+        }
+
+        private void test_thread()
+        {
+            //색 트레킹 쓰레드
+            BackgroundWorker thread = new BackgroundWorker();
+            thread.DoWork += test_redirect;
+            thread.RunWorkerAsync();
+        }
+
+        private void test_redirect(object sender, DoWorkEventArgs e)
+        {
+            bool check = false;
+            while (true)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    if (check)
+                    {
+                        Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
+                        {
+                        ugvList[i].X -= 1;
+                        ugvList[i].Y -= 1;
+
+
+                        refreshView();
+                        }));
+                    }
+                    else
+                    {
+                        Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
+                        {
+                        ugvList[i].X += 1;
+                        ugvList[i].Y += 1;
+
+
+                        refreshView();
+                        }));
+                    }
+                }
+
+                check = !check;
+
+                Thread.Sleep(30);
+
+                Console.WriteLine("child");
+            }
+        }
+
+        #endregion TestMock
+
+        private void CameraOnAndDetectThings()
+        {            
             webcam = new Capture(0); //cam 설정
             thread_start(); //thread 시작
         }
@@ -380,6 +454,7 @@ namespace MVCC.View
         // UGV를 선택하는 모드
         private void SelectUGV(object sender, MouseButtonEventArgs e)
         {
+            Console.WriteLine("Main");
             IInputElement clickedElement = Mouse.DirectlyOver;
 
             // 그룹모드로 선택할때

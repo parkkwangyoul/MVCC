@@ -36,7 +36,7 @@ namespace MVCC.Model
         }
 
         // 주행 상태를 나타냄
-        private bool isDriving = false;
+        private bool isDriving = true;
         public bool IsDriving
         {
             get { return isDriving; }
@@ -46,14 +46,37 @@ namespace MVCC.Model
             }
         }
 
-        // 현재 지나고 있는 좌표
-        private int[,] currentPoint;
-        public int[,] CurrentPoint
+        // 주행 상태를 나타내는 리소스
+        public string DrivingResourcePath
         {
-            get { return currentPoint; }
+            get
+            {
+                if (isDriving)
+                    return "/Resource/run_on.png";
+                else
+                    return "/Resource/run_off.png";
+            }
+        }
+
+        // 현재 지나고 있는 X 좌표
+        private int currentPointX;
+        public int CurrentPointX
+        {
+            get { return currentPointX; }
             set
             {
-                currentPoint = value;
+                currentPointX = value;
+            }
+        }
+
+        // 현재 지나고 있는 Y 좌표
+        private int currentPointY;
+        public int CurrentPointY
+        {
+            get { return currentPointY; }
+            set
+            {
+                currentPointY = value;
             }
         }
 
