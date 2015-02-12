@@ -49,6 +49,8 @@ namespace MVCC.View
         private BluetoothAndPathPlanning bluetoothAndPathPlanning;
         List<UGV> ugvList = new List<UGV>();
 
+        
+
         #region 카메라, thread start
         /**
       * 카메라를 켬
@@ -275,6 +277,10 @@ namespace MVCC.View
             {
                 if (obstacle_check == true) //frame의 추적 영상 처리가 끝나고 처리
                 {
+                    //globals.mutex.WaitOne();
+
+                    globals.rwl.AcquireWriterLock(0);
+
                     blob_count = obstacleDetection.detectBlob(obstacle_image, globals.Map_obstacle, tracking_rect); //장애물 검출
 
                     if (frist_change_check == true) //제일 처음 변화감지는 건너 뜀
@@ -306,6 +312,8 @@ namespace MVCC.View
                     globals.pre_Map_obstacle = (int[,])globals.Map_obstacle.Clone(); //비교를 위해 이전 Map정보 설정
                     Array.Clear(globals.Map_obstacle, 0, globals.rect_height / globals.y_grid * globals.rect_width / globals.x_grid);
 
+                    globals.rwl.ReleaseReaderLock();
+                    //globals.mutex.ReleaseMutex();
                     /*
                     globals.mutex = true;
  
