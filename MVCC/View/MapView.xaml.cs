@@ -284,27 +284,29 @@ namespace MVCC.View
                             Console.WriteLine("Map의 장애물 수 변화 !!! pre_blob_count = " + pre_blob_count + " blob_count = " + blob_count);
                             image_is_changed = true; //Map변화가 감지 됬으니 탬플릿 매칭 시작
                         }
+                        else
+                        {
+                            //장애물이 옮겨짐을 검사. 옮겨지고 있어도 차량은 정지 해야함
+                            int moving_check_count = 0;
 
-                        //장애물이 옮겨짐을 검사. 옮겨지고 있어도 차량은 정지 해야함
-                        int moving_check_count = 0;
-
-                        for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
-                            for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
-                                if (globals.Map_obstacle[j, i] != 2 || globals.pre_Map_obstacle[j, i] != 2)
-                                    if (globals.Map_obstacle[j, i] != globals.pre_Map_obstacle[j, i])
+                            for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
+                                for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
+                                    if (globals.Map_obstacle[j, i] != 2 && globals.pre_Map_obstacle[j, i] != 2
+                                        && globals.Map_obstacle[j, i] != globals.pre_Map_obstacle[j, i])
                                         moving_check_count++;
 
-                        if (moving_check_count >= 5) //배열이 5개 이상 차이날 경우 장애물이 옮겨지고 있음
-                            Console.WriteLine("장애물 옮기는 중!");
+                            if (moving_check_count >= 5) //배열이 5개 이상 차이날 경우 장애물이 옮겨지고 있음
+                                Console.WriteLine("장애물 옮기는 중!");
+                        }
                     }
                     else
                         frist_change_check = true;
 
                     pre_blob_count = blob_count; //현재 blob_count를 이전 blob_count에 저장
                     globals.pre_Map_obstacle = (int[,])globals.Map_obstacle.Clone(); //비교를 위해 이전 Map정보 설정
-                    //Array.Clear(globals.Map_obstacle, 0, globals.rect_height / globals.y_grid * globals.rect_width / globals.x_grid);
+                    Array.Clear(globals.Map_obstacle, 0, globals.rect_height / globals.y_grid * globals.rect_width / globals.x_grid);
 
-
+                    /*
                     globals.mutex = true;
  
                     if (!globals.mutex)
@@ -316,7 +318,7 @@ namespace MVCC.View
                     }
 
                     globals.mutex = false;
-                   
+                   */
                     Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
                     {
                         building_List = obstacleDetection.get_building();
