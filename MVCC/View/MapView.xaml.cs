@@ -56,9 +56,9 @@ namespace MVCC.View
         private void CamOn(object sender, RoutedEventArgs e)
         {
             // 카메라 없을때, 테스트용        
-            //MockCameraOn();
+            MockCameraOn();
             // 카메라 연결했을때
-            CameraOnAndDetectThings();
+            //CameraOnAndDetectThings();
         }
 
         #region TestMock
@@ -74,7 +74,7 @@ namespace MVCC.View
             
             mapViewModel.AddUGV(ugvList);
 
-            test_thread();
+            //test_thread();
         }
 
         private void test_thread()
@@ -96,22 +96,22 @@ namespace MVCC.View
                     {
                         Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
                         {
-                           // ugvList[i].X -= 1;
-                           // ugvList[i].Y -= 1;
+                            ugvList[i].X -= 1;
+                            ugvList[i].Y -= 1;
 
 
-                            refreshView();
+                            //refreshView();
                         }));
                     }
                     else
                     {
                         Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
                         {
-                           // ugvList[i].X += 1;
-                            //ugvList[i].Y += 1;
+                            ugvList[i].X += 1;
+                            ugvList[i].Y += 1;
 
 
-                            refreshView();
+                            //refreshView();
                         }));
                     }
                 }
@@ -120,7 +120,7 @@ namespace MVCC.View
 
                 Thread.Sleep(30);
 
-                Console.WriteLine("child");
+                //Console.WriteLine("child");
             }
         }
 
@@ -385,6 +385,7 @@ namespace MVCC.View
         {
             Point p = e.GetPosition(this);
             
+            // 클릭한 위치를 현재 좌표계 값으로 변경
             int endPointX = ((int)Math.Round(p.X) - 155) / 15;
             int endPointY = ((int)Math.Round(p.Y) - 160) / 15;
 
@@ -393,8 +394,9 @@ namespace MVCC.View
             State individualUGVState = null;
 
             // 그룹용
-            List<UGV> GroupList = new List<UGV>();
-            string groupName = "";
+            Dictionary<string, UGV> GroupMap = new Dictionary<string, UGV>();
+            Dictionary<string, State> GroupStateMap = new Dictionary<string, State>();
+            string groupName = null;
             
             //모드 검사용
             string mode = "N";
@@ -420,7 +422,7 @@ namespace MVCC.View
                 {
                     if (groupName == null || groupName.Equals(tempUGV.GroupName))
                     {
-                        GroupList.Add(tempUGV);
+                        GroupMap.Add(tempUGV.Id, tempUGV);
                     }
 
                     mode = "G";
@@ -434,6 +436,13 @@ namespace MVCC.View
                 if(mode.Equals("I")){
                     if(tempState.ugv.Id.Equals(individualUGV.Id)){
                         individualUGVState = tempState;
+                    }
+                }
+                else if (mode.Equals("G"))
+                {
+                    if (GroupMap.ContainsKey(tempState.ugv.Id))
+                    {
+                        GroupStateMap.Add(tempState.ugv.Id, tempState);
                     }
                 }
             }
@@ -450,7 +459,24 @@ namespace MVCC.View
 
                 refreshView();
             }
+            else if (mode.Equals("G"))
+            {
+                foreach (var key in GroupMap.Keys)
+                {
+                    UGV tempUGV = GroupMap[key];
 
+                    State tempState = GroupStateMap[key];
+
+                    tempState.EndPointX = endPointX;
+                    tempState.EndPointY = endPointY;
+
+                    tempUGV.Command = "f";
+
+                    bluetoothAndPathPlanning.connect(tempUGV, tempState);
+
+                    refreshView();
+                }
+            }
 
         }
 
@@ -753,6 +779,7 @@ namespace MVCC.View
                     tempUGV.IsClickedReadyBelongToGroup = false;
 
                     tempUGV.IsBelongToGroup = true;
+                    tempUGV.IsGroupClicked = true;
                     tempUGV.GroupName = GroupName;
 
                     group.MemberList.Add(tempUGV);
