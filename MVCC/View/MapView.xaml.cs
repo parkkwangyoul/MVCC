@@ -388,7 +388,35 @@ namespace MVCC.View
 
             (FindResource("UGVGroupSrc") as CollectionViewSource).Source = mapViewModel.MVCCGroupList;
 
-            bluetoothAndPathPlanning = new BluetoothAndPathPlanning();           
+            bluetoothAndPathPlanning = new BluetoothAndPathPlanning();
+
+            for (int i = 15; i <= 600; i += 15)
+            {
+                Line line = new Line();
+
+                line.X1 = i;
+                line.Y1 = 0;
+                line.X2 = i;
+                line.Y2 = 360;
+
+                line.Stroke = Brushes.Gray;
+
+                MapItemControlWrapGrid.Children.Add(line);
+            }
+
+            for (int i = 15; i <= 360; i += 15)
+            {
+                Line line = new Line();
+
+                line.X1 = 0;
+                line.Y1 = i;
+                line.X2 = 600;
+                line.Y2 = i;
+
+                line.Stroke = Brushes.Gray;
+
+                MapItemControlWrapGrid.Children.Add(line);
+            }
         }
 
         // UGV에게 이동 명령을 내림

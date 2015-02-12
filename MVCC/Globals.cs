@@ -151,6 +151,7 @@ namespace MVCC
             }
         }
 
+        // UGV별로 블루투스 설정을 저장하는 Dictionary
         private Dictionary<string, UGV> _UGVSettingDictionary;
         public Dictionary<string, UGV> UGVSettingDictionary
         {
