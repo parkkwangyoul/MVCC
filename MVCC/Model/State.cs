@@ -11,6 +11,8 @@ namespace MVCC.Model
         public State(UGV ugv)
         {
             this.ugv = ugv;
+            this.CurrentPointX = (int)ugv.X;
+            this.CurrentPointY = (int)ugv.Y;
         }
 
         private UGV _ugv;
