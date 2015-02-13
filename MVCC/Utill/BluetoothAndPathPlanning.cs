@@ -17,18 +17,11 @@ namespace MVCC.Utill
         private State state;
 
         private Globals globals = Globals.Instance;
-
-        PathFinder pathFinder = new PathFinder();
-        
-        int[] movement = new int[24 + 40];
-        int path_count = 0;
-
+                
         public void connect(UGV ugv, State state)
         {
             this.ugv = ugv;
             this.state = state;
-            this.movement = pathFinder.movement;
-            this.path_count = pathFinder.path_count;
    
             //색 트레킹 쓰레드
             BackgroundWorker thread = new BackgroundWorker();
@@ -95,9 +88,9 @@ namespace MVCC.Utill
 
                         serialport.WriteLine(globals.direction[index].ToString());
 
-                        for (int i = 0; i < path_count; i++)
+                        for (int i = 0; i < ugv.MovementCommandList.Count; i++)
                         {
-                            serialport.WriteLine((movement[i]).ToString());
+                            serialport.WriteLine(ugv.MovementCommandList[i]);
                         }
                         serialport.WriteLine("e");
 

@@ -24,9 +24,12 @@
                     Home
                 </TextBlock>
             </TabItem.Header>
-            <TabPanel>
+            <Grid Style="{StaticResource PropertyTriggerTabGridStyle}">
+                <Grid.RenderTransform>
+                    <TranslateTransform X="600" Y="0" />
+                </Grid.RenderTransform>
                 <view:InfomationView />
-            </TabPanel>
+            </Grid>
         </TabItem>
         <TabItem Style="{StaticResource SideBarSectionStyle}">
             <TabItem.Header>
@@ -37,10 +40,12 @@
                     Map
                 </TextBlock>
             </TabItem.Header>
-                <!--TabPanel.RenderTransform>
+            <Grid Style="{StaticResource PropertyTriggerTabGridStyle}">
+                <Grid.RenderTransform>
                     <TranslateTransform X="600" Y="0" />
-                </-->
+                </Grid.RenderTransform>
                 <view:MapView />
+            </Grid>
         </TabItem>
         <TabItem Style="{StaticResource SideBarSectionStyle}">
             <TabItem.Header>
@@ -61,9 +66,12 @@
                     Setting
                 </TextBlock>
             </TabItem.Header>
-            <TabPanel>
+            <Grid Style="{StaticResource PropertyTriggerTabGridStyle}">
+                <Grid.RenderTransform>
+                    <TranslateTransform X="600" Y="0" />
+                </Grid.RenderTransform>
                 <view:SettingView />
-            </TabPanel>
+            </Grid>
         </TabItem>
     </TabControl>
 </UserControl>

@@ -1209,6 +1209,11 @@ namespace MVCC.Utill
             }
             Console.WriteLine("");
 
+            for (int i = 0; i < path_count; i++)
+            {
+                ugv.MovementCommandList.Add(movement[i].ToString());
+            }
+
             #endregion
         }
 
