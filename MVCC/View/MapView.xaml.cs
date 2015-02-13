@@ -49,7 +49,7 @@ namespace MVCC.View
         private BluetoothAndPathPlanning bluetoothAndPathPlanning;
         List<UGV> ugvList = new List<UGV>();
 
-        
+        private PathFinder pathFinder;
 
         #region 카메라, thread start
         /**
@@ -184,7 +184,7 @@ namespace MVCC.View
                             {
                                 double matchScore = matches[y, x, 0];
 
-                                if (matchScore >= 0.85)
+                                if (matchScore >= 0.8)
                                 {
                                     colorTracking.colorCheck(matchColorCheck, totalPicxel, x, y, globals.TemplateWidth, globals.TemplateHeight); //어떤 색인지 체크                        
                                     y += img1.Height; //x축 다음 y축(세로)이 변화기 때문에 속도를 높이기 위해 검출된 y좌표 + 이미지 사이즈 함.                             
@@ -202,7 +202,7 @@ namespace MVCC.View
 
                     //색상 트래킹
                     tracking_rect = colorTracking.tracking_start(frame);
-                    globals.direction = colorTracking.get_direction();
+                    //globals.direction = colorTracking.get_direction();
 
                     average_val++;
 
@@ -303,16 +303,16 @@ namespace MVCC.View
                         {
                             //장애물이 옮겨짐을 검사. 옮겨지고 있어도 차량은 정지 해야함
                             int moving_check_count = 0;
-                            /*
+                            
                             for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
                                 for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
-                                    if (globals.Map_obstacle[j, i] == '#' || globals.pre_Map_obstacle[j, i] == '#') 
-                                        if(!(globals.Map_obstacle[j, i] == '#' && globals.pre_Map_obstacle[j, i] == '#'))
+                                    if (globals.Map_obstacle[j, i] == '*' || globals.pre_Map_obstacle[j, i] == '*')
+                                        if (!(globals.Map_obstacle[j, i] == '*' && globals.pre_Map_obstacle[j, i] == '*'))
                                             moving_check_count++;
 
                             if (moving_check_count >= 5) //배열이 5개 이상 차이날 경우 장애물이 옮겨지고 있음
                                 Console.WriteLine("장애물 옮기는 중! moving_check_count = " + moving_check_count);
-                             */ 
+                             
                         }
                     }
                     else
@@ -435,6 +435,8 @@ namespace MVCC.View
 
                 MapItemControlWrapGrid.Children.Add(line);
             }
+
+            pathFinder = new PathFinder();
         }
 
         // UGV에게 이동 명령을 내림
@@ -511,6 +513,10 @@ namespace MVCC.View
                 individualUGVState.EndPointY = endPointY;
 
                 individualUGV.Command = "f";
+
+                Console.WriteLine("여기 부터 시작");
+
+                pathFinder.find_path(individualUGV, individualUGVState);
 
                 bluetoothAndPathPlanning.connect(individualUGV, individualUGVState);
 

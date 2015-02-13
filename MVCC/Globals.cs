@@ -16,6 +16,15 @@ namespace MVCC
         public int[,] pre_Map_obstacle;
         public int[] direction = new int[4];
 
+        public struct car_Map
+        {
+            public int[,] Map_obstacle;
+        }
+
+        public car_Map[] car_map = new car_Map[4];
+
+
+
         public bool mutex = false;
 
         public ReaderWriterLock rwl = new ReaderWriterLock();

@@ -77,7 +77,7 @@ namespace MVCC.Utill
                                 if (t_y != 0)
                                     t_y = y / globals.y_grid;
 
-                                Map_obstacle[t_y, t_x] = 2; // 잡힌 차량은 Map에 2라고 표시
+                                Map_obstacle[t_y, t_x] = i + 1; // 잡힌 차량은 Map에 2라고 표시
                             }
                         }
                     }
@@ -345,7 +345,7 @@ namespace MVCC.Utill
                                     else
                                         t_y = pos_y / globals.y_grid;
 
-                                    Map_obstacle[t_y, t_x] = 1; // 장애물은 Map에 1로 표시
+                                    Map_obstacle[t_y, t_x] = '*'; // 장애물은 Map에 1로 표시
                                     grid_check = true;
 
                                     y = pos_y + globals.y_grid;
