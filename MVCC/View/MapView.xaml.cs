@@ -303,16 +303,16 @@ namespace MVCC.View
                         {
                             //장애물이 옮겨짐을 검사. 옮겨지고 있어도 차량은 정지 해야함
                             int moving_check_count = 0;
-                            /*
+                            
                             for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
                                 for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
-                                    if (globals.Map_obstacle[j, i] == '#' || globals.pre_Map_obstacle[j, i] == '#') 
-                                        if(!(globals.Map_obstacle[j, i] == '#' && globals.pre_Map_obstacle[j, i] == '#'))
+                                    if (globals.Map_obstacle[j, i] == '*' || globals.pre_Map_obstacle[j, i] == '*')
+                                        if (!(globals.Map_obstacle[j, i] == '*' && globals.pre_Map_obstacle[j, i] == '*'))
                                             moving_check_count++;
 
                             if (moving_check_count >= 5) //배열이 5개 이상 차이날 경우 장애물이 옮겨지고 있음
                                 Console.WriteLine("장애물 옮기는 중! moving_check_count = " + moving_check_count);
-                             */ 
+                             
                         }
                     }
                     else
