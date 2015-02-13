@@ -15,6 +15,7 @@
                 </ResourceDictionary.MergedDictionaries>
             </ResourceDictionary>
         </TabControl.Resources>
+        
         <TabItem Style="{StaticResource SideBarSectionStyle}">
             <TabItem.Header>
                 <TextBlock Style="{StaticResource SideBarClickedTextBox}" Cursor="Hand">                    
@@ -23,7 +24,9 @@
                     Home
                 </TextBlock>
             </TabItem.Header>
-            <view:InfomationView />
+            <TabPanel>
+                <view:InfomationView />
+            </TabPanel>
         </TabItem>
         <TabItem Style="{StaticResource SideBarSectionStyle}">
             <TabItem.Header>
@@ -34,7 +37,10 @@
                     Map
                 </TextBlock>
             </TabItem.Header>
-            <view:MapView />
+                <!--TabPanel.RenderTransform>
+                    <TranslateTransform X="600" Y="0" />
+                </-->
+                <view:MapView />
         </TabItem>
         <TabItem Style="{StaticResource SideBarSectionStyle}">
             <TabItem.Header>
@@ -55,7 +61,9 @@
                     Setting
                 </TextBlock>
             </TabItem.Header>
-            <view:SettingView />
+            <TabPanel>
+                <view:SettingView />
+            </TabPanel>
         </TabItem>
     </TabControl>
 </UserControl>

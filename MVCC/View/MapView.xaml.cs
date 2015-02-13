@@ -512,7 +512,6 @@ namespace MVCC.View
 
                 individualUGV.Command = "f";
 
-                Console.WriteLine("여기 부터 시작");
                 bluetoothAndPathPlanning.connect(individualUGV, individualUGVState);
 
                 refreshView();
