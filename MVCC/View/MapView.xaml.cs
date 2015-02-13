@@ -49,7 +49,7 @@ namespace MVCC.View
         private BluetoothAndPathPlanning bluetoothAndPathPlanning;
         List<UGV> ugvList = new List<UGV>();
 
-        
+        private PathFinder pathFinder;
 
         #region 카메라, thread start
         /**
@@ -184,7 +184,7 @@ namespace MVCC.View
                             {
                                 double matchScore = matches[y, x, 0];
 
-                                if (matchScore >= 0.85)
+                                if (matchScore >= 0.8)
                                 {
                                     colorTracking.colorCheck(matchColorCheck, totalPicxel, x, y, globals.TemplateWidth, globals.TemplateHeight); //어떤 색인지 체크                        
                                     y += img1.Height; //x축 다음 y축(세로)이 변화기 때문에 속도를 높이기 위해 검출된 y좌표 + 이미지 사이즈 함.                             
@@ -202,7 +202,7 @@ namespace MVCC.View
 
                     //색상 트래킹
                     tracking_rect = colorTracking.tracking_start(frame);
-                    globals.direction = colorTracking.get_direction();
+                    //globals.direction = colorTracking.get_direction();
 
                     average_val++;
 
@@ -435,6 +435,8 @@ namespace MVCC.View
 
                 MapItemControlWrapGrid.Children.Add(line);
             }
+
+            pathFinder = new PathFinder();
         }
 
         // UGV에게 이동 명령을 내림
@@ -513,6 +515,9 @@ namespace MVCC.View
                 individualUGV.Command = "f";
 
                 Console.WriteLine("여기 부터 시작");
+
+                pathFinder.find_path(individualUGV, individualUGVState);
+
                 bluetoothAndPathPlanning.connect(individualUGV, individualUGVState);
 
                 refreshView();

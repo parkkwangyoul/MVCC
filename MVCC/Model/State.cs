@@ -11,8 +11,6 @@ namespace MVCC.Model
         public State(UGV ugv)
         {
             this.ugv = ugv;
-            this.CurrentPointX = (int)ugv.X;
-            this.CurrentPointY = (int)ugv.Y;
         }
 
         private UGV _ugv;
@@ -61,25 +59,15 @@ namespace MVCC.Model
         }
 
         // 현재 지나고 있는 X 좌표
-        private int currentPointX;
         public int CurrentPointX
         {
-            get { return currentPointX; }
-            set
-            {
-                currentPointX = value;
-            }
+            get { return (int)ugv.X; }
         }
 
         // 현재 지나고 있는 Y 좌표
-        private int currentPointY;
         public int CurrentPointY
         {
-            get { return currentPointY; }
-            set
-            {
-                currentPointY = value;
-            }
+            get { return (int)ugv.Y; }
         }
 
         // 지정된 도착 X좌표를 나타냄

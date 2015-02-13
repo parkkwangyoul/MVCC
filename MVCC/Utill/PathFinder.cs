@@ -4,10 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using MVCC.Model;
+
 namespace MVCC.Utill
 {
     class PathFinder
     {
+        private Globals globals = Globals.Instance;
+
+        private UGV ugv;
+        private State state;
+
+        int direct;
+
         #region Path_Planning_Part
 
         public int abs(int value)
@@ -17,39 +26,37 @@ namespace MVCC.Utill
             else { return value * (-1); }
         }
 
-        public static char[,] grid = new char[24, 40];
+        public char[,] grid = new char[24, 40];
 
-        public static string[] grid_1 = new string[24];
+        public string[] grid_1 = new string[24];
 
-        public static int[,] result_grid = new int[24, 40];
+        public int[,] result_grid = new int[24, 40];
 
-        public static int[,] temp_grid = new int[24, 40];
+        public int[,] temp_grid = new int[24, 40];
 
-        public static char[,] unit_100th = new char[24, 40];
-        public static char[,] unit_10th = new char[24, 40];
-        public static char[,] unit_1st = new char[24, 40];
+        public char[,] unit_100th = new char[24, 40];
+        public char[,] unit_10th = new char[24, 40];
+        public char[,] unit_1st = new char[24, 40];
 
 
-        public static int current_perspective = 0;
-        public static int next_perspective = 0;
+        public int current_perspective = 0;
+        public int next_perspective = 0;
 
-        public static int[] follow_command = new int[24 + 40];
-        public static int[] movement = new int[24 + 40];
-        public static int path_count = 0;
-        public static int path_num = 0;
+        public int[] follow_command = new int[24 + 40];
+        public int[] movement = new int[24 + 40];
+        public int path_count = 0;
+        public int path_num = 0;
 
-        public static int movement_count = 0;
+        public int movement_count = 0;
 
         public class coordinate
         {
-
             public int x;
             public int y;
         };
 
         public class vehicle
         {
-
             public int size;
 
             public int current_perspective = 0;
@@ -109,28 +116,28 @@ namespace MVCC.Utill
 
         //***** Path Planning ******//
 
-        public static vehicle vehicle_1 = new vehicle();
-        public static vehicle vehicle_compare = new vehicle();
+        public vehicle vehicle_1 = new vehicle();
+        public vehicle vehicle_compare = new vehicle();
 
-        public static vehicle[,] node = new vehicle[24, 40];
+        public vehicle[,] node = new vehicle[24, 40];
 
-        public static vehicle[] q = new vehicle[24 * 40];
+        public vehicle[] q = new vehicle[24 * 40];
 
-        public static int row = 24;
-        public static int column = 40;
+        public int row = 24;
+        public int column = 40;
 
-        public static int size = 0;
+        public int size = 0;
 
         ////////////////////////////////
 
 
-        public static int q_size = 24 * 40 - 1;
-        public static int q_level = -1;
+        public int q_size = 24 * 40 - 1;
+        public int q_level = -1;
         ////////////////////////////////
 
-        public static int count = 0;
+        public int count = 0;
         //*************************//  
-        public static bool right_move_check(vehicle vehicle_1)
+        public bool right_move_check(vehicle vehicle_1)
         {
 
             int i = 0;
@@ -155,7 +162,7 @@ namespace MVCC.Utill
             else { return false; }
         }
 
-        public static vehicle right_movement(vehicle vehicle_1)
+        public vehicle right_movement(vehicle vehicle_1)
         {
 
             int size = vehicle_1.size;
@@ -170,7 +177,7 @@ namespace MVCC.Utill
         /////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////
 
-        public static bool left_move_check(vehicle vehicle_1)
+        public bool left_move_check(vehicle vehicle_1)
         {
 
             int i = 0;
@@ -194,7 +201,7 @@ namespace MVCC.Utill
             else { return false; }
         }
 
-        public static vehicle left_movement(vehicle vehicle_1)
+        public vehicle left_movement(vehicle vehicle_1)
         {
 
             int size = vehicle_1.size;
@@ -210,7 +217,7 @@ namespace MVCC.Utill
         /////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////
 
-        public static bool up_move_check(vehicle vehicle_1)
+        public bool up_move_check(vehicle vehicle_1)
         {
 
             int i = 0;
@@ -219,7 +226,6 @@ namespace MVCC.Utill
 
             for (i = 0; i < size; i++)
             {
-
                 try
                 {
                     if (grid[vehicle_1.outer_1.y - 1, vehicle_1.outer_1.x + i] == '0') { count++; }
@@ -235,7 +241,7 @@ namespace MVCC.Utill
             else { return false; }
         }
 
-        public static vehicle up_movement(vehicle vehicle_1)
+        public vehicle up_movement(vehicle vehicle_1)
         {
 
             int size = vehicle_1.size;
@@ -251,7 +257,7 @@ namespace MVCC.Utill
         /////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////
 
-        public static bool down_move_check(vehicle vehicle_1)
+        public bool down_move_check(vehicle vehicle_1)
         {
 
             int i = 0;
@@ -275,7 +281,7 @@ namespace MVCC.Utill
             else { return false; }
         }
 
-        public static vehicle down_movement(vehicle vehicle_1)
+        public vehicle down_movement(vehicle vehicle_1)
         {
 
             int size = vehicle_1.size;
@@ -291,7 +297,7 @@ namespace MVCC.Utill
         /////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////
 
-        public static bool diagonal_right_up_check(vehicle vehicle_1)
+        public bool diagonal_right_up_check(vehicle vehicle_1)
         {
 
             int size = vehicle_1.size;
@@ -307,7 +313,7 @@ namespace MVCC.Utill
             return false;
         }
 
-        public static vehicle move_diagonal_right_up(vehicle vehicle_1)
+        public vehicle move_diagonal_right_up(vehicle vehicle_1)
         {
 
             int size = vehicle_1.size;
@@ -330,7 +336,7 @@ namespace MVCC.Utill
         /////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////
 
-        public static bool diagonal_right_down_check(vehicle vehicle_1)
+        public bool diagonal_right_down_check(vehicle vehicle_1)
         {
 
             int size = vehicle_1.size;
@@ -347,7 +353,7 @@ namespace MVCC.Utill
             return false;
         }
 
-        public static vehicle move_diagonal_right_down(vehicle vehicle_1)
+        public vehicle move_diagonal_right_down(vehicle vehicle_1)
         {
 
             int size = vehicle_1.size;
@@ -370,7 +376,7 @@ namespace MVCC.Utill
         /////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////
 
-        public static bool diagonal_left_up_check(vehicle vehicle_1)
+        public bool diagonal_left_up_check(vehicle vehicle_1)
         {
 
             int size = vehicle_1.size;
@@ -386,7 +392,7 @@ namespace MVCC.Utill
             return false;
         }
 
-        public static vehicle move_diagonal_left_up(vehicle vehicle_1)
+        public vehicle move_diagonal_left_up(vehicle vehicle_1)
         {
 
             int size = vehicle_1.size;
@@ -409,7 +415,7 @@ namespace MVCC.Utill
         /////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////
 
-        public static bool diagonal_left_down_check(vehicle vehicle_1)
+        public bool diagonal_left_down_check(vehicle vehicle_1)
         {
 
             int size = vehicle_1.size;
@@ -426,7 +432,7 @@ namespace MVCC.Utill
             return false;
         }
 
-        public static vehicle move_diagonal_left_down(vehicle vehicle_1)
+        public vehicle move_diagonal_left_down(vehicle vehicle_1)
         {
 
             int size = vehicle_1.size;
@@ -446,7 +452,7 @@ namespace MVCC.Utill
             return vehicle_1;
         }
 
-        public static vehicle[,] node_init(vehicle[,] in_node)
+        public vehicle[,] node_init(vehicle[,] in_node)
         {
 
             int i = 0;
@@ -454,18 +460,16 @@ namespace MVCC.Utill
 
             for (i = 0; i < row; i++)
             {
-
                 for (j = 0; j < column; j++)
                 {
 
                     in_node[i, j] = new vehicle(size, 0, j, i, 0);
                 }
             }
-
             return in_node;
         }
 
-        public static void graph_reconstruct(vehicle[,] in_node, int target_x, int target_y, int start_x, int start_y)
+        public void graph_reconstruct(vehicle[,] in_node, int target_x, int target_y, int start_x, int start_y)
         {
 
             int i = 0;
@@ -533,7 +537,7 @@ namespace MVCC.Utill
             }
         }
 
-        public static void find_path_BFS(vehicle node_1, int target_x, int target_y)
+        public void find_path_BFS(vehicle node_1, int target_x, int target_y)
         {
 
             int i = 0;
@@ -602,7 +606,7 @@ namespace MVCC.Utill
         }
 
         // Movement Command
-        public static void follow_path(int start_point_x, int start_point_y, int dest_point_x, int dest_point_y)
+        public void follow_path(int start_point_x, int start_point_y, int dest_point_x, int dest_point_y)
         {
 
             int relative_position_x = dest_point_x - start_point_x;
@@ -679,6 +683,7 @@ namespace MVCC.Utill
                     {
 
                         follow_command[current_weight] = 2; //6 - 4;
+
                         path_count++;
                         follow_path(start_point_x - 1, start_point_y, dest_point_x, dest_point_y);
                     }
@@ -991,7 +996,7 @@ namespace MVCC.Utill
             }
         }
 
-        public static int path_following(int current_direction, int next_direction)
+        public int path_following(int current_direction, int next_direction)
         {
 
             int degree = 0;
@@ -1001,7 +1006,7 @@ namespace MVCC.Utill
             return degree;
         }
 
-        public static void Movement_Command()
+        public void Movement_Command()
         {
 
             if (path_following(follow_command[path_num], follow_command[path_num + 1]) == 0)
@@ -1073,123 +1078,160 @@ namespace MVCC.Utill
             return;
         }
 
-        public static int start_x;
-        public static int start_y;
-        public static int dest_x;
-        public static int dest_y;
-        public static int size_;
+        public int start_x;
+        public int start_y;
+        public int dest_x;
+        public int dest_y;
+        public int size_;
 
         #endregion
 
-        public void find_path(){
+        public void find_path(UGV ugv, State state)
+        {
+            this.ugv = ugv;
+            this.state = state;
+           
+            start_x = state.CurrentPointX / 15;
+            start_y = state.CurrentPointY / 15;
+
+            size_ = 5;
+            size = 5;
+
+            map_classification(); //차량 구별한 장애물 맵 세팅
 
             #region Graph_Node_Initialization
-                            ///////////////////////////////////////////////////////////
-                            vehicle_1.size = size_;
 
-                            vehicle_1.outer_1.x = start_x;
-                            vehicle_1.outer_1.y = start_y;
+            ///////////////////////////////////////////////////////////
+            vehicle_1.size = size_;
 
-                            vehicle_1.outer_2.x = start_x + size_ - 1;
-                            vehicle_1.outer_2.y = start_y;
+            vehicle_1.outer_1.x = start_x;
+            vehicle_1.outer_1.y = start_y;
 
-                            vehicle_1.outer_3.x = start_x;
-                            vehicle_1.outer_3.y = start_y + size_ - 1;
+            vehicle_1.outer_2.x = start_x + size_ - 1;
+            vehicle_1.outer_2.y = start_y;
 
-                            vehicle_1.outer_4.x = start_x + size_ - 1;
-                            vehicle_1.outer_4.y = start_y + size_ - 1;
+            vehicle_1.outer_3.x = start_x;
+            vehicle_1.outer_3.y = start_y + size_ - 1;
 
-                            vehicle_1.visited = 1;
+            vehicle_1.outer_4.x = start_x + size_ - 1;
+            vehicle_1.outer_4.y = start_y + size_ - 1;
 
-                            vehicle_1.weight = 0;
-                            //////////////////////////////////////////////////////////
-                            #endregion
+            vehicle_1.visited = 1;
+
+            vehicle_1.weight = 0;
+            //////////////////////////////////////////////////////////
+            #endregion
 
             #region Node_Initialization
 
-                            for (int i = 0; i < row; i++)
-                            {
+            for (int i = 0; i < row; i++)
+            {
+                for (int j = 0; j < column; j++)
+                {
+                    node[i, j] = new vehicle(size_, 0, j, i, 0);
+                    result_grid[i, j] = temp_grid[i, j];
+                }
+            }
 
-                                for (int j = 0; j < column; j++)
-                                {
+            for (int i = 0; i < row; i++)
+            {
+                for (int j = 0; j < column; j++)
+                {
+                    Console.Write("{0} ", grid[i, j]);
+                }
+                Console.WriteLine();
+            }
 
-                                    node[i, j] = new vehicle(size_, 0, j, i, 0);
 
-                                    result_grid[i, j] = temp_grid[i, j];
-                                }
-                            }
+            //vehicle_1 = vehicle_compare;
 
-                            //vehicle_1 = vehicle_compare;
-
-                            #endregion
+            #endregion
 
             #region Graph_Construction
 
-                            graph_reconstruct(node, dest_x, dest_y, start_x, start_y);
+            graph_reconstruct(node, dest_x, dest_y, start_x, start_y);
 
+            for (int i = 0; i < 24; i++)
+            {
+                for (int j = 0; j < 40; j++)
+                {
+                    //Console.WriteLine("Node[{0},{1}]", i, j);
+                    for (int k = 0; k < 8; k++)
+                    {
+                        if (node[i, j].children[k] != null)
+                        {
+                            //Console.WriteLine("Child[{0}] : {1} {2}", k, node[i, j].children[k].outer_1.x, node[i, j].children[k].outer_1.y);
+                        }
+                    }
+                }
+            }
 
-                            for (int i = 0; i < 24; i++)
-                            {
-                                for (int j = 0; j < 40; j++)
-                                {
-
-                                    //Console.WriteLine("Node[{0},{1}]", i, j);
-                                    for (int k = 0; k < 8; k++)
-                                    {
-
-                                        if (node[i, j].children[k] != null)
-                                        {
-
-                                            //Console.WriteLine("Child[{0}] : {1} {2}", k, node[i, j].children[k].outer_1.x, node[i, j].children[k].outer_1.y);
-                                        }
-                                    }
-                                }
-                            }
-
-                            Console.WriteLine("Graph Reconstruction Complete");
-                            #endregion
+            Console.WriteLine("Graph Reconstruction Complete");
+            #endregion
 
             #region BFS Path Planning
 
-                            find_path_BFS(vehicle_1, dest_x, dest_y);
+            find_path_BFS(vehicle_1, dest_x, dest_y);
 
-                            for (int i = 0; i < 24; i++)
-                            {
-                                for (int j = 0; j < 40; j++)
-                                {
-                                    Console.Write("{0,3} ", result_grid[i, j].ToString());
-                                }
-                                Console.WriteLine(" ");
-                            }
+            for (int i = 0; i < 24; i++)
+            {
+                for (int j = 0; j < 40; j++)
+                {
+                    Console.Write("{0,3} ", result_grid[i, j].ToString());
+                }
+                Console.WriteLine(" ");
+            }
 
-                            #endregion
+            #endregion
 
             #region Path_Following
 
-                            path_num = 0;
-                            path_count = 0;
+            path_num = 0;
+            path_count = 0;
 
-                            follow_path(dest_x, dest_y, start_x, start_y);
-                            follow_command[0] = current_perspective;
+            follow_path(dest_x, dest_y, start_x, start_y);
+            follow_command[0] = current_perspective;
 
-                            for (int i = 0; i < path_count; i++)
-                            {
-                                Movement_Command();
-                            }
+            for (int i = 0; i < path_count; i++)
+            {
+                Movement_Command();
+            }
 
-                            for (int i = 0; i < path_count; i++)
-                            {
-                                Console.Write("{0}", follow_command[i]);
-                            }
-                            Console.WriteLine("");
+            for (int i = 0; i < path_count; i++)
+            {
+                Console.Write("{0}", follow_command[i]);
+            }
+            Console.WriteLine("");
 
-                            for (int i = 0; i < path_count; i++)
-                            {
-                                Console.Write("{0}", movement[i].ToString());
-                            }
-                            Console.WriteLine("");
+            for (int i = 0; i < path_count; i++)
+            {
+                Console.Write("{0}", movement[i].ToString());
+            }
+            Console.WriteLine("");
 
-                            #endregion
+            #endregion
         }
+
+
+        public void map_classification()
+        {
+            globals.theLock.EnterReadLock();
+            int index;
+            int.TryParse(ugv.Id[1].ToString(), out index);
+            direct = globals.direction[index];
+
+            for (int x = 0; x < globals.rect_width / globals.x_grid; x++)
+            {
+                for (int y = 0; y < globals.rect_height / globals.y_grid; y++)
+                {
+                    if (globals.Map_obstacle[y, x] == '*') //장애물은 x 로
+                        grid[y, x] = 'x';
+                    else
+                        grid[y, x] = '0';
+                }
+            }
+            globals.theLock.ExitReadLock();
+        }
+
     }
 }
