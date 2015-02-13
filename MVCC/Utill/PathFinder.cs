@@ -147,11 +147,11 @@ namespace MVCC.Utill
             for (i = 0; i < size; i++)
             {
 
-                try
+                if(vehicle_1.outer_2.x + 1 < 40)
                 {
                     if (grid[vehicle_1.outer_2.y + i, vehicle_1.outer_2.x + 1] == '0') { count++; }
                 }
-                catch (IndexOutOfRangeException) { return false; }
+                else { return false; }
             }
 
             if (count == size)
@@ -186,11 +186,11 @@ namespace MVCC.Utill
 
             for (i = 0; i < size; i++)
             {
-                try
+                if(vehicle_1.outer_1.x - 1 >= 0)
                 {
                     if (grid[vehicle_1.outer_1.y + i, vehicle_1.outer_1.x - 1] == '0') { count++; }
                 }
-                catch (IndexOutOfRangeException) { return false; }
+                else { return false; }
             }
 
             if (count == size)
@@ -226,11 +226,11 @@ namespace MVCC.Utill
 
             for (i = 0; i < size; i++)
             {
-                try
+                if(vehicle_1.outer_1.y - 1 >= 0)
                 {
                     if (grid[vehicle_1.outer_1.y - 1, vehicle_1.outer_1.x + i] == '0') { count++; }
                 }
-                catch (IndexOutOfRangeException) { return false; }
+                else { return false; }
             }
 
             if (count == size)
@@ -266,11 +266,11 @@ namespace MVCC.Utill
 
             for (i = 0; i < size; i++)
             {
-                try
+                if(vehicle_1.outer_3.y + 1 < 24)
                 {
                     if (grid[vehicle_1.outer_3.y + 1, vehicle_1.outer_3.x + i] == '0') { count++; }
                 }
-                catch (IndexOutOfRangeException) { return false; }
+                else { return false; }
             }
 
             if (count == size)
