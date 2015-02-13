@@ -214,7 +214,7 @@ namespace MVCC.View
                             //AddUGV(i.ToString(), tracking_rect[i].X, tracking_rect[i].Y);
                             if (tracking_rect[i].Width != 0 && tracking_rect[i].Height != 0)
                             {
-                                Console.WriteLine("index = " + i + " direction = " + globals.direction[i]);
+                                //Console.WriteLine("index = " + i + " direction = " + globals.direction[i]);
                        
                                 Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
                                 {
