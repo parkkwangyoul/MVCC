@@ -17,7 +17,7 @@ namespace MVCC.Utill
         private State state;
 
         private Globals globals = Globals.Instance;
-
+        /*
         #region Path_Planning_Part
 
         public int abs(int value)
@@ -117,8 +117,6 @@ namespace MVCC.Utill
             }
         };
 
-        //***** Path Planning ******//
-
         public static vehicle vehicle_1 = new vehicle();
         public static vehicle vehicle_compare = new vehicle();
 
@@ -139,7 +137,7 @@ namespace MVCC.Utill
         ////////////////////////////////
 
         public static int count = 0;
-        //*************************//  
+
         public static bool right_move_check(vehicle vehicle_1)
         {
 
@@ -1090,7 +1088,7 @@ namespace MVCC.Utill
         public static int size_;
 
         #endregion
-
+        */
         public void connect(UGV ugv, State state)
         {
             this.ugv = ugv;
@@ -1113,7 +1111,6 @@ namespace MVCC.Utill
 
             UGV settingUGV = globals.UGVSettingDictionary[convertId(ugv.Id)];
 
-
             serialport.PortName = settingUGV.ComPort;
             serialport.BaudRate = settingUGV.Baudrate;
             serialport.DataBits = settingUGV.Databit;
@@ -1123,35 +1120,7 @@ namespace MVCC.Utill
 
             Console.WriteLine("들ㅇ옴");
 
-            
-
             serialport.Open();
-
-            int[,] map = {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
-
           
             if (serialport.IsOpen)
             {
@@ -1223,54 +1192,6 @@ namespace MVCC.Utill
                     // critical section end
 
                     serialport.WriteLine((write_data[0]).ToString());
-                    /*
-                    if (write_data == "a")
-                    {
-
-                        try
-                        {
-                            read_data = serialport.ReadTo("\r");
-                            Console.WriteLine(read_data);
-                        }
-                        catch (TimeoutException)
-                        {
-                            Console.WriteLine("TimeOutException");
-
-                            Console.Write("Buffer : ");
-                            Console.WriteLine(serialport.ReadExisting());
-                        }
-                    }
-                    else if (write_data == "b")
-                    {
-                        try
-                        {
-                            read_data = serialport.ReadTo("\r");
-                            Console.WriteLine(read_data);
-                        }
-                        catch (TimeoutException)
-                        {
-                            Console.WriteLine("TimeOutException");
-
-                            Console.Write("Buffer : ");
-                            Console.WriteLine(serialport.ReadExisting());
-                        }
-                    }
-                    else if (write_data == "c")
-                    {
-                        try
-                        {
-                            read_data = serialport.ReadTo("\r");
-                            Console.WriteLine(read_data);
-                        }
-                        catch (TimeoutException)
-                        {
-                            Console.WriteLine("TimeOutException");
-
-                            Console.Write("Buffer : ");
-                            Console.WriteLine(serialport.ReadExisting());
-                        }
-                    }
-                    */
 
                     try
                     {
@@ -1288,30 +1209,7 @@ namespace MVCC.Utill
                         char[] dest_x_ = new char[3] { '0', '0', '0' };
                         char[] dest_y_ = new char[3] { '0', '0', '0' };
                         char[] s_ = new char[3] { '0', '0', '0' };
-                        /*
-                        Console.Write("starting_point.x : ");
-                        starting_point_x = Console.ReadLine();
 
-                        Console.Write("starting_point.y : ");
-                        starting_point_y = Console.ReadLine();
-
-                        Console.Write("destination.x : ");
-                        destination_x = Console.ReadLine();
-
-                        Console.Write("destination.y : ");
-                        destination_y = Console.ReadLine();
-
-                        Console.Write("size : ");
-                        size = Console.ReadLine();
-
-                        start_x = Int32.Parse(starting_point_x);
-                        start_y = Int32.Parse(starting_point_y);
-
-                        dest_x = Int32.Parse(destination_x);
-                        dest_y = Int32.Parse(destination_y);
-
-                        size_ = Int32.Parse(size);
-                        */
                         start_x_[2] = (char)((start_x / 100) + 48);         // Hundredth
                         start_x_[1] = (char)(((start_x / 10) % 10) + 48);     // Tenth
                         start_x_[0] = (char)((start_x % 10) + 48);          // First
@@ -1354,6 +1252,8 @@ namespace MVCC.Utill
 
                         #endregion
 
+                        #region 사용 안하는 부위
+                        /*
                         #region Graph_Node_Initialization
                         ///////////////////////////////////////////////////////////
                         vehicle_1.size = size_;
@@ -1393,7 +1293,7 @@ namespace MVCC.Utill
                         //vehicle_1 = vehicle_compare;
 
                         #endregion
-
+                        
                         #region Graph_Construction
 
                         graph_reconstruct(node, dest_x, dest_y, start_x, start_y);
@@ -1434,7 +1334,7 @@ namespace MVCC.Utill
                         }
 
                         #endregion
-
+                        
                         #region Path_Following
 
                         path_num = 0;
@@ -1460,6 +1360,8 @@ namespace MVCC.Utill
                         }
                         Console.WriteLine("");
 
+                        #endregion
+                        */
                         #endregion
 
                         #region Transmit_Movement_Command
