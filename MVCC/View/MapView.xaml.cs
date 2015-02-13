@@ -202,6 +202,7 @@ namespace MVCC.View
 
                     //색상 트래킹
                     tracking_rect = colorTracking.tracking_start(frame);
+                    globals.direction = colorTracking.get_direction();
 
                     average_val++;
 
@@ -213,6 +214,8 @@ namespace MVCC.View
                             //AddUGV(i.ToString(), tracking_rect[i].X, tracking_rect[i].Y);
                             if (tracking_rect[i].Width != 0 && tracking_rect[i].Height != 0)
                             {
+                                Console.WriteLine("index = " + i + " direction = " + globals.direction[i]);
+                       
                                 Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
                                 {
                                     for (int j = 0; j < mapViewModel.MVCCItemList.Count; j++)
@@ -279,7 +282,13 @@ namespace MVCC.View
                 {
                    // globals.mutex.WaitOne();
 
-                    //lobals.rwl.AcquireWriterLock(0);
+                    //globals.rwl.AcquireWriterLock(0);
+                    globals.theLock.EnterWriteLock();
+
+                    for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
+                        for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
+                            globals.Map_obstacle[j, i] = 0;
+                    
 
                     blob_count = obstacleDetection.detectBlob(obstacle_image, globals.Map_obstacle, tracking_rect); //장애물 검출
 
@@ -311,11 +320,19 @@ namespace MVCC.View
 
                     pre_blob_count = blob_count; //현재 blob_count를 이전 blob_count에 저장
                     globals.pre_Map_obstacle = (int[,])globals.Map_obstacle.Clone(); //비교를 위해 이전 Map정보 설정
+
+
+                    globals.theLock.ExitWriteLock();
+
+
+                   
                     //Array.Clear(globals.Map_obstacle, 0, globals.rect_height / globals.y_grid * globals.rect_width / globals.x_grid);
 
                     //globals.rwl.ReleaseReaderLock();
+
+                   
                     //globals.mutex.ReleaseMutex();
-                    
+                    /*
                     globals.mutex = true;
  
                     if (!globals.mutex)
@@ -327,7 +344,7 @@ namespace MVCC.View
                     }
 
                     globals.mutex = false;
-                   
+                   */
                     Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
                     {
                         building_List = obstacleDetection.get_building();
@@ -495,6 +512,7 @@ namespace MVCC.View
 
                 individualUGV.Command = "f";
 
+                Console.WriteLine("여기 부터 시작");
                 bluetoothAndPathPlanning.connect(individualUGV, individualUGVState);
 
                 refreshView();

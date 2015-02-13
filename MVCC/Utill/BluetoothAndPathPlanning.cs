@@ -34,11 +34,7 @@ namespace MVCC.Utill
         public static int[,] result_grid = new int[24, 40];
 
         public static int[,] temp_grid = new int[24, 40];
-
-        public static int i = 0;
-        public static int j = 0;
-        public static int k = 0;
-
+ 
         public static char[,] unit_100th = new char[24, 40];
         public static char[,] unit_10th = new char[24, 40];
         public static char[,] unit_1st = new char[24, 40];
@@ -1125,6 +1121,10 @@ namespace MVCC.Utill
             serialport.ReadTimeout = 200;
             serialport.WriteTimeout = 200;
 
+            Console.WriteLine("들ㅇ옴");
+
+            
+
             serialport.Open();
 
             int[,] map = {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -1151,6 +1151,8 @@ namespace MVCC.Utill
                         {0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
+
+          
             if (serialport.IsOpen)
             {
                 ugv.IsBluetoothConnected = true;
@@ -1161,16 +1163,17 @@ namespace MVCC.Utill
                     bool check = true;
 
                     // critical section
-                    //globals.rwl.AcquireReaderLock(0);
+                    globals.theLock.EnterReadLock();
+                   //globals.rwl.AcquireReaderLock(0);
                     //globals.mutex.WaitOne();
-                   while (globals.mutex) ;
+                   //while (globals.mutex) ;
 
-                    globals.mutex = true;
+                  //  globals.mutex = true;
 
 
-                    for (i = 0; i < 24; i++)
+                    for (int i = 0; i < 24; i++)
                     {
-                        for (j = 0; j < 40; j++)
+                        for (int j = 0; j < 40; j++)
                         {
 
                             grid[i, j] = globals.Map_obstacle[i, j].ToString()[0];
@@ -1202,19 +1205,20 @@ namespace MVCC.Utill
                     }
                     //Console.WriteLine(" ");
 
-                    for (i = 0; i < 24; i++)
+                    for (int i = 0; i < 24; i++)
                     {
-                        for (j = 0; j < 40; j++)
+                        for (int j = 0; j < 40; j++)
                         {
                             Console.Write("{0} ", grid[i, j]);
                         }
                         Console.WriteLine(" ");
                     }
 
+                    globals.theLock.ExitReadLock();
                     //globals.rwl.ReleaseReaderLock();
                     //globals.mutex.ReleaseMutex();
 
-                    globals.mutex = false;
+                   // globals.mutex = false;
 
                     // critical section end
 
@@ -1374,10 +1378,10 @@ namespace MVCC.Utill
 
                         #region Node_Initialization
 
-                        for (i = 0; i < row; i++)
+                        for (int i = 0; i < row; i++)
                         {
 
-                            for (j = 0; j < column; j++)
+                            for (int j = 0; j < column; j++)
                             {
 
                                 node[i, j] = new vehicle(size_, 0, j, i, 0);
@@ -1395,13 +1399,13 @@ namespace MVCC.Utill
                         graph_reconstruct(node, dest_x, dest_y, start_x, start_y);
 
 
-                        for (i = 0; i < 24; i++)
+                        for (int i = 0; i < 24; i++)
                         {
-                            for (j = 0; j < 40; j++)
+                            for (int j = 0; j < 40; j++)
                             {
 
                                 //Console.WriteLine("Node[{0},{1}]", i, j);
-                                for (k = 0; k < 8; k++)
+                                for (int k = 0; k < 8; k++)
                                 {
 
                                     if (node[i, j].children[k] != null)
@@ -1420,9 +1424,9 @@ namespace MVCC.Utill
 
                         find_path_BFS(vehicle_1, dest_x, dest_y);
 
-                        for (i = 0; i < 24; i++)
+                        for (int i = 0; i < 24; i++)
                         {
-                            for (j = 0; j < 40; j++)
+                            for (int j = 0; j < 40; j++)
                             {
                                 Console.Write("{0,3} ", result_grid[i, j].ToString());
                             }
@@ -1439,18 +1443,18 @@ namespace MVCC.Utill
                         follow_path(dest_x, dest_y, start_x, start_y);
                         follow_command[0] = current_perspective;
 
-                        for (i = 0; i < path_count; i++)
+                        for (int i = 0; i < path_count; i++)
                         {
                             Movement_Command();
                         }
 
-                        for (i = 0; i < path_count; i++)
+                        for (int i = 0; i < path_count; i++)
                         {
                             Console.Write("{0}", follow_command[i]);
                         }
                         Console.WriteLine("");
 
-                        for (i = 0; i < path_count; i++)
+                        for (int i = 0; i < path_count; i++)
                         {
                             Console.Write("{0}", movement[i].ToString());
                         }
@@ -1459,7 +1463,7 @@ namespace MVCC.Utill
                         #endregion
 
                         #region Transmit_Movement_Command
-                        for (i = 0; i < path_count; i++)
+                        for (int i = 0; i < path_count; i++)
                         {
                             serialport.WriteLine((movement[i]).ToString());
                         }
@@ -1469,21 +1473,21 @@ namespace MVCC.Utill
                         #endregion
 
 
-                        for (i = 0; i < path_count; i++)
+                        for (int i = 0; i < path_count; i++)
                         {
                             Console.Write("{0}", follow_command[i]);
                         }
                         Console.WriteLine("");
 
-                        for (i = 0; i < path_count; i++)
+                        for (int i = 0; i < path_count; i++)
                         {
                             Console.Write("{0}", movement[i].ToString());
                         }
                         Console.WriteLine("");
 
-                        for (i = 0; i < row; i++)
+                        for (int i = 0; i < row; i++)
                         {
-                            for (j = 0; j < column; j++)
+                            for (int j = 0; j < column; j++)
                             {
                                 Console.Write("{0} ", grid[i, j]);
                             }

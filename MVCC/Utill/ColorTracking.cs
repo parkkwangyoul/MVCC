@@ -306,5 +306,10 @@ namespace MVCC.Utill
             return color_count;
         }
 
+        public int[] get_direction()
+        {
+            return direction;
+        }
+
     }
 }

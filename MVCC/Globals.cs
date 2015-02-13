@@ -14,6 +14,7 @@ namespace MVCC
     {
         public int[,] Map_obstacle;
         public int[,] pre_Map_obstacle;
+        public int[] direction = new int[4];
 
         public bool mutex = false;
 
@@ -22,6 +23,8 @@ namespace MVCC
         public int writerTimeouts = 0;
         public int reads = 0;
         public int writes = 0;
+
+        public ReaderWriterLockSlim theLock = new ReaderWriterLockSlim();
 
         //public Mutex mutex = new Mutex();
 
