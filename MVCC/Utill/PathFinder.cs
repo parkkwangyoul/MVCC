@@ -4,20 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using System.ComponentModel;
-using System.IO.Ports;
-
-using MVCC.Model;
-
 namespace MVCC.Utill
 {
-    class BluetoothAndPathPlanning
+    class PathFinder
     {
-        private UGV ugv;
-        private State state;
-
-        private Globals globals = Globals.Instance;
-        /*
         #region Path_Planning_Part
 
         public int abs(int value)
@@ -34,7 +24,7 @@ namespace MVCC.Utill
         public static int[,] result_grid = new int[24, 40];
 
         public static int[,] temp_grid = new int[24, 40];
- 
+
         public static char[,] unit_100th = new char[24, 40];
         public static char[,] unit_10th = new char[24, 40];
         public static char[,] unit_1st = new char[24, 40];
@@ -117,6 +107,8 @@ namespace MVCC.Utill
             }
         };
 
+        //***** Path Planning ******//
+
         public static vehicle vehicle_1 = new vehicle();
         public static vehicle vehicle_compare = new vehicle();
 
@@ -137,7 +129,7 @@ namespace MVCC.Utill
         ////////////////////////////////
 
         public static int count = 0;
-
+        //*************************//  
         public static bool right_move_check(vehicle vehicle_1)
         {
 
@@ -1088,386 +1080,116 @@ namespace MVCC.Utill
         public static int size_;
 
         #endregion
-        */
-        public void connect(UGV ugv, State state)
-        {
-            this.ugv = ugv;
-            this.state = state;
 
-            //색 트레킹 쓰레드
-            BackgroundWorker thread = new BackgroundWorker();
-            thread.DoWork += bluetoothConnect;
-            thread.RunWorkerAsync();
-        }
+        public void find_path(){
 
-        private void bluetoothConnect(object sender, DoWorkEventArgs e)
-        {
-            string write_data = ugv.Command;
-            string read_data;
+            #region Graph_Node_Initialization
+                            ///////////////////////////////////////////////////////////
+                            vehicle_1.size = size_;
 
-            string input_grid;
+                            vehicle_1.outer_1.x = start_x;
+                            vehicle_1.outer_1.y = start_y;
 
-            SerialPort serialport = new SerialPort();
+                            vehicle_1.outer_2.x = start_x + size_ - 1;
+                            vehicle_1.outer_2.y = start_y;
 
-            UGV settingUGV = globals.UGVSettingDictionary[convertId(ugv.Id)];
+                            vehicle_1.outer_3.x = start_x;
+                            vehicle_1.outer_3.y = start_y + size_ - 1;
 
-            serialport.PortName = settingUGV.ComPort;
-            serialport.BaudRate = settingUGV.Baudrate;
-            serialport.DataBits = settingUGV.Databit;
-            serialport.StopBits = getStopBit(settingUGV.Stopbit);
-            serialport.ReadTimeout = 200;
-            serialport.WriteTimeout = 200;
+                            vehicle_1.outer_4.x = start_x + size_ - 1;
+                            vehicle_1.outer_4.y = start_y + size_ - 1;
 
-            Console.WriteLine("들ㅇ옴");
+                            vehicle_1.visited = 1;
 
-            serialport.Open();
-          
-            if (serialport.IsOpen)
-            {
-                ugv.IsBluetoothConnected = true;
-                state.BluetoothOnOff = true;
+                            vehicle_1.weight = 0;
+                            //////////////////////////////////////////////////////////
+                            #endregion
 
-                if (write_data.Equals("f"))
-                {
-                    bool check = true;
+            #region Node_Initialization
 
-                    // critical section
-                    globals.theLock.EnterReadLock();
-                   //globals.rwl.AcquireReaderLock(0);
-                    //globals.mutex.WaitOne();
-                   //while (globals.mutex) ;
-
-                  //  globals.mutex = true;
-
-
-                    for (int i = 0; i < 24; i++)
-                    {
-                        for (int j = 0; j < 40; j++)
-                        {
-
-                            grid[i, j] = globals.Map_obstacle[i, j].ToString()[0];
-
-                            //Console.Write("{0} ", globals.Map_obstacle[i, j].ToString()[0]);
-
-                            if (globals.Map_obstacle[i, j] == 1) { grid[i, j] = 'x'; }
-
-                            if (check == true && globals.Map_obstacle[i, j] == 2)
+                            for (int i = 0; i < row; i++)
                             {
 
-                                start_x = j;
-                                start_y = i;
-
-                                dest_x = state.EndPointX;
-                                dest_y = state.EndPointY;
-
-                                size_ = 5;
-
-                                check = false;
-                            }
-                            if (globals.Map_obstacle[i, j] == 2)
-                            {
-
-                                grid[i, j] = '0';
-                            }
-                        }
-                        //Console.WriteLine(" ");
-                    }
-                    //Console.WriteLine(" ");
-
-                    for (int i = 0; i < 24; i++)
-                    {
-                        for (int j = 0; j < 40; j++)
-                        {
-                            Console.Write("{0} ", grid[i, j]);
-                        }
-                        Console.WriteLine(" ");
-                    }
-
-                    globals.theLock.ExitReadLock();
-                    //globals.rwl.ReleaseReaderLock();
-                    //globals.mutex.ReleaseMutex();
-
-                   // globals.mutex = false;
-
-                    // critical section end
-
-                    serialport.WriteLine((write_data[0]).ToString());
-
-                    try
-                    {
-
-                        #region Start_Destination_Size Declaration
-
-                        string starting_point_x;
-                        string starting_point_y;
-                        string destination_x;
-                        string destination_y;
-                        string size;
-
-                        char[] start_x_ = new char[3] { '0', '0', '0' };
-                        char[] start_y_ = new char[3] { '0', '0', '0' };
-                        char[] dest_x_ = new char[3] { '0', '0', '0' };
-                        char[] dest_y_ = new char[3] { '0', '0', '0' };
-                        char[] s_ = new char[3] { '0', '0', '0' };
-
-                        start_x_[2] = (char)((start_x / 100) + 48);         // Hundredth
-                        start_x_[1] = (char)(((start_x / 10) % 10) + 48);     // Tenth
-                        start_x_[0] = (char)((start_x % 10) + 48);          // First
-
-                        start_y_[2] = (char)((start_y / 100) + 48);
-                        start_y_[1] = (char)(((start_y / 10) % 10) + 48);
-                        start_y_[0] = (char)((start_y % 10) + 48);
-
-                        dest_x_[2] = (char)((dest_x / 100) + 48);
-                        dest_x_[1] = (char)(((dest_x / 10) % 10) + 48);
-                        dest_x_[0] = (char)((dest_x % 10) + 48);
-
-                        dest_y_[2] = (char)((dest_y / 100) + 48);
-                        dest_y_[1] = (char)(((dest_y / 10) % 10) + 48);
-                        dest_y_[0] = (char)((dest_y % 10) + 48);
-
-                        s_[2] = (char)((size_ / 100) + 48);
-                        s_[1] = (char)(((size_ / 10) % 10) + 48);
-                        s_[0] = (char)((size_ % 10) + 48);
-
-                        serialport.WriteLine(start_x_[2].ToString());
-                        serialport.WriteLine(start_x_[1].ToString());
-                        serialport.WriteLine(start_x_[0].ToString());
-
-                        serialport.WriteLine(start_y_[2].ToString());
-                        serialport.WriteLine(start_y_[1].ToString());
-                        serialport.WriteLine(start_y_[0].ToString());
-
-                        serialport.WriteLine(dest_x_[2].ToString());
-                        serialport.WriteLine(dest_x_[1].ToString());
-                        serialport.WriteLine(dest_x_[0].ToString());
-
-                        serialport.WriteLine(dest_y_[2].ToString());
-                        serialport.WriteLine(dest_y_[1].ToString());
-                        serialport.WriteLine(dest_y_[0].ToString());
-
-                        serialport.WriteLine(s_[2].ToString());
-                        serialport.WriteLine(s_[1].ToString());
-                        serialport.WriteLine(s_[0].ToString());
-
-                        #endregion
-
-                        #region 사용 안하는 부위
-                        /*
-                        #region Graph_Node_Initialization
-                        ///////////////////////////////////////////////////////////
-                        vehicle_1.size = size_;
-
-                        vehicle_1.outer_1.x = start_x;
-                        vehicle_1.outer_1.y = start_y;
-
-                        vehicle_1.outer_2.x = start_x + size_ - 1;
-                        vehicle_1.outer_2.y = start_y;
-
-                        vehicle_1.outer_3.x = start_x;
-                        vehicle_1.outer_3.y = start_y + size_ - 1;
-
-                        vehicle_1.outer_4.x = start_x + size_ - 1;
-                        vehicle_1.outer_4.y = start_y + size_ - 1;
-
-                        vehicle_1.visited = 1;
-
-                        vehicle_1.weight = 0;
-                        //////////////////////////////////////////////////////////
-                        #endregion
-
-                        #region Node_Initialization
-
-                        for (int i = 0; i < row; i++)
-                        {
-
-                            for (int j = 0; j < column; j++)
-                            {
-
-                                node[i, j] = new vehicle(size_, 0, j, i, 0);
-
-                                result_grid[i, j] = temp_grid[i, j];
-                            }
-                        }
-
-                        //vehicle_1 = vehicle_compare;
-
-                        #endregion
-                        
-                        #region Graph_Construction
-
-                        graph_reconstruct(node, dest_x, dest_y, start_x, start_y);
-
-
-                        for (int i = 0; i < 24; i++)
-                        {
-                            for (int j = 0; j < 40; j++)
-                            {
-
-                                //Console.WriteLine("Node[{0},{1}]", i, j);
-                                for (int k = 0; k < 8; k++)
+                                for (int j = 0; j < column; j++)
                                 {
 
-                                    if (node[i, j].children[k] != null)
+                                    node[i, j] = new vehicle(size_, 0, j, i, 0);
+
+                                    result_grid[i, j] = temp_grid[i, j];
+                                }
+                            }
+
+                            //vehicle_1 = vehicle_compare;
+
+                            #endregion
+
+            #region Graph_Construction
+
+                            graph_reconstruct(node, dest_x, dest_y, start_x, start_y);
+
+
+                            for (int i = 0; i < 24; i++)
+                            {
+                                for (int j = 0; j < 40; j++)
+                                {
+
+                                    //Console.WriteLine("Node[{0},{1}]", i, j);
+                                    for (int k = 0; k < 8; k++)
                                     {
 
-                                        //Console.WriteLine("Child[{0}] : {1} {2}", k, node[i, j].children[k].outer_1.x, node[i, j].children[k].outer_1.y);
+                                        if (node[i, j].children[k] != null)
+                                        {
+
+                                            //Console.WriteLine("Child[{0}] : {1} {2}", k, node[i, j].children[k].outer_1.x, node[i, j].children[k].outer_1.y);
+                                        }
                                     }
                                 }
                             }
-                        }
 
-                        Console.WriteLine("Graph Reconstruction Complete");
-                        #endregion
+                            Console.WriteLine("Graph Reconstruction Complete");
+                            #endregion
 
-                        #region BFS Path Planning
+            #region BFS Path Planning
 
-                        find_path_BFS(vehicle_1, dest_x, dest_y);
+                            find_path_BFS(vehicle_1, dest_x, dest_y);
 
-                        for (int i = 0; i < 24; i++)
-                        {
-                            for (int j = 0; j < 40; j++)
+                            for (int i = 0; i < 24; i++)
                             {
-                                Console.Write("{0,3} ", result_grid[i, j].ToString());
+                                for (int j = 0; j < 40; j++)
+                                {
+                                    Console.Write("{0,3} ", result_grid[i, j].ToString());
+                                }
+                                Console.WriteLine(" ");
                             }
-                            Console.WriteLine(" ");
-                        }
 
-                        #endregion
-                        
-                        #region Path_Following
+                            #endregion
 
-                        path_num = 0;
-                        path_count = 0;
+            #region Path_Following
 
-                        follow_path(dest_x, dest_y, start_x, start_y);
-                        follow_command[0] = current_perspective;
+                            path_num = 0;
+                            path_count = 0;
 
-                        for (int i = 0; i < path_count; i++)
-                        {
-                            Movement_Command();
-                        }
+                            follow_path(dest_x, dest_y, start_x, start_y);
+                            follow_command[0] = current_perspective;
 
-                        for (int i = 0; i < path_count; i++)
-                        {
-                            Console.Write("{0}", follow_command[i]);
-                        }
-                        Console.WriteLine("");
-
-                        for (int i = 0; i < path_count; i++)
-                        {
-                            Console.Write("{0}", movement[i].ToString());
-                        }
-                        Console.WriteLine("");
-
-                        #endregion
-                        */
-                        #endregion
-
-                        #region Transmit_Movement_Command
-                        for (int i = 0; i < path_count; i++)
-                        {
-                            serialport.WriteLine((movement[i]).ToString());
-                        }
-                        serialport.WriteLine("e");
-
-                        Console.WriteLine("TX Complete");
-                        #endregion
-
-
-                        for (int i = 0; i < path_count; i++)
-                        {
-                            Console.Write("{0}", follow_command[i]);
-                        }
-                        Console.WriteLine("");
-
-                        for (int i = 0; i < path_count; i++)
-                        {
-                            Console.Write("{0}", movement[i].ToString());
-                        }
-                        Console.WriteLine("");
-
-                        for (int i = 0; i < row; i++)
-                        {
-                            for (int j = 0; j < column; j++)
+                            for (int i = 0; i < path_count; i++)
                             {
-                                Console.Write("{0} ", grid[i, j]);
+                                Movement_Command();
                             }
-                            Console.WriteLine(" ");
-                        }
 
-                    }
-                    catch (TimeoutException)
-                    {
-                        Console.WriteLine("TimeOutException");
+                            for (int i = 0; i < path_count; i++)
+                            {
+                                Console.Write("{0}", follow_command[i]);
+                            }
+                            Console.WriteLine("");
 
-                        Console.Write("Buffer : ");
-                        Console.WriteLine(serialport.ReadExisting());
-                    }
+                            for (int i = 0; i < path_count; i++)
+                            {
+                                Console.Write("{0}", movement[i].ToString());
+                            }
+                            Console.WriteLine("");
 
-                    disConnect(serialport);
-                }
-
-                else if (write_data == "g")
-                {
-                    try
-                    {
-
-                    }
-                    catch (TimeoutException)
-                    {
-                        Console.WriteLine("TimeOutException");
-
-                        Console.Write("Buffer : ");
-                        Console.WriteLine(serialport.ReadExisting());
-                    }
-                }
-                else if (write_data == "i")
-                {
-
-                }
-
-                else if (write_data == "q")
-                {
-                    disConnect(serialport);
-                }
-                Console.Out.Flush();
-            }
-        }
-
-        private void disConnect(SerialPort serialport)
-        {
-            serialport.Close();
-            ugv.IsBluetoothConnected = false;
-            state.BluetoothOnOff = false;
-        }
-
-        private StopBits getStopBit(int bit)
-        {
-            if (bit == 0)
-                return StopBits.None;
-            else if (bit == 1)
-                return StopBits.One;
-
-            return StopBits.One;
-        }
-
-        private string convertId(string id)
-        {
-            switch (id)
-            {
-                case "A0":
-                    return "Vehicle 0";
-                case "A1":
-                    return "Vehicle 1";
-                case "A2":
-                    return "Vehicle 2";
-                case "A3":
-                    return "Vehicle 3";
-
-                default:
-                    return "Vehicle 0";
-            }
+                            #endregion
         }
     }
 }
