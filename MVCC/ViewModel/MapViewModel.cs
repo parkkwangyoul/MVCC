@@ -160,6 +160,19 @@ namespace MVCC.ViewModel
         {
             UGV removeUGV = new UGV();
 
+            /*
+            foreach (Group group in MVCCGroupList)
+            {
+                foreach (UGV tempUGV in group.MemberList)
+                {
+                    if (tempUGV.Equals(removeUGV))
+                    {
+                        MVCCGroupList.Remove(group);
+                        break;
+                    }
+                }
+            }*/
+
             for (int i = 0; i < MVCCItemList.Count; i++)
             {
                 if (!(MVCCItemList[i] is UGV))
@@ -170,8 +183,6 @@ namespace MVCC.ViewModel
                 if (tempUGV.Id.Equals(ugvId))
                 {
                     removeUGV = tempUGV;
-
-                    MVCCItemList.Remove(removeUGV);
                     break;
                 }
             }
@@ -186,17 +197,7 @@ namespace MVCC.ViewModel
                 }
             }
 
-            foreach (Group group in MVCCGroupList)
-            {
-                foreach (UGV tempUGV in group.MemberList)
-                {
-                    if (tempUGV.Equals(removeUGV))
-                    {
-                        MVCCGroupList.Remove(group);
-                        break;
-                    }
-                }
-            }
+            MVCCItemList.Remove(removeUGV);
         }
 
         #endregion UGVCommand

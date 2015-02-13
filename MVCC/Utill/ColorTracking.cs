@@ -260,8 +260,8 @@ namespace MVCC.Utill
                     else
                         direction[index] = -1;
                     
-                    if (direction[index] == -1)
-                        Console.WriteLine("i = " + index + " direction[index] = " + direction[index] + "알수 없는 각도" + " result = " + result);
+                    //if (direction[index] == -1)
+                        //Console.WriteLine("i = " + index + " direction[index] = " + direction[index] + "알수 없는 각도" + " result = " + result);
                     //else                        
                     //    Console.WriteLine("i = " + index + " direction[index] = " + direction[index] + " result = " + result);
                    

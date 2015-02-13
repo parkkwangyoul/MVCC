@@ -26,7 +26,7 @@
             </TabItem.Header>
             <Grid Style="{StaticResource PropertyTriggerTabGridStyle}">
                 <Grid.RenderTransform>
-                    <TranslateTransform X="600" Y="0" />
+                    <TranslateTransform X="-50" Y="0" />
                 </Grid.RenderTransform>
                 <view:InfomationView />
             </Grid>
@@ -42,7 +42,7 @@
             </TabItem.Header>
             <Grid Style="{StaticResource PropertyTriggerTabGridStyle}">
                 <Grid.RenderTransform>
-                    <TranslateTransform X="600" Y="0" />
+                    <TranslateTransform X="-50" Y="0" />
                 </Grid.RenderTransform>
                 <view:MapView />
             </Grid>
@@ -66,9 +66,9 @@
                     Setting
                 </TextBlock>
             </TabItem.Header>
-            <Grid Style="{StaticResource PropertyTriggerTabGridStyle}">
+            <Grid Style="{StaticResource PropertyTriggerTabGridStyle}" Opacity="0">
                 <Grid.RenderTransform>
-                    <TranslateTransform X="600" Y="0" />
+                    <TranslateTransform X="-50" Y="0" />
                 </Grid.RenderTransform>
                 <view:SettingView />
             </Grid>

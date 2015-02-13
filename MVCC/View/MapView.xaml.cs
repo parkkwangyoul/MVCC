@@ -514,8 +514,6 @@ namespace MVCC.View
 
                 individualUGV.Command = "f";
 
-                Console.WriteLine("여기 부터 시작");
-
                 pathFinder.find_path(individualUGV, individualUGVState);
 
                 bluetoothAndPathPlanning.connect(individualUGV, individualUGVState);
@@ -534,6 +532,8 @@ namespace MVCC.View
                     tempState.EndPointY = endPointY;
 
                     tempUGV.Command = "f";
+
+                    pathFinder.find_path(tempUGV, tempState);
 
                     bluetoothAndPathPlanning.connect(tempUGV, tempState);
 

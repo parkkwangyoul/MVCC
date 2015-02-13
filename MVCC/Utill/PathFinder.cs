@@ -147,7 +147,7 @@ namespace MVCC.Utill
             for (i = 0; i < size; i++)
             {
 
-                if(vehicle_1.outer_2.x + 1 < 40)
+                if(vehicle_1.outer_2.x + 1 < 40 && vehicle_1.outer_2.y + i < 24)
                 {
                     if (grid[vehicle_1.outer_2.y + i, vehicle_1.outer_2.x + 1] == '0') { count++; }
                 }
@@ -186,7 +186,7 @@ namespace MVCC.Utill
 
             for (i = 0; i < size; i++)
             {
-                if(vehicle_1.outer_1.x - 1 >= 0)
+                if (vehicle_1.outer_1.x - 1 >= 0 && vehicle_1.outer_1.y + i < 24)
                 {
                     if (grid[vehicle_1.outer_1.y + i, vehicle_1.outer_1.x - 1] == '0') { count++; }
                 }
@@ -226,7 +226,7 @@ namespace MVCC.Utill
 
             for (i = 0; i < size; i++)
             {
-                if(vehicle_1.outer_1.y - 1 >= 0)
+                if (vehicle_1.outer_1.y - 1 >= 0 && vehicle_1.outer_1.x + i < 40)
                 {
                     if (grid[vehicle_1.outer_1.y - 1, vehicle_1.outer_1.x + i] == '0') { count++; }
                 }
@@ -266,7 +266,7 @@ namespace MVCC.Utill
 
             for (i = 0; i < size; i++)
             {
-                if(vehicle_1.outer_3.y + 1 < 24)
+                if (vehicle_1.outer_3.y + 1 < 24 && vehicle_1.outer_3.x + i < 40)
                 {
                     if (grid[vehicle_1.outer_3.y + 1, vehicle_1.outer_3.x + i] == '0') { count++; }
                 }
