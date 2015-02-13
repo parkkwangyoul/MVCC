@@ -164,6 +164,23 @@ namespace MVCC.Model
             }
         }
 
+        private List<string> movementCommandList;
+        public List<string> MovementCommandList
+        {
+            get
+            {
+                if (movementCommandList == null)
+                    movementCommandList = new List<string>();
+
+                return movementCommandList;
+            }
+
+            set
+            {
+                movementCommandList = value;
+            }
+        }
+
         #endregion Bluetoot Property
 
         public override string ToString() { return "UGV"; }

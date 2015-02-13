@@ -127,7 +127,7 @@
     <Compile Include="Model\State.cs" />
     <Compile Include="Model\UGV.cs" />
     <Compile Include="Utill\ObstacleDetection.cs" />
-    <None Include="Utill\Program.cs" />
+    <Compile Include="Utill\PathFinder.cs" />
     <Compile Include="ViewModel\InfomationViewModel.cs" />
     <Compile Include="ViewModel\LeftSidebarViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
