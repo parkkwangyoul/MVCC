@@ -15,7 +15,7 @@ namespace MVCC
         public int[,] Map_obstacle;
         public int[,] pre_Map_obstacle;
 
-        //public bool mutex = false;
+        public bool mutex = false;
 
         public ReaderWriterLock rwl = new ReaderWriterLock();
         public int readerTimeouts = 0;
@@ -23,7 +23,7 @@ namespace MVCC
         public int reads = 0;
         public int writes = 0;
 
-        public Mutex mutex = new Mutex();
+        //public Mutex mutex = new Mutex();
 
         private static Globals _Instance;
         public static Globals Instance

@@ -105,7 +105,7 @@ namespace MVCC.CustomControl
         {
             #region ComportList init
 
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 50; i++)
             {
                 ComportList.Add("COM" + (i + 1));
             }

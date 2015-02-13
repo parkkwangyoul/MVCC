@@ -1161,11 +1161,11 @@ namespace MVCC.Utill
                     bool check = true;
 
                     // critical section
-                    globals.rwl.AcquireReaderLock(0);
+                    //globals.rwl.AcquireReaderLock(0);
                     //globals.mutex.WaitOne();
-                    //while (globals.mutex) ;
+                   while (globals.mutex) ;
 
-                   // globals.mutex = true;
+                    globals.mutex = true;
 
 
                     for (i = 0; i < 24; i++)
@@ -1211,10 +1211,10 @@ namespace MVCC.Utill
                         Console.WriteLine(" ");
                     }
 
-                    globals.rwl.ReleaseReaderLock();
+                    //globals.rwl.ReleaseReaderLock();
                     //globals.mutex.ReleaseMutex();
 
-                    //globals.mutex = false;
+                    globals.mutex = false;
 
                     // critical section end
 
