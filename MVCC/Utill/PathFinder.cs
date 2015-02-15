@@ -1220,13 +1220,10 @@ namespace MVCC.Utill
 
             #endregion
 
+            
             UGV_confict_check(); //UGV 경로 충돌 검사  
             UGV_path_evasion(); //USG 경로 회피
-
-            //UGV movent 갱신 쓰레드
-            BackgroundWorker thread = new BackgroundWorker();
-            thread.DoWork += UGV_path_upgrade;
-            thread.RunWorkerAsync(ugv);
+            
         }
 
 
@@ -1292,7 +1289,7 @@ namespace MVCC.Utill
             }
         }
 
-
+/*
         public void UGV_path_upgrade(object sender, DoWorkEventArgs e)
         {
             object object_ugv = e.Argument;
@@ -1308,7 +1305,7 @@ namespace MVCC.Utill
             }
         }
 
-
+*/
 
         public void UGV_path_evasion()
         {
