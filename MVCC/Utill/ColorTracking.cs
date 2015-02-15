@@ -14,7 +14,6 @@ namespace MVCC.Utill
     {
         bool[] color = new bool[4]; //색상 여부 ([0]blue [1] green [2]pink [3]red)
         Point[] color_ROI = new Point[4]; //색상추적에 대한 이동 ROI
-        bool[] change_check = new bool[4]; // 이미지 변환 됫는지 체크.. 지금은 그냥 블루색깔 없어졌는지 test;
         string[] colorStr = { "blue", "green", "orange", "red" };
         int[] direction = new int[4]; //방향 저장 배열
         int color_count = 0; //color_count 세기위해 만약 4개면 템플릿매칭을 안함
@@ -92,8 +91,7 @@ namespace MVCC.Utill
 
                         if (totalPicxel / 10 <= pixCount) //일정 픽섹 이상시 색상배열 변경후 종료
                         {
-                            color[index] = true;
-                            change_check[index] = false;
+                            color[index] = true;                          
                             color_ROI[index].X = x;
                             color_ROI[index].Y = y;
                             color_count++;
@@ -271,29 +269,17 @@ namespace MVCC.Utill
                 }
                 else
                 {
-                    rect[index] = new Rectangle(-1, -1, 0, 0);  //사라졌을때 좌표를 -1로 만듬
+                    rect[index] = new Rectangle(0, 0, 0, 0);  //사라졌을때 좌표를 0,0 길이 0, 0로 만듬
                     color[index] = false;
-                    change_check[index] = true;
                     color_count--;
                 }      
             }
             else
             {
-                rect[index] = new Rectangle(0, 0, 0, 0);  //사라졌을때 좌표를 -1로 만듬
+                rect[index] = new Rectangle(0, 0, 0, 0);  //사라졌을때 좌표를 0,0 길이 0, 0로 만듬
                 color[index] = false;
-                change_check[index] = true;
                 color_count--;
             }
-        }
-
-        public bool change_chk(int index)
-        {
-            return change_check[index];
-        }
-
-        public void change_chk_reset(int index)
-        {
-            change_check[index] = false;
         }
 
         public List<UGV> get_ugv()

@@ -23,7 +23,7 @@ namespace MVCC.Utill
             this.ugv = ugv;
             this.state = state;
    
-            //색 트레킹 쓰레드
+            //bluetooth 연결쓰레드
             BackgroundWorker thread = new BackgroundWorker();
             thread.DoWork += bluetoothConnect;
             thread.RunWorkerAsync();
@@ -61,25 +61,6 @@ namespace MVCC.Utill
 
                 if (write_data.Equals("f"))
                 {
-                    bool check = true;
-
-                    // critical section
-                    globals.theLock.EnterReadLock();
-                   //globals.rwl.AcquireReaderLock(0);
-                    //globals.mutex.WaitOne();
-                   //while (globals.mutex) ;
-
-                  //  globals.mutex = true;
-
-
-                    globals.theLock.ExitReadLock();
-                    //globals.rwl.ReleaseReaderLock();
-                    //globals.mutex.ReleaseMutex();
-
-                   // globals.mutex = false;
-
-                    // critical section end
-
                     serialport.WriteLine((write_data[0]).ToString());
 
                     try

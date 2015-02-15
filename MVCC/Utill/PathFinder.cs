@@ -1221,6 +1221,7 @@ namespace MVCC.Utill
         public void map_classification()
         {
             globals.theLock.EnterReadLock();
+
             int index;
             int.TryParse(ugv.Id[1].ToString(), out index);
             direct = globals.direction[index];
