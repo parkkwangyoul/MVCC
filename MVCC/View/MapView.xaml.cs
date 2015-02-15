@@ -202,7 +202,6 @@ namespace MVCC.View
 
                     //색상 트래킹
                     tracking_rect = colorTracking.tracking_start(frame);
-                    //globals.direction = colorTracking.get_direction();
 
                     average_val++;
 
@@ -245,18 +244,6 @@ namespace MVCC.View
                                 }));
                             }
                         }
-
-                       /*
-                        //색상 트레킹중에 하나가 사라졌는지..(test임!! 나중엔.. 이걸로 말고 장애물 변화를 해야함. 밑에 image_is_changed는 장애물변화될떄!!!!)
-                        for (int i = 0; i < 4; i++)
-                        {
-                            if (colorTracking.change_chk(i) == true)
-                            {
-                                image_is_changed = true;
-                                colorTracking.change_chk_reset(i);
-                            }
-                        }
-                         */
                     }
                     obstacle_check = true; //장애물이미지와 싱크 맞추기 위해 설정
                 }
@@ -280,10 +267,7 @@ namespace MVCC.View
             {
                 if (obstacle_check == true) //frame의 추적 영상 처리가 끝나고 처리
                 {
-                   // globals.mutex.WaitOne();
-
-                    //globals.rwl.AcquireWriterLock(0);
-                    globals.theLock.EnterWriteLock();
+                    globals.theLock.EnterWriteLock(); //critical section start
 
                     for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
                         for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
@@ -322,16 +306,10 @@ namespace MVCC.View
                     globals.pre_Map_obstacle = (int[,])globals.Map_obstacle.Clone(); //비교를 위해 이전 Map정보 설정
 
 
-                    globals.theLock.ExitWriteLock();
-
-
+                    globals.theLock.ExitWriteLock(); //critical section end
                    
                     //Array.Clear(globals.Map_obstacle, 0, globals.rect_height / globals.y_grid * globals.rect_width / globals.x_grid);
 
-                    //globals.rwl.ReleaseReaderLock();
-
-                   
-                    //globals.mutex.ReleaseMutex();
                     /*
                     globals.mutex = true;
  
@@ -345,6 +323,7 @@ namespace MVCC.View
 
                     globals.mutex = false;
                    */
+
                     Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
                     {
                         building_List = obstacleDetection.get_building();
