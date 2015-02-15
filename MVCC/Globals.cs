@@ -16,26 +16,9 @@ namespace MVCC
         public int[,] pre_Map_obstacle;
         public int[] direction = new int[4];
 
-        public struct car_Map
-        {
-            public int[,] Map_obstacle;
-        }
-
-        public car_Map[] car_map = new car_Map[4];
-
-
-
-        public bool mutex = false;
-
-        public ReaderWriterLock rwl = new ReaderWriterLock();
-        public int readerTimeouts = 0;
-        public int writerTimeouts = 0;
-        public int reads = 0;
-        public int writes = 0;
-
         public ReaderWriterLockSlim theLock = new ReaderWriterLockSlim();
 
-        //public Mutex mutex = new Mutex();
+
 
         private static Globals _Instance;
         public static Globals Instance
