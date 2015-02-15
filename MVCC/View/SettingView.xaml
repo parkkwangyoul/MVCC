@@ -38,6 +38,13 @@
         <Grid Grid.Row="0" x:Name="SettingGrid">
             <ItemsControl ItemTemplateSelector="{StaticResource MyDataTemplateSeletor}"
                           ItemsSource="{Binding MVCCBluetoothSettingList}">
+                <ItemsControl.Template>
+                    <ControlTemplate TargetType="{x:Type ItemsControl}">
+                        <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
+                            <ItemsPresenter></ItemsPresenter>
+                        </ScrollViewer>
+                    </ControlTemplate>
+                </ItemsControl.Template>
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate >    
                         <StackPanel x:Name="MVCCBluetoothSettingPanel"></StackPanel>
