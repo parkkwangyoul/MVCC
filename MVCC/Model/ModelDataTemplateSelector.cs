@@ -15,11 +15,14 @@ namespace MVCC.Model
     {
         public DataTemplate DataTemplateUGVControl { get; set; }
 
+        public DataTemplate DataTemplateUGVPathControl { get; set; }
+
         public DataTemplate DataTemplateBuildingControl { get; set; }
 
         public DataTemplate DataTemplateStateControl { get; set; }
 
         public DataTemplate DataTemplateGroupControl { get; set; }
+
 
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
@@ -30,6 +33,9 @@ namespace MVCC.Model
             {
                 case "UGV" :
                     return DataTemplateUGVControl;
+
+                case "UGVPath":
+                    return DataTemplateUGVPathControl;
 
                 case "Building" :
                     return DataTemplateBuildingControl;

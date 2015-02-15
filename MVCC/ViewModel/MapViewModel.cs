@@ -159,19 +159,22 @@ namespace MVCC.ViewModel
         public void RemoveUGV(string ugvId)
         {
             UGV removeUGV = new UGV();
-
-            /*
+            
             foreach (Group group in MVCCGroupList)
             {
                 foreach (UGV tempUGV in group.MemberList)
                 {
                     if (tempUGV.Equals(removeUGV))
                     {
-                        MVCCGroupList.Remove(group);
+                        group.MemberList.Remove(removeUGV);
+
+                        if (group.MemberList.Count == 0)
+                            MVCCGroupList.Remove(group);
+
                         break;
                     }
                 }
-            }*/
+            }
 
             for (int i = 0; i < MVCCItemList.Count; i++)
             {

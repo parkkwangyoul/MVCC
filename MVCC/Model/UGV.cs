@@ -164,6 +164,7 @@ namespace MVCC.Model
             }
         }
 
+        // 블루투스로 전송되는 명령 List
         private List<string> movementCommandList;
         public List<string> MovementCommandList
         {
@@ -181,7 +182,25 @@ namespace MVCC.Model
             }
         }
 
-        #endregion Bluetoot Property
+        #endregion Bluetooth Property
+        
+        // 블루투스로 전송되는 명령이 아닌 좌표쌍으로 이루어진 List
+        private List<KeyValuePair<int, int>> pathList;
+        public List<KeyValuePair<int, int>> PathList
+        {
+            get
+            {
+                if (pathList == null)
+                    return new List<KeyValuePair<int, int>>();
+                else
+                    return pathList;
+            }
+
+            set
+            {
+                pathList = value;
+            }
+        }
 
         public override string ToString() { return "UGV"; }
     }

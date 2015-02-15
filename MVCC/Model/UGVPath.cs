@@ -6,8 +6,18 @@ using System.Threading.Tasks;
 
 namespace MVCC.Model
 {
-    class UGVPath
+    class UGVPath : ModelBase
     {
+        public UGVPath(string id, int startX, int startY, int endX, int endY, string stroke)
+        {
+            this.id = id;
+            this.startX = startX;
+            this.startY = startY;
+            this.endX = endX;
+            this.endY = endY;
+            this.stroke = stroke;
+        }
+        
         // Path가 필요한 해당 UGV Id
         private string id;
         public string Id
@@ -48,23 +58,14 @@ namespace MVCC.Model
             set { endY = value; }
         }
 
-        private List<KeyValuePair<int, int>> pathList;
-        public List<KeyValuePair<int, int>> PathList
+        // Path Color
+        private string stroke = "Gray";
+        public string Stroke
         {
-            get
-            {
-                if (startX == endX && startY == endY)
-                    return null;
-                else if (pathList == null)
-                    return new List<KeyValuePair<int, int>>();
-                else
-                    return pathList;
-            }
-
-            set
-            {
-                pathList = value;
-            }
+            get { return stroke; }
+            set { stroke = value; }
         }
+
+        public override string ToString(){ return "UGVPath"; }
     }
 }
