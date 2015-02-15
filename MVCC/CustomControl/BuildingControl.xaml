@@ -10,7 +10,7 @@
     </UserControl.RenderTransform>
     
     <Grid>
-        <TextBlock TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Id}" />
+        <TextBlock TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Id}" Canvas.ZIndex="1" />
         <Rectangle Width="{Binding Width}" Height="{Binding Height}" Fill="{Binding BuildingColor}">
         </Rectangle>
     </Grid>

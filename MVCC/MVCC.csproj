@@ -101,6 +101,9 @@
     <Compile Include="CustomControl\BluetoothControl.xaml.cs">
       <DependentUpon>BluetoothControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CustomControl\UGVPathControl.xaml.cs">
+      <DependentUpon>UGVPathControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Model\UGVPath.cs" />
     <Compile Include="Utill\BluetoothAndPathPlanning.cs" />
     <Compile Include="Utill\ColorTracking.cs" />
@@ -163,6 +166,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CustomControl\UGVControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomControl\UGVPathControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

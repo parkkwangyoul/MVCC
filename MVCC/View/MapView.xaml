@@ -20,6 +20,10 @@
                 <uc:UGVControl></uc:UGVControl>
             </DataTemplate>
 
+            <DataTemplate x:Key="DataTemplateUGVPathControl">
+                <uc:UGVPathControl></uc:UGVPathControl>
+            </DataTemplate>
+
             <DataTemplate x:Key="DataTemplateBuildingControl">
                 <uc:BuildingControl></uc:BuildingControl>
             </DataTemplate>
@@ -35,6 +39,7 @@
             <model:ModelDataTemplateSelector x:Key="MyDataTemplateSeletor" 
                                              x:Name="MyDataTemplateSeletor" 
                                              DataTemplateUGVControl="{StaticResource DataTemplateUGVControl}" 
+                                             DataTemplateUGVPathControl="{StaticResource DataTemplateUGVPathControl}"
                                              DataTemplateBuildingControl="{StaticResource DataTemplateBuildingControl}" 
                                              DataTemplateStateControl="{StaticResource DataTemplateStateControl}"
                                              DataTemplateGroupControl="{StaticResource DatatTemplateGroupControl}"/>
@@ -80,9 +85,9 @@
             <Grid Grid.Row="1" x:Name="MapGrid">
                 <Border Width="600" Height="360" BorderBrush="#78C8FF" BorderThickness="1">
                     <Grid x:Name="MapItemControlWrapGrid">
-                        <ItemsControl
+                        <ItemsControl Panel.ZIndex="1"
                         ItemTemplateSelector="{StaticResource MyDataTemplateSeletor}"
-                        ItemsSource="{Binding Source={StaticResource MVCCItemSrc}}" Margin="-10,0,10,0">
+                        ItemsSource="{Binding Source={StaticResource MVCCItemSrc}}" Margin="-10 0 10 0">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <Canvas MouseLeftButtonDown="SelectUGV" MouseRightButtonDown="MoveUGV" Background="Transparent" Margin="1,0,-1,0">

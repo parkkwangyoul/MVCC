@@ -388,7 +388,7 @@ namespace MVCC.View
 
             for (int i = 15; i <= 600; i += 15)
             {
-                Line line = new Line();
+                Line line = new Line();               
 
                 line.X1 = i;
                 line.Y1 = 0;
@@ -396,13 +396,15 @@ namespace MVCC.View
                 line.Y2 = 360;
 
                 line.Stroke = Brushes.Gray;
-
+                
                 MapItemControlWrapGrid.Children.Add(line);
             }
 
             for (int i = 15; i <= 360; i += 15)
             {
                 Line line = new Line();
+
+                Panel.SetZIndex(line, 0);
 
                 line.X1 = 0;
                 line.Y1 = i;
@@ -492,9 +494,30 @@ namespace MVCC.View
 
                 individualUGV.Command = "f";
 
+                individualUGV.PathList.Clear();
+
                 pathFinder.find_path(individualUGV, individualUGVState);
 
-                bluetoothAndPathPlanning.connect(individualUGV, individualUGVState);
+                List<KeyValuePair<int, int>> pathList = individualUGV.PathList;
+
+                for (int i = 0; i < pathList.Count; i++)
+                {
+                    if (i == 0)
+                        continue;
+
+                    KeyValuePair<int, int> beforePathTemp = pathList[i - 1];
+                    KeyValuePair<int, int> currentPathTemp = pathList[i];
+
+                    int startX = beforePathTemp.Key;
+                    int startY = beforePathTemp.Value;
+
+                    int endX = currentPathTemp.Key;
+                    int endY = currentPathTemp.Value;
+
+                    mapViewModel.MVCCItemList.Add(new UGVPath(individualUGV.Id, startX, startY, endX, endY, individualUGV.UGVColor));
+                }
+
+                    bluetoothAndPathPlanning.connect(individualUGV, individualUGVState);
 
                 refreshView();
             }
@@ -512,6 +535,25 @@ namespace MVCC.View
                     tempUGV.Command = "f";
 
                     pathFinder.find_path(tempUGV, tempState);
+
+                    List<KeyValuePair<int, int>> pathList = individualUGV.PathList;
+
+                    for (int i = 0; i < pathList.Count; i++)
+                    {
+                        if (i == 0)
+                            continue;
+
+                        KeyValuePair<int, int> beforePathTemp = pathList[i - 1];
+                        KeyValuePair<int, int> currentPathTemp = pathList[i];
+
+                        int startX = beforePathTemp.Key;
+                        int startY = beforePathTemp.Value;
+
+                        int endX = currentPathTemp.Key;
+                        int endY = currentPathTemp.Value;
+
+                        mapViewModel.MVCCItemList.Add(new UGVPath(individualUGV.Id, startX, startY, endX, endY, individualUGV.UGVColor));
+                    }
 
                     bluetoothAndPathPlanning.connect(tempUGV, tempState);
 
@@ -644,6 +686,11 @@ namespace MVCC.View
                             ugv.IsBelongToGroup = false;
 
                             group.MemberList.Remove(ugv);
+
+                            if (group.MemberList.Count == 0)
+                            {
+                                mapViewModel.MVCCGroupList.Remove(group);
+                            }
 
                             cancelSelectUGV(ugv);
                         }
