@@ -517,7 +517,7 @@ namespace MVCC.View
                     mapViewModel.MVCCItemList.Add(new UGVPath(individualUGV.Id, startX, startY, endX, endY, individualUGV.UGVColor));
                 }
 
-                    bluetoothAndPathPlanning.connect(individualUGV, individualUGVState);
+                //bluetoothAndPathPlanning.connect(individualUGV, individualUGVState);
 
                 refreshView();
             }
@@ -555,7 +555,7 @@ namespace MVCC.View
                         mapViewModel.MVCCItemList.Add(new UGVPath(individualUGV.Id, startX, startY, endX, endY, individualUGV.UGVColor));
                     }
 
-                    bluetoothAndPathPlanning.connect(tempUGV, tempState);
+                    //bluetoothAndPathPlanning.connect(tempUGV, tempState);
 
                     refreshView();
                 }

@@ -211,9 +211,24 @@ namespace MVCC.Utill
                     tmp_y = 0;
                 }
 
-                for (int x = tmp_x; x < tmp_x + img_width; x++)
+                if (tmp_x + img_width > glo.rect_width)
+                    tmp_width = img_width - (tmp_x + img_width - glo.rect_width);
+
+                if (tmp_y + img_height > glo.rect_height)
+                    tmp_height = img_height - (tmp_y + img_height - glo.rect_height);
+
+                int x_end = tmp_x + img_width;
+                int y_end = tmp_y + img_height;
+
+                if (x_end > glo.rect_width)
+                    x_end = glo.rect_width;
+                if (y_end > glo.rect_height)
+                    y_end = glo.rect_height;
+
+
+                for (int x = tmp_x; x < x_end; x++)
                 {
-                    for (int y = tmp_y; y < tmp_y + img_height; y++)
+                    for (int y = tmp_y; y < y_end; y++)
                     {
                         if (!small_colorCount[y, x].Equals(new Bgr(0, 0, 0)))
                         {
