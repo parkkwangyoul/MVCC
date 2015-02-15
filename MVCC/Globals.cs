@@ -123,8 +123,31 @@ namespace MVCC
             }
         }
 
+        //경계 사각형 시작 x좌표
+        private int _rect_x = 20;
+
+        public int rect_x
+        {
+            get { return _rect_x; }
+            set
+            {
+                _rect_x = value;
+            }
+        }
+
+        //경계 사각형 시작 y좌표
+        private int _rect_y = 120;
+        public int rect_y
+        {
+            get { return _rect_y; }
+            set
+            {
+                _rect_y = value;
+            }
+        }
+
         //경계 사각형 너비
-        private int _rect_width = 600;
+        private int _rect_width = 540;
 
         public int rect_width
         {
