@@ -272,7 +272,7 @@ namespace MVCC.View
                     for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
                         for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
                             globals.Map_obstacle[j, i] = 0;
-                    
+                    //Array.Clear(globals.Map_obstacle, 0, globals.rect_height / globals.y_grid * globals.rect_width / globals.x_grid);
 
                     blob_count = obstacleDetection.detectBlob(obstacle_image, globals.Map_obstacle, tracking_rect); //장애물 검출
 
@@ -308,8 +308,7 @@ namespace MVCC.View
 
                     globals.theLock.ExitWriteLock(); //critical section end
                    
-                    //Array.Clear(globals.Map_obstacle, 0, globals.rect_height / globals.y_grid * globals.rect_width / globals.x_grid);
-
+                   
                     /*
                     globals.mutex = true;
  

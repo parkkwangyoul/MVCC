@@ -21,7 +21,7 @@ namespace MVCC.Utill
         Image<Bgr, Byte> colorCheckImage; //칼라 체크할 이미지 변수
         int totalPicxel, pos_x, pos_y, img_width, img_height; //탬플릿매칭으로 넘어온 정보
         Globals glo = Globals.Instance; //gloal 변수를 위해
-
+        
         List<UGV> ugvList = new List<UGV>();
 
         //어떤 색인지 알아내기 위해

@@ -18,7 +18,8 @@ namespace MVCC
 
         public ReaderWriterLockSlim theLock = new ReaderWriterLockSlim();
 
-
+        public int[,] UGVs_movement = new int[4, 24 + 40];
+        public int[] UGVs_path_count = new int[4];
 
         private static Globals _Instance;
         public static Globals Instance
@@ -43,8 +44,7 @@ namespace MVCC
             {
                 if (nowSelectedUGV == null)
                 {
-                    nowSelectedUGV = new UGV();
-                   
+                    nowSelectedUGV = new UGV();              
                 }
 
                 return nowSelectedUGV;
