@@ -14,7 +14,6 @@ namespace MVCC.Utill
 
         private UGV ugv;
         private State state;
-
         int direct;
 
         #region Path_Planning_Part
