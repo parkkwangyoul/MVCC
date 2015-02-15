@@ -44,7 +44,7 @@ namespace MVCC.Model
 
         // 도착 X 좌표
         private int endX;
-        private int EndX
+        public int EndX
         {
             get { return endX; }
             set { endX = value; }
@@ -52,7 +52,7 @@ namespace MVCC.Model
 
         // 도착 Y 좌표
         private int endY;
-        private int EndY
+        public int EndY
         {
             get { return endY; }
             set { endY = value; }

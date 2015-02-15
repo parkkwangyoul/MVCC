@@ -386,21 +386,21 @@ namespace MVCC.View
 
             bluetoothAndPathPlanning = new BluetoothAndPathPlanning();
 
-            for (int i = 15; i <= 600; i += 15)
+            for (int i = 15; i <= globals.rect_width; i += 15)
             {
                 Line line = new Line();               
 
                 line.X1 = i;
                 line.Y1 = 0;
                 line.X2 = i;
-                line.Y2 = 360;
+                line.Y2 = globals.rect_height;
 
                 line.Stroke = Brushes.Gray;
                 
                 MapItemControlWrapGrid.Children.Add(line);
             }
 
-            for (int i = 15; i <= 360; i += 15)
+            for (int i = 15; i <= globals.rect_height; i += 15)
             {
                 Line line = new Line();
 
@@ -408,7 +408,7 @@ namespace MVCC.View
 
                 line.X1 = 0;
                 line.Y1 = i;
-                line.X2 = 600;
+                line.X2 = globals.rect_width ;
                 line.Y2 = i;
 
                 line.Stroke = Brushes.Gray;
@@ -500,10 +500,14 @@ namespace MVCC.View
 
                 List<KeyValuePair<int, int>> pathList = individualUGV.PathList;
 
+                Console.WriteLine("pathList count : " + pathList.Count);
+
                 for (int i = 0; i < pathList.Count; i++)
                 {
                     if (i == 0)
                         continue;
+
+                    Console.WriteLine("test: " + pathList[i]);
 
                     KeyValuePair<int, int> beforePathTemp = pathList[i - 1];
                     KeyValuePair<int, int> currentPathTemp = pathList[i];

@@ -23,7 +23,7 @@ namespace MVCC.Utill
         int grid_x;
         int grid_y;
 
-       
+
 
         #region Path_Planning_Part
 
@@ -32,53 +32,45 @@ namespace MVCC.Utill
             grid_x = globals.rect_width / globals.x_grid;
             grid_y = globals.rect_height / globals.y_grid;
 
-             grid = new char[grid_y, grid_x];
+            grid = new char[grid_y, grid_x];
 
-        grid_1 = new string[grid_y];
+            grid_1 = new string[grid_y];
 
-       result_grid = new int[grid_y, grid_x];
+            result_grid = new int[grid_y, grid_x];
 
-        temp_grid = new int[grid_y, grid_x];
+            temp_grid = new int[grid_y, grid_x];
 
-     unit_100th = new char[grid_y, grid_x];
-       unit_10th = new char[grid_y, grid_x];
-      unit_1st = new char[grid_y, grid_x];
-
-
-     current_perspective = 0;
-      next_perspective = 0;
-
-    follow_command = new int[grid_y + grid_x];
-       movement = new int[grid_y + grid_x];
-    path_count = 0;
-     path_num = 0;
-
-   movement_count = 0;
+            unit_100th = new char[grid_y, grid_x];
+            unit_10th = new char[grid_y, grid_x];
+            unit_1st = new char[grid_y, grid_x];
 
 
-          vehicle_1 = new vehicle();
-   vehicle_compare = new vehicle();
+            current_perspective = 0;
+            next_perspective = 0;
 
-      node = new vehicle[grid_y, grid_x];
+            follow_command = new int[grid_y + grid_x];
+            movement = new int[grid_y + grid_x];
+            path_count = 0;
+            path_num = 0;
 
-   q = new vehicle[grid_y * grid_x];
-
-  row = grid_y;
-column = grid_x;
-
- size = 0;
+            movement_count = 0;
 
 
+            vehicle_1 = new vehicle();
+            vehicle_compare = new vehicle();
 
+            node = new vehicle[grid_y, grid_x];
 
- q_size = grid_y * grid_x - 1;
- q_level = -1;
-       count = 0;
+            q = new vehicle[grid_y * grid_x];
 
+            row = grid_y;
+            column = grid_x;
 
+            size = 0;
 
-
-
+            q_size = grid_y * grid_x - 1;
+            q_level = -1;
+            count = 0;
         }
 
 
@@ -93,22 +85,22 @@ column = grid_x;
 
         public string[] grid_1;
 
-        public int[,] result_grid; 
+        public int[,] result_grid;
 
-        public int[,] temp_grid; 
+        public int[,] temp_grid;
 
-        public char[,] unit_100th; 
-        public char[,] unit_10th; 
+        public char[,] unit_100th;
+        public char[,] unit_10th;
         public char[,] unit_1st;
 
 
         public int current_perspective;
-        public int next_perspective; 
+        public int next_perspective;
 
-        public int[] follow_command; 
+        public int[] follow_command;
         public int[] movement;
-        public int path_count ;
-        public int path_num ;
+        public int path_count;
+        public int path_num;
 
         public int movement_count;
 
@@ -184,9 +176,9 @@ column = grid_x;
 
         public vehicle[,] node;
 
-        public vehicle[] q ;
+        public vehicle[] q;
 
-        public int row ;
+        public int row;
         public int column;
 
         public int size;
@@ -195,7 +187,7 @@ column = grid_x;
 
 
         public int q_size;
-        public int q_level; 
+        public int q_level;
         ////////////////////////////////
 
         public int count;
@@ -709,10 +701,10 @@ column = grid_x;
 
             vehicle_compare.weight = 0;
 
-            Console.WriteLine("{0}", current_weight);
+            Console.WriteLine("current_weight : {0}", current_weight);
             grid[start_point_y, start_point_x] = '5';
 
-            ugv.PathList.Add(new KeyValuePair<int, int>(start_point_x, start_point_y));
+            ugv.PathList.Add(new KeyValuePair<int, int>(start_point_x * 15, start_point_y * 15));
 
             if ((relative_position_x == 0) && (relative_position_y == 0))
             {
@@ -1281,10 +1273,10 @@ column = grid_x;
 
             #endregion
 
-            
-           // UGV_confict_check(); //UGV 경로 충돌 검사  
+
+            // UGV_confict_check(); //UGV 경로 충돌 검사  
             //UGV_path_evasion(); //USG 경로 회피
-            
+
         }
 
 
@@ -1303,9 +1295,9 @@ column = grid_x;
                 {
                     if (globals.Map_obstacle[y, x] == '*') //장애물은 x 로
                         grid[y, x] = 'x';
-                    else if (globals.Map_obstacle[y, x] == 0)
-                        grid[y, x] = '0';
-                    else if (globals.Map_obstacle[y, x] == index + 1)
+                    // else if (globals.Map_obstacle[y, x] == 0)
+                    //     grid[y, x] = '0';
+                    else
                         grid[y, x] = '0';
                 }
             }
@@ -1319,20 +1311,20 @@ column = grid_x;
             {
                 if (!(mapViewModel.MVCCItemList[i] is UGV))
                     continue;
-               
+
                 UGV temp_ugv = mapViewModel.MVCCItemList[i] as UGV;
 
-                if(ugv.Id != temp_ugv.Id)
+                if (ugv.Id != temp_ugv.Id)
                 {
                     //List<string> temp_movent = temp_ugv.MovementCommandList;
                     int max_path_count;
 
-                    if(ugv.MovementCommandList.Count > temp_ugv.MovementCommandList.Count )
+                    if (ugv.MovementCommandList.Count > temp_ugv.MovementCommandList.Count)
                         max_path_count = ugv.MovementCommandList.Count;
                     else
                         max_path_count = temp_ugv.MovementCommandList.Count;
 
-                    for (int j = 0; j < max_path_count; i++ )
+                    for (int j = 0; j < max_path_count; i++)
                     {
 
 
@@ -1340,33 +1332,33 @@ column = grid_x;
                     }
 
 
-                        if (temp_ugv.Id.Equals("A" + i))
-                        {
-                            //temp_ugv.X = tracking_rect[i].X;
-                           // temp_ugv.Y = tracking_rect[i].Y;
-                            break;
-                        }
+                    if (temp_ugv.Id.Equals("A" + i))
+                    {
+                        //temp_ugv.X = tracking_rect[i].X;
+                        // temp_ugv.Y = tracking_rect[i].Y;
+                        break;
+                    }
                 }
             }
         }
 
-/*
-        public void UGV_path_upgrade(object sender, DoWorkEventArgs e)
-        {
-            object object_ugv = e.Argument;
-            UGV temp_ugv = (UGV)object_ugv;
+        /*
+                public void UGV_path_upgrade(object sender, DoWorkEventArgs e)
+                {
+                    object object_ugv = e.Argument;
+                    UGV temp_ugv = (UGV)object_ugv;
 
-            int index;
-            int.TryParse(temp_ugv.Id[1].ToString(), out index);
+                    int index;
+                    int.TryParse(temp_ugv.Id[1].ToString(), out index);
            
-            while(ugv.MovementCommandList.Count != 0)
-            {
+                    while(ugv.MovementCommandList.Count != 0)
+                    {
 
 
-            }
-        }
+                    }
+                }
 
-*/
+        */
 
         public void UGV_path_evasion()
         {
@@ -1380,7 +1372,7 @@ column = grid_x;
 
         }
 
-    
+
 
 
     }

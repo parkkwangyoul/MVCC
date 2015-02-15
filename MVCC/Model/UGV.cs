@@ -191,14 +191,9 @@ namespace MVCC.Model
             get
             {
                 if (pathList == null)
-                    return new List<KeyValuePair<int, int>>();
-                else
-                    return pathList;
-            }
-
-            set
-            {
-                pathList = value;
+                    pathList = new List<KeyValuePair<int, int>>();
+                                
+                return pathList;
             }
         }
 

@@ -83,11 +83,11 @@
             </Grid>
 
             <Grid Grid.Row="1" x:Name="MapGrid">
-                <Border Width="600" Height="360" BorderBrush="#78C8FF" BorderThickness="1">
+                <Border Width="540" Height="360" BorderBrush="#78C8FF" BorderThickness="1">
                     <Grid x:Name="MapItemControlWrapGrid">
                         <ItemsControl Panel.ZIndex="1"
                         ItemTemplateSelector="{StaticResource MyDataTemplateSeletor}"
-                        ItemsSource="{Binding Source={StaticResource MVCCItemSrc}}" Margin="-10 0 10 0">
+                        ItemsSource="{Binding Source={StaticResource MVCCItemSrc}}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <Canvas MouseLeftButtonDown="SelectUGV" MouseRightButtonDown="MoveUGV" Background="Transparent" Margin="1,0,-1,0">
