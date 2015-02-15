@@ -58,9 +58,9 @@ namespace MVCC.View
         private void CamOn(object sender, RoutedEventArgs e)
         {
             // 카메라 없을때, 테스트용        
-            MockCameraOn();
+            //MockCameraOn();
             // 카메라 연결했을때
-            //CameraOnAndDetectThings();
+            CameraOnAndDetectThings();
         }
 
         #region TestMock
@@ -166,9 +166,9 @@ namespace MVCC.View
 
             while (true)
             {
-                using (Image<Bgr, Byte> frame = webcam.QueryFrame()) //webcam에서 영상 받음
+                using (Image<Bgr, Byte> frame = webcam.QueryFrame().Flip(Emgu.CV.CvEnum.FLIP.HORIZONTAL).Flip(Emgu.CV.CvEnum.FLIP.VERTICAL)) //webcam에서 영상 받음
                 {
-                    frame.ROI = new System.Drawing.Rectangle(0, 0, globals.rect_width, globals.rect_height); // 정한 범위를 ROI로 설정                 
+                    frame.ROI = new System.Drawing.Rectangle(globals.rect_x, globals.rect_y, globals.rect_width, globals.rect_height); // 정한 범위를 ROI로 설정                 
                     obstacle_image = frame.Clone(); //원본 복사
 
                     if (image_is_changed == true && colorTracking.get_color_count() != 4) //시작할때 바로 들어고, 변화가 감지됬을때 들어가서 탬플릿 매칭 수행
