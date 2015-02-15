@@ -32,10 +32,7 @@ namespace MVCC.Utill
         private void bluetoothConnect(object sender, DoWorkEventArgs e)
         {
             string write_data = ugv.Command;
-            string read_data;
-
-            string input_grid;
-
+  
             int index;
             int.TryParse(ugv.Id[1].ToString(), out index);
 
@@ -49,8 +46,6 @@ namespace MVCC.Utill
             serialport.StopBits = getStopBit(settingUGV.Stopbit);
             serialport.ReadTimeout = 200;
             serialport.WriteTimeout = 200;
-
-
 
             serialport.Open();
           

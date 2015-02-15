@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel;
 
+using MVCC.ViewModel;
 using MVCC.Model;
 
 namespace MVCC.Utill
@@ -11,6 +13,9 @@ namespace MVCC.Utill
     class PathFinder
     {
         private Globals globals = Globals.Instance;
+
+        // MapViewModel 가져옴
+        private MapViewModel mapViewModel;
 
         private UGV ugv;
         private State state;
@@ -146,7 +151,7 @@ namespace MVCC.Utill
             for (i = 0; i < size; i++)
             {
 
-                if(vehicle_1.outer_2.x + 1 < 40 && vehicle_1.outer_2.y + i < 24)
+                if (vehicle_1.outer_2.x + 1 < 40 && vehicle_1.outer_2.y + i < 24)
                 {
                     if (grid[vehicle_1.outer_2.y + i, vehicle_1.outer_2.x + 1] == '0') { count++; }
                 }
@@ -1089,7 +1094,7 @@ namespace MVCC.Utill
         {
             this.ugv = ugv;
             this.state = state;
-           
+
             start_x = state.CurrentPointX / 15;
             start_y = state.CurrentPointY / 15;
 
@@ -1214,15 +1219,24 @@ namespace MVCC.Utill
             }
 
             #endregion
+
+            UGV_confict_check(); //UGV 경로 충돌 검사  
+            UGV_path_evasion(); //USG 경로 회피
+
+            //UGV movent 갱신 쓰레드
+            BackgroundWorker thread = new BackgroundWorker();
+            thread.DoWork += UGV_path_upgrade;
+            thread.RunWorkerAsync(ugv);
         }
 
 
         public void map_classification()
         {
-            globals.theLock.EnterReadLock();
-
             int index;
             int.TryParse(ugv.Id[1].ToString(), out index);
+
+            globals.theLock.EnterReadLock(); //critical section start
+
             direct = globals.direction[index];
 
             for (int x = 0; x < globals.rect_width / globals.x_grid; x++)
@@ -1231,12 +1245,85 @@ namespace MVCC.Utill
                 {
                     if (globals.Map_obstacle[y, x] == '*') //장애물은 x 로
                         grid[y, x] = 'x';
-                    else
+                    else if (globals.Map_obstacle[y, x] == 0)
                         grid[y, x] = '0';
+                    else
+                        grid[y, x] = 'x';
                 }
             }
-            globals.theLock.ExitReadLock();
+
+            globals.theLock.ExitReadLock(); //critical section end
         }
+
+        public void UGV_confict_check()
+        {
+            for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
+            {
+                if (!(mapViewModel.MVCCItemList[i] is UGV))
+                    continue;
+               
+                UGV temp_ugv = mapViewModel.MVCCItemList[i] as UGV;
+
+                if(ugv.Id != temp_ugv.Id)
+                {
+                    //List<string> temp_movent = temp_ugv.MovementCommandList;
+                    int max_path_count;
+
+                    if(ugv.MovementCommandList.Count > temp_ugv.MovementCommandList.Count )
+                        max_path_count = ugv.MovementCommandList.Count;
+                    else
+                        max_path_count = temp_ugv.MovementCommandList.Count;
+
+                    for (int j = 0; j < max_path_count; i++ )
+                    {
+
+
+
+                    }
+
+
+                        if (temp_ugv.Id.Equals("A" + i))
+                        {
+                            //temp_ugv.X = tracking_rect[i].X;
+                           // temp_ugv.Y = tracking_rect[i].Y;
+                            break;
+                        }
+                }
+            }
+        }
+
+
+        public void UGV_path_upgrade(object sender, DoWorkEventArgs e)
+        {
+            object object_ugv = e.Argument;
+            UGV temp_ugv = (UGV)object_ugv;
+
+            int index;
+            int.TryParse(temp_ugv.Id[1].ToString(), out index);
+           
+            while(ugv.MovementCommandList.Count != 0)
+            {
+
+
+            }
+        }
+
+
+
+        public void UGV_path_evasion()
+        {
+
+
+
+
+
+
+
+
+        }
+
+    
+
 
     }
 }
