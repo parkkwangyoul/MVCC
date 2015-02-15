@@ -233,7 +233,10 @@ namespace MVCC.ViewModel
             }
         }
 
-        //chu 추가
+        /**
+         * 추대윤 추가
+         * 빌딩이 사라졌을때, 제거하는 메소드
+         * */
         public void RemoveBuilding(string ugvId)
         {
             Building removeUGV = new Building();
