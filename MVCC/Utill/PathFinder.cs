@@ -26,9 +26,8 @@ namespace MVCC.Utill
 
 
         #region Path_Planning_Part
-
-        public PathFinder()
-        {
+        
+        public void init(){
             grid_x = globals.rect_width / globals.x_grid;
             grid_y = globals.rect_height / globals.y_grid;
 

@@ -537,6 +537,8 @@ namespace MVCC.View
 
                 individualUGV.PathList.Clear();
 
+                pathFinder.init();
+
                 pathFinder.find_path(individualUGV, individualUGVState);
 
                 List<KeyValuePair<int, int>> pathList = individualUGV.PathList;
@@ -585,6 +587,8 @@ namespace MVCC.View
                     tempState.EndPointY = endPointY;
 
                     tempUGV.Command = "f";
+
+                    pathFinder.init();
 
                     pathFinder.find_path(tempUGV, tempState);
 
