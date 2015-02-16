@@ -701,7 +701,7 @@ namespace MVCC.Utill
             Console.Write("{0} ", current_weight);
             grid[start_point_y, start_point_x] = '5';
 
-            ugv.PathList.Add(new KeyValuePair<int, int>((start_point_x + 2)* 15, (start_point_y + 2) * 15));
+            ugv.PathList.Add(new KeyValuePair<int, int>((start_point_x + 2)* 15 + 7, (start_point_y + 2) * 15 + 7));
 
             if ((relative_position_x == 0) && (relative_position_y == 0))
             {
