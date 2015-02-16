@@ -244,11 +244,21 @@ namespace MVCC.View
                                             UGV_move_check[i].y = tracking_rect[i].Y / 15;
                                             
                                             if (ugv.PathList.Count != 0)
-                                            {                                              
+                                            {
                                                 if (pre_UGV_move_check[i].x != UGV_move_check[i].x || pre_UGV_move_check[i].y != UGV_move_check[i].y)
                                                 {
-                                                    //Console.WriteLine("index = " + i + " 제거는 되나?" + " count = " + ugv.PathList.Count);                                                   
-                                                    ugv.PathList.RemoveAt(0);
+                                                    //Console.WriteLine("\n index = " + i + " 제거는 되나?" + " count = " + ugv.PathList.Count);                                                   
+                                                    //KeyValuePair<int, int> beforePathTemp = ugv.PathList[i - 1];
+                                                    KeyValuePair<int, int> currentPathTemp = ugv.PathList[ugv.PathList.Count - 1];
+
+                                                    ugv.PathList.Remove(currentPathTemp);
+
+                                                    for (int m = 0; m < ugv.PathList.Count; m++)
+                                                    {
+                                                     //   Console.WriteLine("test: " + ugv.PathList[i]);
+                                                    }
+
+                                                    //Console.WriteLine("");
                                                 }
                                             }
 
@@ -304,11 +314,8 @@ namespace MVCC.View
                 if (obstacle_check == true) //frame의 추적 영상 처리가 끝나고 처리
                 {
                     globals.theLock.EnterWriteLock(); //critical section start
-
-                    for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
-                        for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
-                            globals.Map_obstacle[j, i] = 0;
-                    //Array.Clear(globals.Map_obstacle, 0, globals.rect_height / globals.y_grid * globals.rect_width / globals.x_grid);
+   
+                    Array.Clear(globals.Map_obstacle, 0, globals.rect_height / globals.y_grid * globals.rect_width / globals.x_grid);
 
                     blob_count = obstacleDetection.detectBlob(obstacle_image, globals.Map_obstacle, tracking_rect); //장애물 검출
 
@@ -543,7 +550,7 @@ namespace MVCC.View
                     if (i == 0)
                         continue;
 
-                    //Console.WriteLine("test: " + pathList[i]);
+                    Console.WriteLine("test: " + pathList[i]);
 
                     KeyValuePair<int, int> beforePathTemp = pathList[i - 1];
                     KeyValuePair<int, int> currentPathTemp = pathList[i];
