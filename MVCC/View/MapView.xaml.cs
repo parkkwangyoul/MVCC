@@ -541,8 +541,19 @@ namespace MVCC.View
 
                 List<KeyValuePair<int, int>> pathList = individualUGV.PathList;
 
+                for (int i = 0; i < mapViewModel.MVCCUGVPathList.Count; i++)
+                {
+                    UGVPath tempUGVPath = mapViewModel.MVCCUGVPathList[i] as UGVPath;
+
+                    if(tempUGVPath.Id.Equals(individualUGV.Id)){
+                        mapViewModel.MVCCUGVPathList.Remove(tempUGVPath);
+                    }
+                }
+
                 for (int i = 0; i < pathList.Count; i++)
                 {
+                    Console.WriteLine("Path : " + pathList[i]);
+
                     if (i == 0)
                         continue;
 
@@ -577,8 +588,18 @@ namespace MVCC.View
 
                     pathFinder.find_path(tempUGV, tempState);
 
-                    List<KeyValuePair<int, int>> pathList = individualUGV.PathList;
+                    List<KeyValuePair<int, int>> pathList = tempUGV.PathList;
+                    
+                    for (int i = 0; i < mapViewModel.MVCCUGVPathList.Count; i++)
+                    {
+                        UGVPath tempUGVPath = mapViewModel.MVCCUGVPathList[i] as UGVPath;
 
+                        if (tempUGVPath.Id.Equals(tempUGV.Id))
+                        {
+                            mapViewModel.MVCCUGVPathList.Remove(tempUGVPath);
+                        }
+                    }
+                    
                     for (int i = 0; i < pathList.Count; i++)
                     {
                         if (i == 0)
@@ -593,7 +614,7 @@ namespace MVCC.View
                         int endX = currentPathTemp.Key;
                         int endY = currentPathTemp.Value;
 
-                        //mapViewModel.MVCCUGVPathList.Add(new UGVPath(individualUGV.Id, startX, startY, endX, endY, individualUGV.UGVColor));
+                        mapViewModel.MVCCUGVPathList.Add(new UGVPath(tempUGV.Id, startX, startY, endX, endY, tempUGV.UGVColor));
                     }
 
                     //bluetoothAndPathPlanning.connect(tempUGV, tempState);
