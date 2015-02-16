@@ -65,9 +65,9 @@ namespace MVCC.View
         private void CamOn(object sender, RoutedEventArgs e)
         {
             // 카메라 없을때, 테스트용        
-            MockCameraOn();
+            //MockCameraOn();
             // 카메라 연결했을때
-            //CameraOnAndDetectThings();
+            CameraOnAndDetectThings();
         }
 
         #region TestMock
@@ -242,26 +242,26 @@ namespace MVCC.View
 
                                             UGV_move_check[i].x = tracking_rect[i].X / 15;
                                             UGV_move_check[i].y = tracking_rect[i].Y / 15;
-                                            
+                                            /*
                                             if (ugv.PathList.Count != 0)
                                             {
                                                 if (pre_UGV_move_check[i].x != UGV_move_check[i].x || pre_UGV_move_check[i].y != UGV_move_check[i].y)
                                                 {
                                                     //Console.WriteLine("\n index = " + i + " 제거는 되나?" + " count = " + ugv.PathList.Count);                                                   
                                                     //KeyValuePair<int, int> beforePathTemp = ugv.PathList[i - 1];
-                                                    KeyValuePair<int, int> currentPathTemp = ugv.PathList[ugv.PathList.Count - 1];
+                                                    //KeyValuePair<int, int> currentPathTemp = ugv.PathList[ugv.PathList.Count - 1];
 
-                                                    ugv.PathList.Remove(currentPathTemp);
+                                                    //ugv.PathList.Remove(currentPathTemp);
 
-                                                    for (int m = 0; m < ugv.PathList.Count; m++)
-                                                    {
-                                                     //   Console.WriteLine("test: " + ugv.PathList[i]);
+                                                    //for (int m = 0; m < ugv.PathList.Count; m++)
+                                                    //{
+                                                    //    Console.WriteLine("test: " + ugv.PathList[m]);
                                                     }
 
                                                     //Console.WriteLine("");
                                                 }
                                             }
-
+                                            */
                                             pre_UGV_move_check[i] = UGV_move_check[i];
                                             break;
                                         }

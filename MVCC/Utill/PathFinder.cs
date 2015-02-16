@@ -1278,7 +1278,7 @@ namespace MVCC.Utill
             #endregion
 
 
-            UGV_confict_check(); //UGV 경로 충돌 검사  
+            //UGV_confict_check(); //UGV 경로 충돌 검사  
             //UGV_path_evasion(); //USG 경로 회피
 
         }
@@ -1290,8 +1290,7 @@ namespace MVCC.Utill
 
             int index;
             int.TryParse(ugv.Id[1].ToString(), out index);
-
-            
+         
             direct = globals.direction[index];
 
             for (int x = 0; x < globals.rect_width / globals.x_grid; x++)
