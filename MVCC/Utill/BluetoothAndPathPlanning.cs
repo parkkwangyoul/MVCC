@@ -156,15 +156,15 @@ namespace MVCC.Utill
                             globals.angle[index] = 7;
                         }
 
-                        serialport.WriteLine( (globals.angle[index] - globals.direction[index]).ToString() );
-
                         Console.WriteLine("Turn Value : {0}", (globals.angle[index] - globals.direction[index]).ToString() );
 
                         Console.WriteLine("ugv.Id = " + ugv.Id + " direction[index] = " + globals.direction[index]);
 
+                        serialport.WriteLine( (globals.angle[index] - globals.direction[index]).ToString() );
+
                         for (int i = 0; i < ugv.MovementCommandList.Count; i++)
                         {
-                            serialport.WriteLine(ugv.MovementCommandList[i]);
+                            serialport.WriteLine(ugv.MovementCommandList[i][0].ToString());
                         }
                         serialport.WriteLine("e");
 

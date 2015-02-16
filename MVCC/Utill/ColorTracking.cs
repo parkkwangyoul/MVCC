@@ -15,7 +15,7 @@ namespace MVCC.Utill
         bool[] color = new bool[4]; //색상 여부 ([0]blue [1] green [2]pink [3]red)
         Point[] color_ROI = new Point[4]; //색상추적에 대한 이동 ROI
         string[] colorStr = { "blue", "green", "orange", "red" };
-        int[] direction = new int[4]; //방향 저장 배열
+        //int[] direction = new int[4]; //방향 저장 배열
         int color_count = 0; //color_count 세기위해 만약 4개면 템플릿매칭을 안함
         bool[] change_check = new bool[4]; // 이미지 변환 됫는지 체크..
 
@@ -257,29 +257,30 @@ namespace MVCC.Utill
                     int result = (int)Math.Ceiling(E * (180 / 3.14192));
 
                     if (75 <= result && result <= 105)
-                        direction[index] = 0;
+                        glo.direction[index] = 0;
                     else if (115 <= result && result <= 155)
-                        direction[index] = 1;
+                        glo.direction[index] = 1;
                     else if (165 <= result && result < 180 || -179 <= result && result <= -165 || result == 180)
-                        direction[index] = 2;
+                        glo.direction[index] = 2;
                     else if (-155 <= result && result <= -115)
-                        direction[index] = 3;
+                        glo.direction[index] = 3;
                     else if (-105 <= result && result <= -75)
-                        direction[index] = 4;
+                        glo.direction[index] = 4;
                     else if (-65 <= result && result <= -25)
-                        direction[index] = 5;
+                        glo.direction[index] = 5;
                     else if (-15 <= result && result < 0 || 0 <= result && result < 15)
-                        direction[index] = 6;
+                        glo.direction[index] = 6;
                     else if (25 <= result && result <= 65)
-                        direction[index] = 7;
+                        glo.direction[index] = 7;
                     else
-                        direction[index] = -1;
+                        glo.direction[index] = -1;
                     
-                    //if (direction[index] == -1)
-                        //Console.WriteLine("i = " + index + " direction[index] = " + direction[index] + "알수 없는 각도" + " result = " + result);
-                    //else                        
-                    //    Console.WriteLine("i = " + index + " direction[index] = " + direction[index] + " result = " + result);
-                   
+                    /*
+                    if (direction[index] == -1)
+                        Console.WriteLine("i = " + index + " direction[index] = " + direction[index] + "알수 없는 각도" + " result = " + result);
+                    else                        
+                        Console.WriteLine("i = " + index + " direction[index] = " + direction[index] + " result = " + result);
+                   */
                     //if (index == 3)
                     //    Console.WriteLine("");
                 
@@ -320,11 +321,5 @@ namespace MVCC.Utill
         {
             return color_count;
         }
-
-        public int[] get_direction()
-        {
-            return direction;
-        }
-
     }
 }
