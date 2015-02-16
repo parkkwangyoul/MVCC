@@ -148,8 +148,12 @@ namespace MVCC.Utill
             Image<Bgr, Byte> colorCount = colorSetting.Convert<Bgr, Byte>(); //픽셀수 세기 위해
 
             //작은 원 찾기
+            //YCrCb_min = new Ycc(0, 0, 0);
+            //YCrCb_max = new Ycc(255, 146, 100);   //큰원yellow 색 범위
+
             YCrCb_min = new Ycc(0, 0, 0);
-            YCrCb_max = new Ycc(255, 146, 100);   //blue 색 범위
+            YCrCb_max = new Ycc(255, 146, 114);   //작은 원 yellow 색 범위
+
 
             colorSetting = YCrCbFrame.InRange((Ycc)YCrCb_min, (Ycc)YCrCb_max); //색 범위 설정
 
@@ -274,18 +278,15 @@ namespace MVCC.Utill
                     else
                         glo.direction[index] = -1;
 
-                    /*
-                    if (index == 0)
-                    {
-                        if (glo.direction[index] == -1)
-                            Console.WriteLine("i = " + index + " direction[index] = " + glo.direction[index] + "알수 없는 각도" + " result = " + result);
-                        else
-                            Console.WriteLine("i = " + index + " direction[index] = " + glo.direction[index] + " result = " + result);
-                    }
-                     * 
-                      */
-                    //if (index == 3)
-                    //    Console.WriteLine("");
+                    
+                  
+                    if (glo.direction[index] == -1)
+                          Console.WriteLine("i = " + index + " direction[index] = " + glo.direction[index] + "알수 없는 각도" + " result = " + result);
+                    else
+                          Console.WriteLine("i = " + index + " direction[index] = " + glo.direction[index] + " result = " + result);
+                              
+                    if (index == 3)
+                       Console.WriteLine("");
                 
                 }
                 else
