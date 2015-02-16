@@ -588,6 +588,8 @@ namespace MVCC.View
 
                     tempUGV.Command = "f";
 
+                    tempUGV.PathList.Clear();
+
                     pathFinder.init();
 
                     pathFinder.find_path(tempUGV, tempState);
@@ -741,6 +743,8 @@ namespace MVCC.View
 
                             ugv.GroupName = group.Name;
                             ugv.IsBelongToGroup = true;
+
+                            ugv.IsGroupClicked = true;
 
                             group.MemberList.Add(ugv);
 
