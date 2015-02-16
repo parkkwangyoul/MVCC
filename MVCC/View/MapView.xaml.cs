@@ -65,9 +65,9 @@ namespace MVCC.View
         private void CamOn(object sender, RoutedEventArgs e)
         {
             // 카메라 없을때, 테스트용        
-            //MockCameraOn();
+            MockCameraOn();
             // 카메라 연결했을때
-            CameraOnAndDetectThings();
+            //CameraOnAndDetectThings();
         }
 
         #region TestMock
@@ -420,6 +420,8 @@ namespace MVCC.View
 
             (FindResource("UGVGroupSrc") as CollectionViewSource).Source = mapViewModel.MVCCGroupList;
 
+            (FindResource("UGVPathSrc") as CollectionViewSource).Source = mapViewModel.MVCCUGVPathList;
+
             bluetoothAndPathPlanning = new BluetoothAndPathPlanning();
 
             for (int i = 15; i <= globals.rect_width; i += 15)
@@ -554,7 +556,7 @@ namespace MVCC.View
                     int endX = currentPathTemp.Key;
                     int endY = currentPathTemp.Value;
 
-                    mapViewModel.MVCCItemList.Add(new UGVPath(individualUGV.Id, startX, startY, endX, endY, individualUGV.UGVColor));
+                    mapViewModel.MVCCUGVPathList.Add(new UGVPath(individualUGV.Id, startX, startY, endX, endY, individualUGV.UGVColor));
                 }
 
                 //bluetoothAndPathPlanning.connect(individualUGV, individualUGVState);
@@ -1028,6 +1030,8 @@ namespace MVCC.View
             (FindResource("UGVStateSrc") as CollectionViewSource).View.Refresh();
 
             (FindResource("UGVGroupSrc") as CollectionViewSource).View.Refresh();
+
+            (FindResource("UGVPathSrc") as CollectionViewSource).View.Refresh();
         }
 
         // 숫자키에 대응되는 그룹의 번호

@@ -118,6 +118,27 @@ namespace MVCC.ViewModel
         }
         #endregion MVCCGroupList
 
+        #region MVCCUGVPathList
+
+        private ObservableCollection<ModelBase> _MVCCUGVPathList;
+
+        public ObservableCollection<ModelBase> MVCCUGVPathList
+        {
+            get
+            {
+                if (_MVCCUGVPathList == null)
+                    _MVCCUGVPathList = new ObservableCollection<ModelBase>();
+
+                return _MVCCItemList;
+            }
+
+            set
+            {
+                Set<ObservableCollection<ModelBase>>(ref _MVCCUGVPathList, value);
+            }
+        }
+        #endregion MVCCUGVPathList
+
         //private List<Point> mainTouchPoint = new List<Point>();
 
         #region UGVCommand
