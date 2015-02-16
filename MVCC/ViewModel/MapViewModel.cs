@@ -129,7 +129,7 @@ namespace MVCC.ViewModel
                 if (_MVCCUGVPathList == null)
                     _MVCCUGVPathList = new ObservableCollection<ModelBase>();
 
-                return _MVCCItemList;
+                return _MVCCUGVPathList;
             }
 
             set
