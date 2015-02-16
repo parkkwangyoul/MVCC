@@ -83,6 +83,8 @@ namespace MVCC.Utill
 
                         Console.WriteLine("Direction Value : {0}", globals.direction[index]);
 
+                        #region Direction Calculation
+
                         if (globals.direction[index] == 0)
                         {
                             direction_y = direction_y - 1;
@@ -120,8 +122,12 @@ namespace MVCC.Utill
                             direction_y = direction_y + 1;
                         }
 
+                        #endregion
+
                         Console.WriteLine("direction_x {0}", direction_x);
                         Console.WriteLine("direction_y {0}", direction_y);
+
+                        #region Angle Calculation
 
                         if ((first_x - start_x == 0) && (first_y - start_y == -1))
                         {
@@ -155,20 +161,65 @@ namespace MVCC.Utill
                         {
                             globals.angle[index] = 7;
                         }
+                        #endregion
 
-                        Console.WriteLine("Turn Value : {0}", (globals.angle[index] - globals.direction[index]).ToString() );
+
+                        #region Send Angle
+
+                        if ((globals.angle[index] - globals.direction[index] == 0))
+                        {
+                            serialport.WriteLine( "0" );
+                        }
+                        else if ((globals.angle[index] - globals.direction[index] == 1))
+                        {
+                            serialport.WriteLine( "1" );
+                        }
+                        else if ((globals.angle[index] - globals.direction[index] == 2) || (globals.angle[index] - globals.direction[index] == -6))
+                        {
+                            serialport.WriteLine( "2" );
+                        }
+                        else if ((globals.angle[index] - globals.direction[index] == 3) || (globals.angle[index] - globals.direction[index] == -5))
+                        {
+                            serialport.WriteLine( "3" );
+                        }
+                        else if ((globals.angle[index] - globals.direction[index] == 4) || (globals.angle[index] - globals.direction[index] == -4))
+                        {
+                            serialport.WriteLine( "4" );
+                        }
+                        else if ((globals.angle[index] - globals.direction[index] == 5) || (globals.angle[index] - globals.direction[index] == -3))
+                        {
+                            serialport.WriteLine( "5" );
+                        }
+                        else if ((globals.angle[index] - globals.direction[index] == 6) || (globals.angle[index] - globals.direction[index] == -2))
+                        {
+                            serialport.WriteLine( "6" );
+                        }
+                        else if ((globals.angle[index] - globals.direction[index] == 7) || (globals.angle[index] - globals.direction[index] == -1))
+                        {
+                            serialport.WriteLine( "7" );
+                        }
+                        else if ((globals.angle[index] - globals.direction[index] == -7) && (globals.angle[index] - globals.direction[index] == 0))
+                        {
+                            serialport.WriteLine( "8" );
+                        }
+                        #endregion
 
                         Console.WriteLine("ugv.Id = " + ugv.Id + " direction[index] = " + globals.direction[index]);
 
-                        serialport.WriteLine( (globals.angle[index] - globals.direction[index]).ToString() );
+                        #region Transmit Movement Commands
 
                         for (int i = 0; i < ugv.MovementCommandList.Count; i++)
                         {
                             serialport.WriteLine(ugv.MovementCommandList[i][0].ToString());
-                        }
+                        } 
                         serialport.WriteLine("e");
 
                         Console.WriteLine("TX Complete");
+
+                        ugv.MovementCommandList.Clear();
+
+                        #endregion
+
                         #endregion
                     }
                     catch (TimeoutException)

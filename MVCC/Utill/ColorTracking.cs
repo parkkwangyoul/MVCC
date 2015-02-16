@@ -274,13 +274,17 @@ namespace MVCC.Utill
                         glo.direction[index] = 7;
                     else
                         glo.direction[index] = -1;
-                    
+
                     /*
-                    if (direction[index] == -1)
-                        Console.WriteLine("i = " + index + " direction[index] = " + direction[index] + "알수 없는 각도" + " result = " + result);
-                    else                        
-                        Console.WriteLine("i = " + index + " direction[index] = " + direction[index] + " result = " + result);
-                   */
+                    if (index == 0)
+                    {
+                        if (glo.direction[index] == -1)
+                            Console.WriteLine("i = " + index + " direction[index] = " + glo.direction[index] + "알수 없는 각도" + " result = " + result);
+                        else
+                            Console.WriteLine("i = " + index + " direction[index] = " + glo.direction[index] + " result = " + result);
+                    }
+                     * 
+                      */
                     //if (index == 3)
                     //    Console.WriteLine("");
                 
