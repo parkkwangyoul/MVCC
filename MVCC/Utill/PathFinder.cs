@@ -1060,20 +1060,20 @@ namespace MVCC.Utill
             return degree;
         }
 
-        public void Movement_Command()
+        public void Follow_Command()
         {
 
             int dx = (ugv.PathList[path_num + 1].Key / 15 - 2) - (ugv.PathList[path_num].Key / 15 - 2);
             int dy = (ugv.PathList[path_num + 1].Value / 15 - 2) - (ugv.PathList[path_num].Value / 15 - 2);
 
-            if (dx == 0 && dy == -1) { movement[path_num] = 0; }
-            if (dx == 1 && dy == -1) { movement[path_num] = 1; }
-            if (dx == 1 && dy == 0) { movement[path_num] = 2; }
-            if (dx == -1 && dy == 1) { movement[path_num] = 3; }
-            if (dx == 0 && dy == 1) { movement[path_num] = 4; }
-            if (dx == -1 && dy == 1) { movement[path_num] = 5; }
-            if (dx == -1 && dy == 0) { movement[path_num] = 6; }
-            if (dx == -1 && dy == -1) { movement[path_num] = 7; }
+            //if (dx == 0 && dy == -1) { follow_command[path_num] = 0; }
+            //if (dx == 1 && dy == -1) { follow_command[path_num] = 1; }
+            //if (dx == 1 && dy == 0) { follow_command[path_num] = 2; }
+            //if (dx == -1 && dy == 1) { follow_command[path_num] = 3; }
+            //if (dx == 0 && dy == 1) { follow_command[path_num] = 4; }
+            //if (dx == -1 && dy == 1) { follow_command[path_num] = 5; }
+            //if (dx == -1 && dy == 0) { follow_command[path_num] = 6; }
+            //if (dx == -1 && dy == -1) { follow_command[path_num] = 7; }
 
             path_num++;
 
@@ -1085,6 +1085,78 @@ namespace MVCC.Utill
         public int dest_x;
         public int dest_y;
         public int size_;
+
+        
+
+        public void Movement_Command() {
+
+            if (path_following(follow_command[path_num], follow_command[path_num + 1]) == 0)
+            {
+
+                movement[path_num] = 0;
+                path_num++;
+
+            }
+            else if ((path_following(follow_command[path_num], follow_command[path_num + 1]) == 1))
+            { // || (path_following(follow_command[path_num], follow_command[path_num+1]) == -1) ){
+
+                movement[path_num] = 1;
+                path_num++;
+
+            }
+            else if ((path_following(follow_command[path_num], follow_command[path_num + 1]) == 2) || (path_following(follow_command[path_num], follow_command[path_num + 1]) == -6))
+            {
+
+                movement[path_num] = 2;
+                path_num++;
+
+            }
+            else if ((path_following(follow_command[path_num], follow_command[path_num + 1]) == 3) || (path_following(follow_command[path_num], follow_command[path_num + 1]) == -5))
+            {
+
+                movement[path_num] = 3;
+                path_num++;
+
+            }
+            else if ((path_following(follow_command[path_num], follow_command[path_num + 1]) == 4) || (path_following(follow_command[path_num], follow_command[path_num + 1]) == -4))
+            {
+
+                movement[path_num] = 4;
+                path_num++;
+
+            }
+            else if ((path_following(follow_command[path_num], follow_command[path_num + 1]) == 5) || (path_following(follow_command[path_num], follow_command[path_num + 1]) == -3))
+            {
+
+                movement[path_num] = 5;
+                path_num++;
+
+            }
+            else if ((path_following(follow_command[path_num], follow_command[path_num + 1]) == 6) || (path_following(follow_command[path_num], follow_command[path_num + 1]) == -2))
+            {
+
+                movement[path_num] = 6;
+                path_num++;
+
+            }
+
+            else if ((path_following(follow_command[path_num], follow_command[path_num + 1]) == 7) || (path_following(follow_command[path_num], follow_command[path_num + 1]) == -1))
+            {
+
+                movement[path_num] = 7;
+                path_num++;
+
+            }
+
+            else if ((path_following(follow_command[path_num], follow_command[path_num + 1]) == -7) && (follow_command[path_num] == 7) && (follow_command[path_num + 1] == 0))
+            {
+
+                movement[path_num] = 8;
+                path_num++;
+
+            }
+        
+        }
 
         #endregion
 
@@ -1203,8 +1275,15 @@ namespace MVCC.Utill
 
             for (int i = 0; i < path_count - 2; i++)
             {
+                Follow_Command();
+            }
+
+            path_num = 0;
+            for (int i = 0; i < path_count - 2; i++)
+            {
                 Movement_Command();
             }
+
             Console.WriteLine("");
 
             for (int i = 0; i < path_count - 2; i++)
