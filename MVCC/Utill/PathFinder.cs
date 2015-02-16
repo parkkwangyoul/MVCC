@@ -14,9 +14,6 @@ namespace MVCC.Utill
     {
         private Globals globals = Globals.Instance;
 
-        // MapViewModel 가져옴
-        private MapViewModel mapViewModel;
-
         private UGV ugv;
         private State state;
         int direct;
@@ -1171,8 +1168,6 @@ namespace MVCC.Utill
             this.ugv = ugv;
             this.state = state;
 
-            mapViewModel = new MapViewModel();
-
             start_x = state.CurrentPointX / 15;
             start_y = state.CurrentPointY / 15;
 
@@ -1319,7 +1314,7 @@ namespace MVCC.Utill
             #endregion
 
 
-            //UGV_confict_check(); //UGV 경로 충돌 검사  
+            UGV_confict_check(); //UGV 경로 충돌 검사  
             //UGV_path_evasion(); //USG 경로 회피
 
         }
@@ -1354,9 +1349,8 @@ namespace MVCC.Utill
 
         public void UGV_confict_check()
         {
-            Console.WriteLine("UGV_confict_check 함수는 불러져?");
-            Console.WriteLine("mapViewModel.MVCCItemList.Count = " + mapViewModel.MVCCItemList.Count);
-
+            //Console.WriteLine("mapViewModel.MVCCItemList.Count = " + mapViewModel.MVCCItemList.Count);
+            MapViewModel mapViewModel = new MapViewModel();
 
             for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
             {
@@ -1413,6 +1407,9 @@ namespace MVCC.Utill
                         {
                             if (confilt_count_first > confilt_count_second) //첫번재 차량이 만나는 경로가 길었을대 
                             {
+
+
+
 
 
 
