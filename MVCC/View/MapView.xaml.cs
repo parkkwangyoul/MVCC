@@ -242,19 +242,34 @@ namespace MVCC.View
 
                                             UGV_move_check[i].x = tracking_rect[i].X / 15;
                                             UGV_move_check[i].y = tracking_rect[i].Y / 15;
-                                            /*
+                                            
                                             if (ugv.PathList.Count != 0)
-                                            {                                              
+                                            {
+                                                KeyValuePair<int, int> temp = new KeyValuePair<int,int>();
+                                       
                                                 if (pre_UGV_move_check[i].x != UGV_move_check[i].x || pre_UGV_move_check[i].y != UGV_move_check[i].y)
                                                 {
-                                                    //Console.WriteLine("index = " + i + " 제거는 되나?" + " count = " + ugv.PathList.Count);                                                   
-                                                    //ugv.PathList.RemoveAt(0);
+                                                    temp = ugv.PathList[ugv.PathList.Count - 1];
+
+                                                for (int p = mapViewModel.MVCCUGVPathList.Count - 1; p >= 0; p--)
+                                                {
+                                                    UGVPath tempPath = mapViewModel.MVCCUGVPathList[p] as UGVPath;
+
+                                                    if (tempPath.Id.Equals(ugv.Id) && tempPath.EndX == temp.Key && tempPath.EndY == temp.Value)
+                                                    {
+                                                        mapViewModel.MVCCUGVPathList.Remove(tempPath);
+
+                                                        ugv.PathList.RemoveAt(ugv.PathList.Count - 1);
+
+                                                        break;
+                                                    }
+                                                }
+
+                                                refreshViewPath();
                                                 }
                                             }
 
-                                            pre_UGV_move_check[i] = UGV_move_check[i];
-                                            */
-
+                                                pre_UGV_move_check[i] = UGV_move_check[i];
 
                                             break;
                                         }
@@ -542,8 +557,8 @@ namespace MVCC.View
                 pathFinder.find_path(individualUGV, individualUGVState);
 
                 List<KeyValuePair<int, int>> pathList = individualUGV.PathList;
-
-                for (int i = 0; i < mapViewModel.MVCCUGVPathList.Count; i++)
+                                
+                for (int i = mapViewModel.MVCCUGVPathList.Count - 1; i >= 0 ; i--)
                 {
                     UGVPath tempUGVPath = mapViewModel.MVCCUGVPathList[i] as UGVPath;
 
@@ -552,9 +567,11 @@ namespace MVCC.View
                     }
                 }
 
+                refreshViewPath();
+
                 for (int i = 0; i < pathList.Count; i++)
                 {
-                    Console.WriteLine("Path : " + pathList[i]);
+                    //Console.WriteLine("Path : " + pathList[i]);
 
                     if (i == 0)
                         continue;
@@ -595,8 +612,8 @@ namespace MVCC.View
                     pathFinder.find_path(tempUGV, tempState);
 
                     List<KeyValuePair<int, int>> pathList = tempUGV.PathList;
-                    
-                    for (int i = 0; i < mapViewModel.MVCCUGVPathList.Count; i++)
+
+                    for (int i = mapViewModel.MVCCUGVPathList.Count - 1; i >= 0; i--)
                     {
                         UGVPath tempUGVPath = mapViewModel.MVCCUGVPathList[i] as UGVPath;
 
@@ -605,6 +622,8 @@ namespace MVCC.View
                             mapViewModel.MVCCUGVPathList.Remove(tempUGVPath);
                         }
                     }
+
+                    refreshViewPath();
                     
                     for (int i = 0; i < pathList.Count; i++)
                     {
