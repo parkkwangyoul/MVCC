@@ -1063,8 +1063,8 @@ namespace MVCC.Utill
         public void Movement_Command()
         {
 
-            int dx = ugv.PathList[path_num + 1].Key - ugv.PathList[path_num].Key;
-            int dy = ugv.PathList[path_num + 1].Value - ugv.PathList[path_num].Value;
+            int dx = (ugv.PathList[path_num + 1].Key / 15 - 2) - (ugv.PathList[path_num].Key / 15 - 2);
+            int dy = (ugv.PathList[path_num + 1].Value / 15 - 2) - (ugv.PathList[path_num].Value / 15 - 2);
 
             if (dx == 0 && dy == -1) { movement[path_num] = 0; }
             if (dx == 1 && dy == -1) { movement[path_num] = 1; }
