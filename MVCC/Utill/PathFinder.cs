@@ -44,7 +44,6 @@ namespace MVCC.Utill
             unit_10th = new char[grid_y, grid_x];
             unit_1st = new char[grid_y, grid_x];
 
-
             current_perspective = 0;
             next_perspective = 0;
 
@@ -54,7 +53,6 @@ namespace MVCC.Utill
             path_num = 0;
 
             movement_count = 0;
-
 
             vehicle_1 = new vehicle();
             vehicle_compare = new vehicle();
@@ -704,7 +702,7 @@ namespace MVCC.Utill
             Console.WriteLine("current_weight : {0}", current_weight);
             grid[start_point_y, start_point_x] = '5';
 
-            ugv.PathList.Add(new KeyValuePair<int, int>(start_point_x * 15, start_point_y * 15));
+            ugv.PathList.Add(new KeyValuePair<int, int>((start_point_x + 2)* 15, (start_point_y + 2) * 15));
 
             if ((relative_position_x == 0) && (relative_position_y == 0))
             {
@@ -1148,9 +1146,15 @@ namespace MVCC.Utill
             this.ugv = ugv;
             this.state = state;
 
+            mapViewModel = new MapViewModel();
+
             start_x = state.CurrentPointX / 15;
             start_y = state.CurrentPointY / 15;
 
+            dest_x = state.EndPointX;
+            dest_y = state.EndPointY;
+
+            //Console.WriteLine("dest_x = " + dest_x + " dest_y = " + dest_y + " current_perspective =" + current_perspective);
             size_ = 5;
             size = 5;
 
@@ -1274,7 +1278,7 @@ namespace MVCC.Utill
             #endregion
 
 
-            // UGV_confict_check(); //UGV 경로 충돌 검사  
+            UGV_confict_check(); //UGV 경로 충돌 검사  
             //UGV_path_evasion(); //USG 경로 회피
 
         }
@@ -1282,11 +1286,12 @@ namespace MVCC.Utill
 
         public void map_classification()
         {
+            globals.theLock.EnterReadLock(); //critical section start
+
             int index;
             int.TryParse(ugv.Id[1].ToString(), out index);
 
-            globals.theLock.EnterReadLock(); //critical section start
-
+            
             direct = globals.direction[index];
 
             for (int x = 0; x < globals.rect_width / globals.x_grid; x++)
@@ -1295,8 +1300,10 @@ namespace MVCC.Utill
                 {
                     if (globals.Map_obstacle[y, x] == '*') //장애물은 x 로
                         grid[y, x] = 'x';
-                    // else if (globals.Map_obstacle[y, x] == 0)
-                    //     grid[y, x] = '0';
+                   // else if (globals.Map_obstacle[y, x] == 0)
+                    //    grid[y, x] = '0';
+                   // else if (globals.Map_obstacle[y, x] == index + 1)
+                   //     grid[y, x] = '1';
                     else
                         grid[y, x] = '0';
                 }
@@ -1307,36 +1314,81 @@ namespace MVCC.Utill
 
         public void UGV_confict_check()
         {
+            Console.WriteLine("UGV_confict_check 함수는 불러져?");
+            Console.WriteLine("mapViewModel.MVCCItemList.Count = " + mapViewModel.MVCCItemList.Count);
+
+
             for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
             {
+                Console.WriteLine("i = " + i + " mapViewModel.MVCCItemList.Count = " + mapViewModel.MVCCItemList.Count);
+
                 if (!(mapViewModel.MVCCItemList[i] is UGV))
                     continue;
 
                 UGV temp_ugv = mapViewModel.MVCCItemList[i] as UGV;
 
+                Console.WriteLine("회피 검사하는데로 들어오니?");
+
                 if (ugv.Id != temp_ugv.Id)
                 {
-                    //List<string> temp_movent = temp_ugv.MovementCommandList;
-                    int max_path_count;
-
-                    if (ugv.MovementCommandList.Count > temp_ugv.MovementCommandList.Count)
-                        max_path_count = ugv.MovementCommandList.Count;
-                    else
-                        max_path_count = temp_ugv.MovementCommandList.Count;
-
-                    for (int j = 0; j < max_path_count; i++)
+                    if (temp_ugv.PathList.Count != 0)
                     {
+                        //List<string> temp_movent = temp_ugv.MovementCommandList;
+                        int max_path_count;
+
+                        if (ugv.MovementCommandList.Count > temp_ugv.MovementCommandList.Count)
+                            max_path_count = ugv.MovementCommandList.Count;
+                        else
+                            max_path_count = temp_ugv.MovementCommandList.Count;
+
+                        bool confilt_check = false;
+                        int confilt_x;
+                        int confilt_y;
+                        int confilt_count_first = 0;
+                        int confilt_count_second = 0;
+
+                        for (int j = 0; j < ugv.MovementCommandList.Count; j++) //두번째로 가고 있는 차
+                        {
+                            for (int k = 0; k < temp_ugv.MovementCommandList.Count; k++) //첫번째로 가려고 하는 차
+                            {
+                                if (ugv.PathList[j].Value == temp_ugv.PathList[k].Value)
+                                {
+                                    confilt_check = true;
+                                    confilt_x = ugv.PathList[j].Key;
+                                    confilt_y = ugv.PathList[j].Value;
+
+                                    confilt_count_first = k;
+                                    confilt_count_second = j;
+
+                                    Console.WriteLine("경로 충돌한다");
+                                    break;
+                                }
+                            }
+
+                            if (confilt_check == true)
+                                break;
+                        }
+
+                        if (confilt_check == true)
+                        {
+                            if (confilt_count_first > confilt_count_second) //첫번재 차량이 만나는 경로가 길었을대 
+                            {
 
 
 
-                    }
+                            }
+                            else //두번재 차량이 만나는 경로가 길었을대
+                            {
 
 
-                    if (temp_ugv.Id.Equals("A" + i))
-                    {
-                        //temp_ugv.X = tracking_rect[i].X;
-                        // temp_ugv.Y = tracking_rect[i].Y;
-                        break;
+                            }
+                        }
+                        else
+                        {
+
+                            Console.WriteLine("경로 충돌안한다");
+                            continue;
+                        }
                     }
                 }
             }

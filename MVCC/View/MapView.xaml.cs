@@ -40,6 +40,13 @@ namespace MVCC.View
         bool obstacle_check = false; //트래킹과 장애물검사랑 동기화 위해
         bool image_is_changed = true; //영상을 비교했을때 차이가 날경우 (초기화를 true하는이유는 차가 놓여진상태에서 시작하면 바로 탬플릿 매칭을 수행해야되기때문)
 
+        struct UGV_move
+        {
+            public int x;
+            public int y;
+        };
+
+
         // MapViewModel 가져옴
         private MapViewModel mapViewModel;
 
@@ -148,7 +155,7 @@ namespace MVCC.View
         }
         #endregion 카메라 and thread start
 
-        #region color 트레킹
+        #region color 트레킹    
         //색상 트레킹
         private void colorTracking(object sender, DoWorkEventArgs e)
         {
@@ -163,6 +170,10 @@ namespace MVCC.View
             globals.TemplateHeight = img1.Height + 30;
             List<UGV> ugvList = new List<UGV>();
             int average_val = 0; //떨림 방지를 위한 count
+          
+
+            UGV_move[] UGV_move_check = new UGV_move[4];
+            UGV_move[] pre_UGV_move_check = new UGV_move[4];
 
             while (true)
             {
@@ -184,7 +195,7 @@ namespace MVCC.View
                             {
                                 double matchScore = matches[y, x, 0];
 
-                                if (matchScore >= 0.8)
+                                if (matchScore >= 0.9)
                                 {
                                     colorTracking.colorCheck(matchColorCheck, totalPicxel, x, y, globals.TemplateWidth, globals.TemplateHeight); //어떤 색인지 체크                        
                                     y += img1.Height; //x축 다음 y축(세로)이 변화기 때문에 속도를 높이기 위해 검출된 y좌표 + 이미지 사이즈 함.                             
@@ -228,6 +239,20 @@ namespace MVCC.View
                                         {
                                             ugv.X = tracking_rect[i].X;
                                             ugv.Y = tracking_rect[i].Y;
+
+                                            UGV_move_check[i].x = tracking_rect[i].X / 15;
+                                            UGV_move_check[i].y = tracking_rect[i].Y / 15;
+                                            
+                                            if (ugv.PathList.Count != 0)
+                                            {                                              
+                                                if (pre_UGV_move_check[i].x != UGV_move_check[i].x || pre_UGV_move_check[i].y != UGV_move_check[i].y)
+                                                {
+                                                    //Console.WriteLine("index = " + i + " 제거는 되나?" + " count = " + ugv.PathList.Count);                                                   
+                                                    ugv.PathList.RemoveAt(0);
+                                                }
+                                            }
+
+                                            pre_UGV_move_check[i] = UGV_move_check[i];
                                             break;
                                         }
                                     }
@@ -245,6 +270,17 @@ namespace MVCC.View
                             }
                         }
                     }
+
+                    //색상 트레킹중에 하나가 사라졌는지..(test임!! 나중엔.. 이걸로 말고 장애물 변화를 해야함. 밑에 image_is_changed는 장애물변화될떄!!!!)
+                    for (int i = 0; i < 4; i++)
+                    {
+                        if (colorTracking.change_chk(i) == true)
+                        {
+                            image_is_changed = true;
+                            colorTracking.change_chk_reset(i);
+                        }
+                    }
+
                     obstacle_check = true; //장애물이미지와 싱크 맞추기 위해 설정
                 }
             }
@@ -507,7 +543,7 @@ namespace MVCC.View
                     if (i == 0)
                         continue;
 
-                    Console.WriteLine("test: " + pathList[i]);
+                    //Console.WriteLine("test: " + pathList[i]);
 
                     KeyValuePair<int, int> beforePathTemp = pathList[i - 1];
                     KeyValuePair<int, int> currentPathTemp = pathList[i];

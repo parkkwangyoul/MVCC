@@ -17,6 +17,7 @@ namespace MVCC.Utill
         string[] colorStr = { "blue", "green", "orange", "red" };
         int[] direction = new int[4]; //방향 저장 배열
         int color_count = 0; //color_count 세기위해 만약 4개면 템플릿매칭을 안함
+        bool[] change_check = new bool[4]; // 이미지 변환 됫는지 체크..
 
         Image<Bgr, Byte> colorCheckImage; //칼라 체크할 이미지 변수
         int totalPicxel, pos_x, pos_y, img_width, img_height; //탬플릿매칭으로 넘어온 정보
@@ -95,6 +96,7 @@ namespace MVCC.Utill
                             color_ROI[index].X = x;
                             color_ROI[index].Y = y;
                             color_count++;
+                            change_check[index] = false;
                             ugvList.Add(new UGV("A" + index, glo.TemplateWidth, glo.TemplateHeight, x, y, colorStr[index]));                          
                             return;
                         }
@@ -286,6 +288,7 @@ namespace MVCC.Utill
                 {
                     rect[index] = new Rectangle(0, 0, 0, 0);  //사라졌을때 좌표를 0,0 길이 0, 0로 만듬
                     color[index] = false;
+                    change_check[index] = true;
                     color_count--;
                 }      
             }
@@ -293,8 +296,19 @@ namespace MVCC.Utill
             {
                 rect[index] = new Rectangle(0, 0, 0, 0);  //사라졌을때 좌표를 0,0 길이 0, 0로 만듬
                 color[index] = false;
+                change_check[index] = true;
                 color_count--;
             }
+        }
+
+        public bool change_chk(int index)
+        {
+            return change_check[index];
+        }
+
+        public void change_chk_reset(int index)
+        {
+            change_check[index] = false;
         }
 
         public List<UGV> get_ugv()
