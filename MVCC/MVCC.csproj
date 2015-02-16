@@ -264,6 +264,12 @@
     <Resource Include="Resource\run_off.png" />
     <Resource Include="Resource\run_on.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\A0.jpg" />
+    <Resource Include="Resource\A1.jpg" />
+    <Resource Include="Resource\A2.jpg" />
+    <Resource Include="Resource\A3.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

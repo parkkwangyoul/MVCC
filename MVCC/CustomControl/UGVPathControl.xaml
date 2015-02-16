@@ -7,5 +7,5 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Line X1="{Binding StartX}" X2="{Binding EndX}" 
             Y1="{Binding StartY}" Y2="{Binding EndY}" 
-            Stroke="{Binding Stroke}" Canvas.ZIndex="0" />
+            Stroke="{Binding Stroke}" StrokeThickness = "2" Canvas.ZIndex="0" />
 </UserControl>

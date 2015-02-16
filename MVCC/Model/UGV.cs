@@ -116,6 +116,12 @@ namespace MVCC.Model
          * Bluetooth 관련 속성들 
          **/
 
+        public string UGVImageSrc
+        {
+            get
+            { return "/Resource/A" + Id[Id.Length - 1] + ".jpg"; }
+        }
+
         private string comPort = "COM1";
         public string ComPort
         {

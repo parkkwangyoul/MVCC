@@ -14,9 +14,15 @@ namespace MVCC
     {
         public int[,] Map_obstacle;
         public int[,] pre_Map_obstacle;
+
+        public string[] rotate = new string[4];
+        public int[] angle = new int[4];
         public int[] direction = new int[4];
+        public int[] first_point_x = new int[4];
+        public int[] first_point_y = new int[4];
 
         public ReaderWriterLockSlim theLock = new ReaderWriterLockSlim();
+        public ReaderWriterLockSlim bluetoothLock = new ReaderWriterLockSlim();
 
        // public int[,] UGVs_movement = new int[4, 24 + 40];
         //public int[] UGVs_path_count = new int[4];

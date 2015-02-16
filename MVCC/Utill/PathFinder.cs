@@ -701,7 +701,7 @@ namespace MVCC.Utill
             Console.Write("{0} ", current_weight);
             grid[start_point_y, start_point_x] = '5';
 
-            ugv.PathList.Add(new KeyValuePair<int, int>((start_point_x + 2)* 15 + 7, (start_point_y + 2) * 15 + 7));
+            ugv.PathList.Add(new KeyValuePair<int, int>((start_point_x)* 15, (start_point_y) * 15));
 
             if ((relative_position_x == 0) && (relative_position_y == 0))
             {
@@ -736,15 +736,14 @@ namespace MVCC.Utill
                     if ((dir_6 == 1) && (grid[start_point_y, start_point_x - 1] != 'x') && (result_grid[start_point_y, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0))
                     {
 
-                        follow_command[current_weight] = 2; //6 - 4;
-
+                        //follow_command[current_weight] = 2; //6 - 4;
                         path_count++;
                         follow_path(start_point_x - 1, start_point_y, dest_point_x, dest_point_y);
                     }
                     else if ((dir_0 == 1) && (grid[start_point_y - 1, start_point_x] != 'x') && (result_grid[start_point_y - 1, start_point_x] == (current_weight - 1)) && ((start_point_y - 1) >= 0))
                     {
 
-                        follow_command[current_weight] = 4; //0 + 4;
+                        //follow_command[current_weight] = 4; //0 + 4;
                         path_count++;
                         follow_path(start_point_x, start_point_y - 1, dest_point_x, dest_point_y);
                     }
@@ -752,7 +751,7 @@ namespace MVCC.Utill
                     else if ((dir_7 == 1) && (grid[start_point_y - 1, start_point_x - 1] != 'x') && (result_grid[start_point_y - 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x - 1) >= 0))
                     {
 
-                        follow_command[current_weight] = 3; //7 - 4;
+                        //follow_command[current_weight] = 3; //7 - 4;
                         path_count++;
                         follow_path(start_point_x - 1, start_point_y - 1, dest_point_x, dest_point_y);
                     }
@@ -761,35 +760,35 @@ namespace MVCC.Utill
                     else if ((dir_1 == 1) && (grid[start_point_y - 1, start_point_x + 1] != 'x') && (result_grid[start_point_y - 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x + 1) <= (column - 1)))
                     {
 
-                        follow_command[current_weight] = 5; //1 + 4;
+                        //follow_command[current_weight] = 5; //1 + 4;
                         path_count++;
                         follow_path(start_point_x + 1, start_point_y - 1, dest_point_x, dest_point_y);
                     }
                     else if ((dir_2 == 1) && (grid[start_point_y, start_point_x + 1] != 'x') && (result_grid[start_point_y, start_point_x + 1] == (current_weight - 1)) && ((start_point_x + 1) <= (column - 1)))
                     {
 
-                        follow_command[current_weight] = 6; //2 + 4;
+                        //follow_command[current_weight] = 6; //2 + 4;
                         path_count++;
                         follow_path(start_point_x + 1, start_point_y, dest_point_x, dest_point_y);
                     }
                     else if ((dir_3 == 1) && (grid[start_point_y + 1, start_point_x + 1] != 'x') && (result_grid[start_point_y + 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)) && ((start_point_x + 1) <= (column - 1)))
                     {
 
-                        follow_command[current_weight] = 7; //3 + 4;
+                        //follow_command[current_weight] = 7; //3 + 4;
                         path_count++;
                         follow_path(start_point_x + 1, start_point_y + 1, dest_point_x, dest_point_y);
                     }
                     else if ((dir_4 == 1) && (grid[start_point_y + 1, start_point_x] != 'x') && (result_grid[start_point_y + 1, start_point_x] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)))
                     {
 
-                        follow_command[current_weight] = 0; //4 - 4;
+                        //follow_command[current_weight] = 0; //4 - 4;
                         path_count++;
                         follow_path(start_point_x, start_point_y + 1, dest_point_x, dest_point_y);
                     }
                     else if ((dir_5 == 1) && (grid[start_point_y + 1, start_point_x - 1] != 'x') && (result_grid[start_point_y + 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0) && ((start_point_y + 1) <= (row - 1)))
                     {
 
-                        follow_command[current_weight] = 1; //5 - 4;
+                        //follow_command[current_weight] = 1; //5 - 4;
                         path_count++;
                         follow_path(start_point_x - 1, start_point_y + 1, dest_point_x, dest_point_y);
                     }
@@ -822,21 +821,21 @@ namespace MVCC.Utill
                     if ((dir_2 == 1) && (grid[start_point_y, start_point_x + 1] != 'x') && (result_grid[start_point_y, start_point_x + 1] == (current_weight - 1)) && ((start_point_x + 1) <= (column - 1)))
                     {
 
-                        follow_command[current_weight] = 6; //2 + 4;
+                        //follow_command[current_weight] = 6; //2 + 4;
                         path_count++;
                         follow_path(start_point_x + 1, start_point_y, dest_point_x, dest_point_y);
                     }
                     else if ((dir_4 == 1) && (grid[start_point_y + 1, start_point_x] != 'x') && (result_grid[start_point_y + 1, start_point_x] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)))
                     {
 
-                        follow_command[current_weight] = 0; //4 - 4;
+                        //follow_command[current_weight] = 0; //4 - 4;
                         path_count++;
                         follow_path(start_point_x, start_point_y + 1, dest_point_x, dest_point_y);
                     }
                     else if ((dir_3 == 1) && (grid[start_point_y + 1, start_point_x + 1] != 'x') && (result_grid[start_point_y + 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)) && ((start_point_x + 1) <= (column - 1)))
                     {
 
-                        follow_command[current_weight] = 7; //3 + 4;
+                        //follow_command[current_weight] = 7; //3 + 4;
                         path_count++;
                         follow_path(start_point_x + 1, start_point_y + 1, dest_point_x, dest_point_y);
                     }
@@ -845,35 +844,35 @@ namespace MVCC.Utill
                     else if ((dir_5 == 1) && (grid[start_point_y + 1, start_point_x - 1] != 'x') && (result_grid[start_point_y + 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0) && ((start_point_y + 1) <= (row - 1)))
                     {
 
-                        follow_command[current_weight] = 1; // 5 - 4;
+                        //follow_command[current_weight] = 1; // 5 - 4;
                         path_count++;
                         follow_path(start_point_x - 1, start_point_y + 1, dest_point_x, dest_point_y);
                     }
                     else if ((dir_6 == 1) && (grid[start_point_y, start_point_x - 1] != 'x') && (result_grid[start_point_y, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0))
                     {
 
-                        follow_command[current_weight] = 2; //6 - 4;
+                        //follow_command[current_weight] = 2; //6 - 4;
                         path_count++;
                         follow_path(start_point_x - 1, start_point_y, dest_point_x, dest_point_y);
                     }
                     else if ((dir_7 == 1) && (grid[start_point_y - 1, start_point_x - 1] != 'x') && (result_grid[start_point_y - 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x - 1) >= 0))
                     {
 
-                        follow_command[current_weight] = 3; //7 - 4;
+                        //follow_command[current_weight] = 3; //7 - 4;
                         path_count++;
                         follow_path(start_point_x - 1, start_point_y - 1, dest_point_x, dest_point_y);
                     }
                     else if ((dir_0 == 1) && (grid[start_point_y - 1, start_point_x] != 'x') && (result_grid[start_point_y - 1, start_point_x] == (current_weight - 1)) && ((start_point_y - 1) >= 0))
                     {
 
-                        follow_command[current_weight] = 4; //0 + 4;
+                        //follow_command[current_weight] = 4; //0 + 4;
                         path_count++;
                         follow_path(start_point_x, start_point_y - 1, dest_point_x, dest_point_y);
                     }
                     else if ((dir_1 == 1) && (grid[start_point_y - 1, start_point_x + 1] != 'x') && (result_grid[start_point_y - 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x + 1) <= (column - 1)))
                     {
 
-                        follow_command[current_weight] = 5; //1 + 4;
+                        //follow_command[current_weight] = 5; //1 + 4;
                         path_count++;
                         follow_path(start_point_x + 1, start_point_y - 1, dest_point_x, dest_point_y);
                     }
@@ -906,21 +905,21 @@ namespace MVCC.Utill
                     if ((dir_2 == 1) && (grid[start_point_y, start_point_x + 1] != 'x') && (result_grid[start_point_y, start_point_x + 1] == (current_weight - 1)) && ((start_point_x + 1) <= (column - 1)))
                     {
 
-                        follow_command[current_weight] = 2; //2 + 4;
+                        //follow_command[current_weight] = 2; //2 + 4;
                         path_count++;
                         follow_path(start_point_x + 1, start_point_y, dest_point_x, dest_point_y);
                     }
                     else if ((dir_0 == 1) && (grid[start_point_y - 1, start_point_x] != 'x') && (result_grid[start_point_y - 1, start_point_x] == (current_weight - 1)) && ((start_point_y - 1) >= 0))
                     {
 
-                        follow_command[current_weight] = 0; //0 + 4;
+                        //follow_command[current_weight] = 0; //0 + 4;
                         path_count++;
                         follow_path(start_point_x, start_point_y - 1, dest_point_x, dest_point_y);
                     }
                     else if ((dir_1 == 1) && (grid[start_point_y - 1, start_point_x + 1] != 'x') && (result_grid[start_point_y - 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x + 1) <= (column - 1)))
                     {
 
-                        follow_command[current_weight] = 1; //1 + 4;
+                        //follow_command[current_weight] = 1; //1 + 4;
                         path_count++;
                         follow_path(start_point_x + 1, start_point_y - 1, dest_point_x, dest_point_y);
                     }
@@ -929,35 +928,35 @@ namespace MVCC.Utill
                     else if ((dir_3 == 1) && (grid[start_point_y + 1, start_point_x + 1] != 'x') && (result_grid[start_point_y + 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)) && ((start_point_x + 1) <= (column - 1)))
                     {
 
-                        follow_command[current_weight] = 3; //3 + 4;
+                        //follow_command[current_weight] = 3; //3 + 4;
                         path_count++;
                         follow_path(start_point_x + 1, start_point_y + 1, dest_point_x, dest_point_y);
                     }
                     else if ((dir_4 == 1) && (grid[start_point_y + 1, start_point_x] != 'x') && (result_grid[start_point_y + 1, start_point_x] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)))
                     {
 
-                        follow_command[current_weight] = 4; //4 - 4;
+                        //follow_command[current_weight] = 4; //4 - 4;
                         path_count++;
                         follow_path(start_point_x, start_point_y + 1, dest_point_x, dest_point_y);
                     }
                     else if ((dir_5 == 1) && (grid[start_point_y + 1, start_point_x - 1] != 'x') && (result_grid[start_point_y + 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0) && ((start_point_y + 1) <= (row - 1)))
                     {
 
-                        follow_command[current_weight] = 5; //5 - 4;
+                        //follow_command[current_weight] = 5; //5 - 4;
                         path_count++;
                         follow_path(start_point_x - 1, start_point_y + 1, dest_point_x, dest_point_y);
                     }
                     else if ((dir_6 == 1) && (grid[start_point_y, start_point_x - 1] != 'x') && (result_grid[start_point_y, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0))
                     {
 
-                        follow_command[current_weight] = 6; //6 - 4;
+                        //follow_command[current_weight] = 6; //6 - 4;
                         path_count++;
                         follow_path(start_point_x - 1, start_point_y, dest_point_x, dest_point_y);
                     }
                     else if ((dir_7 == 1) && (grid[start_point_y - 1, start_point_x - 1] != 'x') && (result_grid[start_point_y - 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x - 1) >= 0))
                     {
 
-                        follow_command[current_weight] = 7; //7 - 4;
+                        //follow_command[current_weight] = 7; //7 - 4;
                         path_count++;
                         follow_path(start_point_x - 1, start_point_y - 1, dest_point_x, dest_point_y);
                     }
@@ -990,21 +989,21 @@ namespace MVCC.Utill
                     if ((dir_6 == 1) && (grid[start_point_y, start_point_x - 1] != 'x') && (result_grid[start_point_y, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0))
                     {
 
-                        follow_command[current_weight] = 6; //6 - 4;
+                        //follow_command[current_weight] = 6; //6 - 4;
                         path_count++;
                         follow_path(start_point_x - 1, start_point_y, dest_point_x, dest_point_y);
                     }
                     else if ((dir_4 == 1) && (grid[start_point_y + 1, start_point_x] != 'x') && (result_grid[start_point_y + 1, start_point_x] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)))
                     {
 
-                        follow_command[current_weight] = 4; //4 - 4;
+                        //follow_command[current_weight] = 4; //4 - 4;
                         path_count++;
                         follow_path(start_point_x, start_point_y + 1, dest_point_x, dest_point_y);
                     }
                     else if ((dir_5 == 1) && (grid[start_point_y + 1, start_point_x - 1] != 'x') && (result_grid[start_point_y + 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_x - 1) >= 0) && ((start_point_y + 1) <= (row - 1)))
                     {
 
-                        follow_command[current_weight] = 5; //5 - 4;
+                        //follow_command[current_weight] = 5; //5 - 4;
                         path_count++;
                         follow_path(start_point_x - 1, start_point_y + 1, dest_point_x, dest_point_y);
                     }
@@ -1013,35 +1012,35 @@ namespace MVCC.Utill
                     else if ((dir_7 == 1) && (grid[start_point_y - 1, start_point_x - 1] != 'x') && (result_grid[start_point_y - 1, start_point_x - 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x - 1) >= 0))
                     {
 
-                        follow_command[current_weight] = 7; //7 - 4;
+                        //follow_command[current_weight] = 7; //7 - 4;
                         path_count++;
                         follow_path(start_point_x - 1, start_point_y - 1, dest_point_x, dest_point_y);
                     }
                     else if ((dir_0 == 1) && (grid[start_point_y - 1, start_point_x] != 'x') && (result_grid[start_point_y - 1, start_point_x] == (current_weight - 1)) && ((start_point_y - 1) >= 0))
                     {
 
-                        follow_command[current_weight] = 0; //0 + 4;
+                        //follow_command[current_weight] = 0; //0 + 4;
                         path_count++;
                         follow_path(start_point_x, start_point_y - 1, dest_point_x, dest_point_y);
                     }
                     else if ((dir_1 == 1) && (grid[start_point_y - 1, start_point_x + 1] != 'x') && (result_grid[start_point_y - 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y - 1) >= 0) && ((start_point_x + 1) <= (column - 1)))
                     {
 
-                        follow_command[current_weight] = 1; //1 + 4;
+                        //follow_command[current_weight] = 1; //1 + 4;
                         path_count++;
                         follow_path(start_point_x + 1, start_point_y - 1, dest_point_x, dest_point_y);
                     }
                     else if ((dir_2 == 1) && (grid[start_point_y, start_point_x + 1] != 'x') && (result_grid[start_point_y, start_point_x + 1] == (current_weight - 1)) && ((start_point_x + 1) <= (column - 1)))
                     {
 
-                        follow_command[current_weight] = 2; //2 + 4;
+                        //follow_command[current_weight] = 2; //2 + 4;
                         path_count++;
                         follow_path(start_point_x + 1, start_point_y, dest_point_x, dest_point_y);
                     }
                     else if ((dir_3 == 1) && (grid[start_point_y + 1, start_point_x + 1] != 'x') && (result_grid[start_point_y + 1, start_point_x + 1] == (current_weight - 1)) && ((start_point_y + 1) <= (row - 1)) && ((start_point_x + 1) <= (column - 1)))
                     {
 
-                        follow_command[current_weight] = 3; //3 + 4;
+                        //follow_command[current_weight] = 3; //3 + 4;
                         path_count++;
                         follow_path(start_point_x + 1, start_point_y + 1, dest_point_x, dest_point_y);
                     }
@@ -1063,17 +1062,24 @@ namespace MVCC.Utill
         public void Follow_Command()
         {
 
-            int dx = (ugv.PathList[path_num + 1].Key / 15 - 2) - (ugv.PathList[path_num].Key / 15 - 2);
-            int dy = (ugv.PathList[path_num + 1].Value / 15 - 2) - (ugv.PathList[path_num].Value / 15 - 2);
+            int dx = (ugv.PathList[path_count - path_num - 1].Key / 15) - (ugv.PathList[path_count - path_num].Key / 15);
+            int dy = (ugv.PathList[path_count - path_num - 1].Value / 15) - (ugv.PathList[path_count - path_num].Value / 15);
 
-            //if (dx == 0 && dy == -1) { follow_command[path_num] = 0; }
-            //if (dx == 1 && dy == -1) { follow_command[path_num] = 1; }
-            //if (dx == 1 && dy == 0) { follow_command[path_num] = 2; }
-            //if (dx == -1 && dy == 1) { follow_command[path_num] = 3; }
-            //if (dx == 0 && dy == 1) { follow_command[path_num] = 4; }
-            //if (dx == -1 && dy == 1) { follow_command[path_num] = 5; }
-            //if (dx == -1 && dy == 0) { follow_command[path_num] = 6; }
-            //if (dx == -1 && dy == -1) { follow_command[path_num] = 7; }
+            Console.WriteLine("ugv.PathList[path_count - path_num].Key = {0}", ugv.PathList[path_count - path_num].Key / 15);
+            Console.WriteLine("ugv.PathList[path_count - path_num].Value = {0}", ugv.PathList[path_count - path_num].Value / 15);
+
+            Console.WriteLine("ugv.PathList[path_count - path_num - 1].Key = {0}", ugv.PathList[path_count - path_num - 1].Key / 15);
+            Console.WriteLine("ugv.PathList[path_count - path_num].Value = {0}", ugv.PathList[path_count - path_num - 1].Value / 15);
+            Console.WriteLine();
+
+            if (dx == 0 && dy == -1) { follow_command[path_num] = 0; }
+            if (dx == 1 && dy == -1) { follow_command[path_num] = 1; }
+            if (dx == 1 && dy == 0) { follow_command[path_num] = 2; }
+            if (dx == 1 && dy == 1) { follow_command[path_num] = 3; }
+            if (dx == 0 && dy == 1) { follow_command[path_num] = 4; }
+            if (dx == -1 && dy == 1) { follow_command[path_num] = 5; }
+            if (dx == -1 && dy == 0) { follow_command[path_num] = 6; }
+            if (dx == -1 && dy == -1) { follow_command[path_num] = 7; }
 
             path_num++;
 
@@ -1273,32 +1279,39 @@ namespace MVCC.Utill
 
             follow_path(dest_x, dest_y, start_x, start_y);
 
-            for (int i = 0; i < path_count - 2; i++)
+            for (int i = 0; i < path_count; i++)
             {
                 Follow_Command();
             }
 
+            int index;
+            int.TryParse(ugv.Id[1].ToString(), out index);
+
+            globals.first_point_x[index] = ugv.PathList[path_count - 1].Key / 15;
+            globals.first_point_y[index] = ugv.PathList[path_count - 1].Value / 15;
+
+
             path_num = 0;
-            for (int i = 0; i < path_count - 2; i++)
+            for (int i = 0; i < path_count - 1; i++)
             {
                 Movement_Command();
             }
 
             Console.WriteLine("");
 
-            for (int i = 0; i < path_count - 2; i++)
+            for (int i = 0; i < path_count; i++)
             {
                 Console.Write("{0}", follow_command[i]);
             }
             Console.WriteLine("");
 
-            for (int i = 0; i < path_count - 2; i++)
+            for (int i = 0; i < path_count - 1; i++)
             {
                 Console.Write("{0}", movement[i].ToString());
             }
             Console.WriteLine("");
 
-            for (int i = 0; i < path_count - 2; i++)
+            for (int i = 0; i < path_count - 1; i++)
             {
                 ugv.MovementCommandList.Add(movement[i].ToString());
             }

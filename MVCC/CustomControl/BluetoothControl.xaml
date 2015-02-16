@@ -33,7 +33,7 @@
                     <ColumnDefinition Width="100*" />
                 </Grid.ColumnDefinitions>
 
-                <Rectangle Height="100" VerticalAlignment="Center" Margin="5" Stroke="#C9C9C9" StrokeThickness="1"/>
+                <Image Source="{Binding UGVImageSrc}" Grid.Column="0" Height="100" VerticalAlignment="Center" />
 
                 <StackPanel Grid.Column="1">
                     <Grid Margin="10 2">
