@@ -557,7 +557,7 @@ namespace MVCC.View
 
                 //bluetoothAndPathPlanning.connect(individualUGV, individualUGVState);
 
-                refreshView();
+                refreshViewPath();
             }
             else if (mode.Equals("G"))
             {
@@ -590,12 +590,12 @@ namespace MVCC.View
                         int endX = currentPathTemp.Key;
                         int endY = currentPathTemp.Value;
 
-                        mapViewModel.MVCCUGVPathList.Add(new UGVPath(individualUGV.Id, startX, startY, endX, endY, individualUGV.UGVColor));
+                        //mapViewModel.MVCCUGVPathList.Add(new UGVPath(individualUGV.Id, startX, startY, endX, endY, individualUGV.UGVColor));
                     }
 
                     //bluetoothAndPathPlanning.connect(tempUGV, tempState);
 
-                    refreshView();
+                    refreshViewPath();
                 }
             }
 
@@ -1026,6 +1026,11 @@ namespace MVCC.View
             (FindResource("UGVStateSrc") as CollectionViewSource).View.Refresh();
 
             (FindResource("UGVGroupSrc") as CollectionViewSource).View.Refresh();
+        }
+
+        private void refreshViewPath()
+        {
+            refreshView();
 
             (FindResource("UGVPathSrc") as CollectionViewSource).View.Refresh();
         }
