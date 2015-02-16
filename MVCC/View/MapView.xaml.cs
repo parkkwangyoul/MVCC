@@ -333,6 +333,42 @@ namespace MVCC.View
                         {
                             Console.WriteLine("Map의 장애물 수 변화 !!! pre_blob_count = " + pre_blob_count + " blob_count = " + blob_count);
                             image_is_changed = true; //Map변화가 감지 됬으니 탬플릿 매칭 시작
+                            
+                            
+                            Dictionary<string, State> AllUGVStateMap = new Dictionary<string, State>();
+
+                            for (int i = 0; i < mapViewModel.MVCCItemStateList.Count; i++)
+                            {
+                                State tempState = mapViewModel.MVCCItemStateList[i];
+                                AllUGVStateMap.Add(tempState.ugv.Id, tempState);
+                            }
+
+                            //정지신호
+                            for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
+                            {
+                                if (!(mapViewModel.MVCCItemList[i] is UGV))
+                                    continue;
+
+                                UGV tempUGV = mapViewModel.MVCCItemList[i] as UGV;
+                                State tempUGVState = AllUGVStateMap[tempUGV.Id];
+                                tempUGV.Command = "q";
+
+                                bluetoothAndPathPlanning.connect(tempUGV, tempUGVState);
+                            }     
+
+                            for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
+                            {
+                                if (!(mapViewModel.MVCCItemList[i] is UGV))
+                                    continue;
+
+                                UGV tempUGV = mapViewModel.MVCCItemList[i] as UGV;
+
+                                State tempUGVState = AllUGVStateMap[tempUGV.Id];
+
+                                pathFinder.find_path(tempUGV, tempUGVState);
+
+                                bluetoothAndPathPlanning.connect(tempUGV, tempUGVState);
+                            }
                         }
                         else
                         {
@@ -404,7 +440,6 @@ namespace MVCC.View
             }
         }
         #endregion obstacle 검출
-
 
         public MapView()
         {
