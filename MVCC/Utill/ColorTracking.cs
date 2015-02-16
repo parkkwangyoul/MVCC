@@ -15,7 +15,6 @@ namespace MVCC.Utill
         bool[] color = new bool[4]; //색상 여부 ([0]blue [1] green [2]pink [3]red)
         Point[] color_ROI = new Point[4]; //색상추적에 대한 이동 ROI
         string[] colorStr = { "blue", "green", "orange", "red" };
-        //int[] direction = new int[4]; //방향 저장 배열
         int color_count = 0; //color_count 세기위해 만약 4개면 템플릿매칭을 안함
         bool[] change_check = new bool[4]; // 이미지 변환 됫는지 체크..
 
