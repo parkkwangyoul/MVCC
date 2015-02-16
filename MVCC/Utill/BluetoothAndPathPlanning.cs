@@ -66,8 +66,6 @@ namespace MVCC.Utill
                     {
                         #region Transmit_Movement_Command
 
-                        //serialport.WriteLine((8 - (globals.angle_direction[index] - globals.direction[index])).ToString());
-
                         int first_x = globals.first_point_x[index];
                         int first_y = globals.first_point_y[index];
 
@@ -157,6 +155,8 @@ namespace MVCC.Utill
                         {
                             globals.angle[index] = 7;
                         }
+
+                        serialport.WriteLine( (globals.angle[index] - globals.direction[index]).ToString() );
 
                         Console.WriteLine("Turn Value : {0}", (globals.angle[index] - globals.direction[index]).ToString() );
 
