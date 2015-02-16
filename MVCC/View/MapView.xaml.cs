@@ -242,17 +242,20 @@ namespace MVCC.View
 
                                             UGV_move_check[i].x = tracking_rect[i].X / 15;
                                             UGV_move_check[i].y = tracking_rect[i].Y / 15;
-                                            
+                                            /*
                                             if (ugv.PathList.Count != 0)
                                             {                                              
                                                 if (pre_UGV_move_check[i].x != UGV_move_check[i].x || pre_UGV_move_check[i].y != UGV_move_check[i].y)
                                                 {
                                                     //Console.WriteLine("index = " + i + " 제거는 되나?" + " count = " + ugv.PathList.Count);                                                   
-                                                    ugv.PathList.RemoveAt(0);
+                                                    //ugv.PathList.RemoveAt(0);
                                                 }
                                             }
 
                                             pre_UGV_move_check[i] = UGV_move_check[i];
+                                            */
+
+
                                             break;
                                         }
                                     }

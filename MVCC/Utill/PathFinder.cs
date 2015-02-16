@@ -699,7 +699,7 @@ namespace MVCC.Utill
 
             vehicle_compare.weight = 0;
 
-            Console.WriteLine("current_weight : {0}", current_weight);
+            Console.Write("{0} ", current_weight);
             grid[start_point_y, start_point_x] = '5';
 
             ugv.PathList.Add(new KeyValuePair<int, int>((start_point_x + 2)* 15, (start_point_y + 2) * 15));
@@ -1064,71 +1064,19 @@ namespace MVCC.Utill
         public void Movement_Command()
         {
 
-            if (path_following(follow_command[path_num], follow_command[path_num + 1]) == 0)
-            {
+            int dx = ugv.PathList[path_num + 1].Key - ugv.PathList[path_num].Key;
+            int dy = ugv.PathList[path_num + 1].Value - ugv.PathList[path_num].Value;
 
-                movement[path_num] = 0;
-                path_num++;
+            if (dx == 0 && dy == -1) { movement[path_num] = 0; }
+            if (dx == 1 && dy == -1) { movement[path_num] = 1; }
+            if (dx == 1 && dy == 0) { movement[path_num] = 2; }
+            if (dx == -1 && dy == 1) { movement[path_num] = 3; }
+            if (dx == 0 && dy == 1) { movement[path_num] = 4; }
+            if (dx == -1 && dy == 1) { movement[path_num] = 5; }
+            if (dx == -1 && dy == 0) { movement[path_num] = 6; }
+            if (dx == -1 && dy == -1) { movement[path_num] = 7; }
 
-            }
-            else if ((path_following(follow_command[path_num], follow_command[path_num + 1]) == 1))
-            { // || (path_following(follow_command[path_num], follow_command[path_num+1]) == -1) ){
-
-                movement[path_num] = 1;
-                path_num++;
-
-            }
-            else if ((path_following(follow_command[path_num], follow_command[path_num + 1]) == 2) || (path_following(follow_command[path_num], follow_command[path_num + 1]) == -6))
-            {
-
-                movement[path_num] = 2;
-                path_num++;
-
-            }
-            else if ((path_following(follow_command[path_num], follow_command[path_num + 1]) == 3) || (path_following(follow_command[path_num], follow_command[path_num + 1]) == -5))
-            {
-
-                movement[path_num] = 3;
-                path_num++;
-
-            }
-            else if ((path_following(follow_command[path_num], follow_command[path_num + 1]) == 4) || (path_following(follow_command[path_num], follow_command[path_num + 1]) == -4))
-            {
-
-                movement[path_num] = 4;
-                path_num++;
-
-            }
-            else if ((path_following(follow_command[path_num], follow_command[path_num + 1]) == 5) || (path_following(follow_command[path_num], follow_command[path_num + 1]) == -3))
-            {
-
-                movement[path_num] = 5;
-                path_num++;
-
-            }
-            else if ((path_following(follow_command[path_num], follow_command[path_num + 1]) == 6) || (path_following(follow_command[path_num], follow_command[path_num + 1]) == -2))
-            {
-
-                movement[path_num] = 6;
-                path_num++;
-
-            }
-
-            else if ((path_following(follow_command[path_num], follow_command[path_num + 1]) == 7) || (path_following(follow_command[path_num], follow_command[path_num + 1]) == -1))
-            {
-
-                movement[path_num] = 7;
-                path_num++;
-
-            }
-
-            else if ((path_following(follow_command[path_num], follow_command[path_num + 1]) == -7) && (follow_command[path_num] == 7) && (follow_command[path_num + 1] == 0))
-            {
-
-                movement[path_num] = 8;
-                path_num++;
-
-            }
+            path_num++;
 
             return;
         }
@@ -1153,6 +1101,8 @@ namespace MVCC.Utill
 
             dest_x = state.EndPointX;
             dest_y = state.EndPointY;
+
+            Console.WriteLine("ugv.Id = " + ugv.Id + " start_x = " + start_x + " start_y = " + start_y +" dest_x = " + dest_x + " dest_y = " + dest_y);
 
             //Console.WriteLine("dest_x = " + dest_x + " dest_y = " + dest_y + " current_perspective =" + current_perspective);
             size_ = 5;
@@ -1251,26 +1201,26 @@ namespace MVCC.Utill
             path_count = 0;
 
             follow_path(dest_x, dest_y, start_x, start_y);
-            follow_command[0] = current_perspective;
 
-            for (int i = 0; i < path_count; i++)
+            for (int i = 0; i < path_count - 2; i++)
             {
                 Movement_Command();
             }
+            Console.WriteLine("");
 
-            for (int i = 0; i < path_count; i++)
+            for (int i = 0; i < path_count - 2; i++)
             {
                 Console.Write("{0}", follow_command[i]);
             }
             Console.WriteLine("");
 
-            for (int i = 0; i < path_count; i++)
+            for (int i = 0; i < path_count - 2; i++)
             {
                 Console.Write("{0}", movement[i].ToString());
             }
             Console.WriteLine("");
 
-            for (int i = 0; i < path_count; i++)
+            for (int i = 0; i < path_count - 2; i++)
             {
                 ugv.MovementCommandList.Add(movement[i].ToString());
             }
