@@ -65,9 +65,9 @@ namespace MVCC.View
         private void CamOn(object sender, RoutedEventArgs e)
         {
             // 카메라 없을때, 테스트용        
-            MockCameraOn();
+            //MockCameraOn();
             // 카메라 연결했을때
-            //CameraOnAndDetectThings();
+            CameraOnAndDetectThings();
         }
 
         #region TestMock
@@ -538,14 +538,10 @@ namespace MVCC.View
 
                 List<KeyValuePair<int, int>> pathList = individualUGV.PathList;
 
-                Console.WriteLine("pathList count : " + pathList.Count);
-
                 for (int i = 0; i < pathList.Count; i++)
                 {
                     if (i == 0)
                         continue;
-
-                    //Console.WriteLine("test: " + pathList[i]);
 
                     KeyValuePair<int, int> beforePathTemp = pathList[i - 1];
                     KeyValuePair<int, int> currentPathTemp = pathList[i];
@@ -594,7 +590,7 @@ namespace MVCC.View
                         int endX = currentPathTemp.Key;
                         int endY = currentPathTemp.Value;
 
-                        mapViewModel.MVCCItemList.Add(new UGVPath(individualUGV.Id, startX, startY, endX, endY, individualUGV.UGVColor));
+                        mapViewModel.MVCCUGVPathList.Add(new UGVPath(individualUGV.Id, startX, startY, endX, endY, individualUGV.UGVColor));
                     }
 
                     //bluetoothAndPathPlanning.connect(tempUGV, tempState);
