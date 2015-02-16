@@ -348,7 +348,7 @@ namespace MVCC.View
                                         if (!(globals.Map_obstacle[j, i] == '*' && globals.pre_Map_obstacle[j, i] == '*'))
                                             moving_check_count++;
 
-                            if (moving_check_count >= 5) //배열이 5개 이상 차이날 경우 장애물이 옮겨지고 있음
+                            if (moving_check_count >= 7) //배열이 5개 이상 차이날 경우 장애물이 옮겨지고 있음
                                 Console.WriteLine("장애물 옮기는 중! moving_check_count = " + moving_check_count);
                              
                         }
