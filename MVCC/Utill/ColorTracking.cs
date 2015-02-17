@@ -21,7 +21,7 @@ namespace MVCC.Utill
         Image<Bgr, Byte> colorCheckImage; //칼라 체크할 이미지 변수
         int totalPicxel, pos_x, pos_y, img_width, img_height; //탬플릿매칭으로 넘어온 정보
         Globals glo = Globals.Instance; //gloal 변수를 위해
-        
+
         List<UGV> ugvList = new List<UGV>();
 
         //어떤 색인지 알아내기 위해
@@ -91,12 +91,12 @@ namespace MVCC.Utill
 
                         if (totalPicxel / 10 <= pixCount) //일정 픽섹 이상시 색상배열 변경후 종료
                         {
-                            color[index] = true;                          
+                            color[index] = true;
                             color_ROI[index].X = x;
                             color_ROI[index].Y = y;
                             color_count++;
                             change_check[index] = false;
-                            ugvList.Add(new UGV("A" + index, glo.TemplateWidth, glo.TemplateHeight, x, y, colorStr[index]));                          
+                            ugvList.Add(new UGV("A" + index, glo.TemplateWidth, glo.TemplateHeight, x, y, colorStr[index]));
                             return;
                         }
                     }
@@ -163,7 +163,7 @@ namespace MVCC.Utill
             CvInvoke.cvDilate(colorSetting, colorSetting, rect_6, 2); //수축 팽창
 
             Image<Bgr, Byte> small_colorCount = colorSetting.Convert<Bgr, Byte>(); //픽셀수 세기 위해
-            
+
             int x_p = 0, y_p = 0; // 큰 원 픽셀수 저장
             int small_x = 0, small_y = 0; // 작은원 픽셀수 저장
 
@@ -259,6 +259,9 @@ namespace MVCC.Utill
                     double E = Math.Atan2(D, C);
                     int result = (int)Math.Ceiling(E * (180 / 3.14192));
 
+
+                   // glo.theLock.EnterWriteLock(); //critical section start
+
                     if (75 <= result && result <= 105)
                         glo.direction[index] = 0;
                     else if (115 <= result && result <= 155)
@@ -278,16 +281,16 @@ namespace MVCC.Utill
                     else
                         glo.direction[index] = -1;
 
-                    
-                  
-                    if (glo.direction[index] == -1)
-                          Console.WriteLine("i = " + index + " direction[index] = " + glo.direction[index] + "알수 없는 각도" + " result = " + result);
-                    else
-                          Console.WriteLine("i = " + index + " direction[index] = " + glo.direction[index] + " result = " + result);
+                    //glo.theLock.ExitWriteLock(); //critical section end
+                    /*
+                      if (glo.direction[index] == -1)
+                            Console.WriteLine("i = " + index + " direction[index] = " + glo.direction[index] + "알수 없는 각도" + " result = " + result);
+                      else
+                            Console.WriteLine("i = " + index + " direction[index] = " + glo.direction[index] + " result = " + result);
                               
-                    if (index == 3)
-                       Console.WriteLine("");
-                
+                      if (index == 3)
+                         Console.WriteLine("");
+                  */
                 }
                 else
                 {
@@ -295,7 +298,7 @@ namespace MVCC.Utill
                     color[index] = false;
                     change_check[index] = true;
                     color_count--;
-                }      
+                }
             }
             else
             {

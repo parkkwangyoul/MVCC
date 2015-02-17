@@ -1180,6 +1180,9 @@ namespace MVCC.Utill
             size_ = 5;
             size = 5;
 
+            ugv.MovementCommandList.Clear();
+            ugv.PathList.Clear();
+
             map_classification(); //차량 구별한 장애물 맵 세팅
 
             #region Graph_Node_Initialization
@@ -1279,8 +1282,17 @@ namespace MVCC.Utill
                 Follow_Command();
             }
 
+          
             int index;
             int.TryParse(ugv.Id[1].ToString(), out index);
+
+            if(path_count == 0)
+            {
+                Console.WriteLine("길 찾기결과 길 없음!!!!!!!!!!!!!!");
+                ugv.MovementCommandList.Clear();
+                ugv.PathList.Clear();
+                return;
+            }
 
             globals.first_point_x[index] = ugv.PathList[path_count - 1].Key / 15;
             globals.first_point_y[index] = ugv.PathList[path_count - 1].Value / 15;
@@ -1328,13 +1340,14 @@ namespace MVCC.Utill
 
         public void map_classification()
         {
-            globals.theLock.EnterReadLock(); //critical section start
 
             int index;
             int.TryParse(ugv.Id[1].ToString(), out index);
-         
+
             direct = globals.direction[index];
 
+            globals.theLock.EnterReadLock(); //critical section start
+            
             for (int x = 0; x < globals.rect_width / globals.x_grid; x++)
             {
                 for (int y = 0; y < globals.rect_height / globals.y_grid; y++)

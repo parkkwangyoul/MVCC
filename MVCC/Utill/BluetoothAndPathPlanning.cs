@@ -51,10 +51,15 @@ namespace MVCC.Utill
             serialport.ReadTimeout = 200;
             serialport.WriteTimeout = 200;
 
-            serialport.Open();
-          
+            Console.WriteLine("serialport.isopen : " + serialport.IsOpen);
+
+            if(!serialport.IsOpen){ serialport.Open(); }
+            
             if (serialport.IsOpen)
             {
+                Console.WriteLine("serialport.isopen : " + serialport.IsOpen);
+                Console.WriteLine("ugv command : " + write_data);
+                
                 ugv.IsBluetoothConnected = true;
                 state.BluetoothOnOff = true;
 
@@ -75,13 +80,13 @@ namespace MVCC.Utill
                         int direction_x = ((state.CurrentPointX) / 15);
                         int direction_y = ((state.CurrentPointY) / 15);
 
-                        Console.WriteLine("first_x {0}", globals.first_point_x[index]);
-                        Console.WriteLine("first_y {0}", globals.first_point_y[index]);
+                        //Console.WriteLine("first_x {0}", globals.first_point_x[index]);
+                        //Console.WriteLine("first_y {0}", globals.first_point_y[index]);
 
-                        Console.WriteLine("start_point_x {0}", start_x);
-                        Console.WriteLine("start_point_y {0}", start_y);
+                        //Console.WriteLine("start_point_x {0}", start_x);
+                        //Console.WriteLine("start_point_y {0}", start_y);
 
-                        Console.WriteLine("Direction Value : {0}", globals.direction[index]);
+                        //Console.WriteLine("Direction Value : {0}", globals.direction[index]);
 
                         #region Direction Calculation
 
@@ -124,8 +129,8 @@ namespace MVCC.Utill
 
                         #endregion
 
-                        Console.WriteLine("direction_x {0}", direction_x);
-                        Console.WriteLine("direction_y {0}", direction_y);
+                        //Console.WriteLine("direction_x {0}", direction_x);
+                        //Console.WriteLine("direction_y {0}", direction_y);
 
                         #region Angle Calculation
 
@@ -204,7 +209,7 @@ namespace MVCC.Utill
                         }
                         #endregion
 
-                        Console.WriteLine("ugv.Id = " + ugv.Id + " direction[index] = " + globals.direction[index]);
+                        //Console.WriteLine("ugv.Id = " + ugv.Id + " direction[index] = " + globals.direction[index]);
 
                         #region Transmit Movement Commands
 
@@ -216,7 +221,7 @@ namespace MVCC.Utill
 
                         Console.WriteLine("TX Complete");
 
-                        ugv.MovementCommandList.Clear();
+                        disConnect(serialport);
 
                         #endregion
 
@@ -230,30 +235,13 @@ namespace MVCC.Utill
                         Console.WriteLine(serialport.ReadExisting());
                     }
 
-                    disConnect(serialport);
+                    //disConnect(serialport);
                 }
 
-                else if (write_data == "g")
+                else if (write_data.Equals("q"))
                 {
-                    try
-                    {
+                    serialport.WriteLine((write_data[0]).ToString());
 
-                    }
-                    catch (TimeoutException)
-                    {
-                        Console.WriteLine("TimeOutException");
-
-                        Console.Write("Buffer : ");
-                        Console.WriteLine(serialport.ReadExisting());
-                    }
-                }
-                else if (write_data == "i")
-                {
-
-                }
-
-                else if (write_data == "q")
-                {
                     disConnect(serialport);
                 }
                 Console.Out.Flush();

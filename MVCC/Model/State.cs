@@ -71,7 +71,7 @@ namespace MVCC.Model
         }
 
         // 지정된 도착 X좌표를 나타냄
-        private int endPointX;
+        private int endPointX = -1;
         public int EndPointX
         {
             get { return endPointX; }
@@ -82,7 +82,7 @@ namespace MVCC.Model
         }
 
         // 지정된 도착 Y좌표를 나타냄
-        private int endPointY;
+        private int endPointY = -1;
         public int EndPointY
         {
             get { return endPointY; }
