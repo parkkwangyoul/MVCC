@@ -270,6 +270,24 @@
     <Resource Include="Resource\A2.jpg" />
     <Resource Include="Resource\A3.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\driving_on.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\driving_off.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\ugv_blue.png" />
+    <Resource Include="Resource\ugv_green.png" />
+    <Resource Include="Resource\ugv_purple.png" />
+    <Resource Include="Resource\ugv_yellow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\ugv_orange.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\ugv_red.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

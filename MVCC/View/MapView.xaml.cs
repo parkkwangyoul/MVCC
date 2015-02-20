@@ -60,14 +60,14 @@ namespace MVCC.View
 
         #region 카메라, thread start
         /**
-      * 카메라를 켬
-      * */
+        * 카메라를 켬
+        * */
         private void CamOn(object sender, RoutedEventArgs e)
         {
             // 카메라 없을때, 테스트용        
-            //MockCameraOn();
+            MockCameraOn();
             // 카메라 연결했을때
-            CameraOnAndDetectThings();
+            //CameraOnAndDetectThings();
         }
 
         #region TestMock
@@ -1059,10 +1059,11 @@ namespace MVCC.View
         // 특정 UGV의 선택을 해제하는 기능
         private void cancelSelectUGV(UGV ugv)
         {
-            ugv.UGVStrokeThickness = 0;
             ugv.IsClicked = false;
             ugv.IsClickedReadyBelongToGroup = false;
             ugv.IsGroupClicked = false;
+
+            ugv.UGVStroke = "Transparent";
 
             for (int j = 0; j < mapViewModel.MVCCItemStateList.Count; j++)
             {
@@ -1087,10 +1088,11 @@ namespace MVCC.View
 
                 UGV tempUGV = mapViewModel.MVCCItemList[i] as UGV;
 
-                tempUGV.UGVStrokeThickness = 0;
                 tempUGV.IsClicked = false;
                 tempUGV.IsClickedReadyBelongToGroup = false;
                 tempUGV.IsGroupClicked = false;
+
+                tempUGV.UGVStroke = "Transparent";
             }
 
             for (int i = 0; i < mapViewModel.MVCCItemStateList.Count; i++)

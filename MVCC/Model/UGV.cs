@@ -57,6 +57,26 @@ namespace MVCC.Model
             }
         }
 
+        public string UGVResource
+        {
+            get
+            {
+                switch (Id)
+                {
+                    case "A0" :
+                        return "/Resource/ugv_blue.png";
+                    case "A1" :
+                        return "/Resource/ugv_green.png";
+                    case "A2":
+                        return "/Resource/ugv_orange.png";
+                    case "A3" :
+                        return "/Resource/ugv_red.png";
+                    default:
+                        return "/Resource/ugv_green.png";
+                }
+            }
+        }
+
         // 그룹에 포함되어 있다면, 그 그룹의 이름
         private string groupName;
         public string GroupName
@@ -80,7 +100,7 @@ namespace MVCC.Model
         }
 
         // 선택했을때, 점선으로 바뀜
-        private int uGVStrokeThickness = 0;
+        private int uGVStrokeThickness = 1;
         public int UGVStrokeThickness
         {
             get { return uGVStrokeThickness; }
@@ -90,7 +110,7 @@ namespace MVCC.Model
             }
         }
 
-        private string uGVStroke = "#78C8FF";
+        private string uGVStroke = "Transparent";
         public string UGVStroke
         {
             get { return uGVStroke; }

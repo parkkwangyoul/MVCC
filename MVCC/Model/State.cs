@@ -52,9 +52,9 @@ namespace MVCC.Model
             get
             {
                 if (isDriving)
-                    return "/Resource/run_on.png";
+                    return "/Resource/driving_on.png";
                 else
-                    return "/Resource/run_off.png";
+                    return "/Resource/driving_off.png";
             }
         }
 

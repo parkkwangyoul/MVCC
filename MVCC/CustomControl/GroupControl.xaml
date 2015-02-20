@@ -18,17 +18,9 @@
                 <ItemsControl ItemsSource="{Binding MemberList}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border BorderBrush="#78C8FF" BorderThickness="1" Height="140" Margin="3">
+                            <Border BorderBrush="{Binding UGVColor}" BorderThickness="2" Height="50" Margin="3">
                                 <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="25*" />
-                                        <RowDefinition Height="75*" />
-                                    </Grid.RowDefinitions>
-
                                     <TextBlock Grid.Row="0" VerticalAlignment="Center" Padding="10 0 0 0" Text="{Binding Id}"/>
-
-                                    <Grid Grid.Row="1">
-                                    </Grid>
                                 </Grid>
                             </Border>
                         </DataTemplate>
