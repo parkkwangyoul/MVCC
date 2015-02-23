@@ -29,8 +29,11 @@ namespace MVCC.Utill
             //gray = gray.AddWeighted(graySoft, 1.3, -0.6, 0);
             //Image<Gray, Byte> bin = gray.ThresholdBinary(new Gray(70), new Gray(255));
 
-            gray = gray.AddWeighted(graySoft, 0.95, -0.1, 0);
-            Image<Gray, Byte> bin = gray.ThresholdBinary(new Gray(85), new Gray(255));
+            //gray = gray.AddWeighted(graySoft, 0.95, -0.1, 0);
+            //Image<Gray, Byte> bin = gray.ThresholdBinary(new Gray(85), new Gray(255));
+
+            gray = gray.AddWeighted(graySoft, 1.3, -0.6, 0);
+            Image<Gray, Byte> bin = gray.ThresholdBinary(new Gray(60), new Gray(255));
 
             Gray cannyThreshold = new Gray(149);
             Gray cannyThresholdLinking = new Gray(149);
@@ -139,6 +142,17 @@ namespace MVCC.Utill
                     string color_str;
                     int color_index = -1;
 
+                    /*
+                    // 장애물 범위 지정안했을때 
+                    int temp_x, temp_y, temp_width, temp_height;
+
+                    temp_x = targetBlob.BoundingBox.X;
+                    temp_y = targetBlob.BoundingBox.Y;
+
+                    temp_width = targetBlob.BoundingBox.Width;
+                    temp_height = targetBlob.BoundingBox.Height;
+                    */
+                    
                     //장애물의 충돌 검사를 위해 범위 설정
                     int xx = 10, yy = 10;
                     int temp_x, temp_y, temp_width, temp_height;
@@ -159,6 +173,7 @@ namespace MVCC.Utill
                         temp_height = targetBlob.BoundingBox.Height + yy;
 
                     }
+                    
 
                     //검출된 색이 장애물인지
                     if ((color_str = obstacle_colorCheck(blob_image, targetBlob.Area, targetBlob.BoundingBox.X, targetBlob.BoundingBox.Y, targetBlob.BoundingBox.Width, targetBlob.BoundingBox.Height)) == "null")
@@ -236,17 +251,57 @@ namespace MVCC.Utill
                             topB = temp_y;
                             bottomB = temp_y + temp_height;
 
+                            if (bottomA < topB)
+                            {
+                                if (topB - bottomA <= 2)
+                                    Console.WriteLine(i + " 번쨰 장애물과 충돌함 (아래) 아직 떨어져있을때 \n");
+
+                                continue; //아래
+                            }
+
+                            if (topA > bottomB)
+                            {
+                                if (topA - bottomB <= 2)
+                                    Console.WriteLine(i + " 번쨰 장애물과 충돌함 (위) 아직 떨어져있을때\n");
+
+                                continue; //위
+                            }
+                            if (rightA < leftB)
+                            {
+                                if (leftB - rightA <= 2)
+                                    Console.WriteLine(i + " 번쨰 장애물과 충돌함 (오른쪽) 아직 떨어져있을때\n");
+
+                                continue; //오른쪽
+                            }
+                            if (leftA > rightB)
+                            {
+                                if (leftA - rightB <= 2)
+                                    Console.WriteLine(i + " 번쨰 장애물과 충돌함 (왼쪽) 아직 떨어져있을때\n");
+
+                                continue; //왼쪽
+                            }
+
+                            if (bottomA - topB <= 2)
+                                Console.WriteLine(i + " 번쨰 장애물과 충돌함 (아래)\n");
+                            else if (bottomB - topA <= 2)
+                                Console.WriteLine(i + " 번쨰 장애물과 충돌함 (위)\n");
+                            else if (rightA - leftB <= 2)
+                                Console.WriteLine(i + " 번쨰 장애물과 충돌함 (오른쪽)\n");
+                            else if (rightB - leftA <= 2)
+                                Console.WriteLine(i + " 번쨰 장애물과 충돌함 (왼쪽)\n");
+                            /*
                             if (bottomA < topB) continue; //아래
                             if (topA > bottomB) continue; //위
                             if (rightA < leftB) continue; //오른쪽
                             if (leftA > rightB) continue; //왼쪽
 
-
+                            
                             if (bottomA - topB <= yy - 4 || bottomB - topA <= yy - 4 || rightA - leftB <= xx - 4 || rightB - leftA <= xx - 4)
                                 Console.WriteLine(i + " 번쨰 장애물과 충돌위기\n");
                             else
                                 Console.WriteLine(i + " 번쨰 장애물과 충돌함\n");
                             //[0]blue [1] green [2]orange [3]red
+                             */
                         }
                     }          
                 }
