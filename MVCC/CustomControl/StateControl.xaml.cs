@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using MVCC.Model;
+
 namespace MVCC.CustomControl
 {
     /// <summary>
@@ -20,9 +22,16 @@ namespace MVCC.CustomControl
     /// </summary>
     public partial class StateControl : UserControl
     {
+        private State state;
+
         public StateControl()
         {
             InitializeComponent();
+        }
+
+        private void StopUGV(object sender, MouseButtonEventArgs e)
+        {
+            state = DataContext as State;
         }
     }
 }
