@@ -65,9 +65,9 @@ namespace MVCC.View
         private void CamOn(object sender, RoutedEventArgs e)
         {
             // 카메라 없을때, 테스트용        
-            MockCameraOn();
+            //MockCameraOn();
             // 카메라 연결했을때
-            //CameraOnAndDetectThings();
+            CameraOnAndDetectThings();
         }
 
         #region TestMock
@@ -331,7 +331,6 @@ namespace MVCC.View
 
                     globals.theLock.ExitWriteLock(); //critical section end
                   
-
                     if (frist_change_check == true) //제일 처음 변화감지는 건너 뜀
                     {
                         if (pre_blob_count != blob_count) //이전 blob과 현재 blob의 카운터가 다르면 Map에 장애물 수 생김 

@@ -36,7 +36,7 @@ namespace MVCC.Model
         }
 
         // 주행 상태를 나타냄
-        private bool isDriving = true;
+        private bool isDriving = false;
         public bool IsDriving
         {
             get { return isDriving; }

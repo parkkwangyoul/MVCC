@@ -39,11 +39,11 @@ namespace MVCC.Utill
                 if (color[i] == false)
                 {
                     if (i == 0) //blue
-                        YccColorCheck(i, 0, 41, 151, 255, 119, 240); //8섹션
+                        YccColorCheck(i, 0, 74, 142, 255, 120, 240); //8섹션
                     else if (i == 1) //green
-                        YccColorCheck(i, 0, 75, 100, 186, 123, 131); //8섹션
+                        YccColorCheck(i, 0, 75, 112, 186, 121, 142); //8섹션
                     else if (i == 2) //orange
-                        YccColorCheck(i, 0, 155, 0, 255, 216, 102); //8섹션
+                        YccColorCheck(i, 0, 155, 0, 255, 202, 102); //8섹션
                     else //red
                         YccColorCheck(i, 0, 159, 102, 196, 240, 124); //8섹션
                 }
@@ -63,7 +63,7 @@ namespace MVCC.Utill
 
             colorSetting = YCrCbFrame.InRange((Ycc)YCrCb_min, (Ycc)YCrCb_max); //색 범위 설정
 
-            StructuringElementEx rect_12 = new StructuringElementEx(12, 12, 6, 6, Emgu.CV.CvEnum.CV_ELEMENT_SHAPE.CV_SHAPE_RECT);
+            StructuringElementEx rect_12 = new StructuringElementEx(6, 6, 3, 3, Emgu.CV.CvEnum.CV_ELEMENT_SHAPE.CV_SHAPE_RECT);
             CvInvoke.cvErode(colorSetting, colorSetting, rect_12, 1);
             StructuringElementEx rect_6 = new StructuringElementEx(6, 6, 3, 3, Emgu.CV.CvEnum.CV_ELEMENT_SHAPE.CV_SHAPE_RECT);
             CvInvoke.cvDilate(colorSetting, colorSetting, rect_6, 2); //수축 팽창
@@ -114,11 +114,11 @@ namespace MVCC.Utill
                 if (color[i] == true) //있는 색상만 트레킹
                 {
                     if (i == 0)
-                        color_traking(i, 0, 41, 151, 255, 119, 240, iamge, rect); //8섹션
+                        color_traking(i, 0, 74, 142, 255, 120, 240, iamge, rect); //8섹션
                     else if (i == 1)
-                        color_traking(i, 0, 75, 100, 186, 123, 131, iamge, rect); //8섹션
+                        color_traking(i, 0, 75, 112, 186, 121, 142, iamge, rect); //8섹션
                     else if (i == 2)
-                        color_traking(i, 0, 155, 0, 255, 216, 102, iamge, rect); //8섹션
+                        color_traking(i, 0, 155, 0, 255, 202, 102, iamge, rect); //8섹션
                     else
                         color_traking(i, 0, 159, 102, 196, 240, 124, iamge, rect); //8섹션
                 }// ([0]blue [1] green [2]orange [3]red)
@@ -140,7 +140,7 @@ namespace MVCC.Utill
 
             colorSetting = YCrCbFrame.InRange((Ycc)YCrCb_min, (Ycc)YCrCb_max); //색 범위 설정
 
-            StructuringElementEx rect_12 = new StructuringElementEx(12, 12, 6, 6, Emgu.CV.CvEnum.CV_ELEMENT_SHAPE.CV_SHAPE_RECT);
+            StructuringElementEx rect_12 = new StructuringElementEx(6, 6, 3, 3, Emgu.CV.CvEnum.CV_ELEMENT_SHAPE.CV_SHAPE_RECT);
             CvInvoke.cvErode(colorSetting, colorSetting, rect_12, 1);
             StructuringElementEx rect_6 = new StructuringElementEx(6, 6, 3, 3, Emgu.CV.CvEnum.CV_ELEMENT_SHAPE.CV_SHAPE_RECT);
             CvInvoke.cvDilate(colorSetting, colorSetting, rect_6, 2); //수축 팽창
@@ -199,8 +199,8 @@ namespace MVCC.Utill
                 int big_center_y = y_p / pixCount; //큰 원 중심좌표
 
                 //사라진것을 판별하기 위해.. 원랜 마이너스값으로 좌표가 계산되어 일부러 음수좌표는 0으로 만들고 사라졌을때 좌표를 -1로 만듬
-                int tmp_x = x_p / pixCount - glo.TemplateWidth / 2;
-                int tmp_y = y_p / pixCount - glo.TemplateHeight / 2;
+                int tmp_x = big_center_x - glo.TemplateWidth / 2;
+                int tmp_y = big_center_y - glo.TemplateHeight / 2;
 
                 int tmp_width = glo.TemplateWidth;
                 int tmp_height = glo.TemplateHeight;
@@ -245,8 +245,8 @@ namespace MVCC.Utill
                 }
 
                 rect[index] = new Rectangle(tmp_x, tmp_y, tmp_width, tmp_height); //사각형의 왼쪽 위의 좌표
-                color_ROI[index].X = x_p / pixCount - glo.TemplateWidth / 2;
-                color_ROI[index].Y = y_p / pixCount - glo.TemplateHeight / 2;
+                color_ROI[index].X = big_center_x - glo.TemplateWidth / 2;
+                color_ROI[index].Y = big_center_y - glo.TemplateHeight / 2;
 
                 if (small_pixCount != 0)
                 {
@@ -291,6 +291,10 @@ namespace MVCC.Utill
                       if (index == 3)
                          Console.WriteLine("");
                   */
+
+                    if (glo.direction[index] == -1)
+                        Console.WriteLine("i = " + index + " direction[index] = " + glo.direction[index] + " result = " + result);
+                    
                 }
                 else
                 {
