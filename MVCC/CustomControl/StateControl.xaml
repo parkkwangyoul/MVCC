@@ -22,7 +22,8 @@
                     <ColumnDefinition Width="25*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 
-                <Image Grid.Column="0" Margin="5" Source="{Binding DrivingResourcePath}" />
+                <Image Grid.Column="0" Margin="5" Source="{Binding DrivingResourcePath}" 
+                       MouseLeftButtonDown="StopUGV" Cursor="Hand" />
                 <StackPanel Orientation="Vertical" Grid.Column="1" VerticalAlignment="Center">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="X : " />
