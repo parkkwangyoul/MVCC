@@ -55,7 +55,7 @@ namespace MVCC.Utill
 
             if(!serialport.IsOpen){ serialport.Open(); }
             
-            if (serialport.IsOpen)
+            while (serialport.IsOpen)
             {
                 Console.WriteLine("serialport.isopen : " + serialport.IsOpen);
                 Console.WriteLine("ugv command : " + write_data);
