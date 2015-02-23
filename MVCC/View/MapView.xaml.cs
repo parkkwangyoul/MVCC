@@ -950,6 +950,7 @@ namespace MVCC.View
 
                     if (tempGroup.Name.Equals("G" + groupNum))
                     {
+                        cancelSelectUGV();
                         for (int j = 0; j < tempGroup.MemberList.Count; j++)
                         {
                             UGV tempUGV = tempGroup.MemberList[j];
