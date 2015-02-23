@@ -242,7 +242,7 @@ namespace MVCC.Utill
                 {
                     serialport.WriteLine((write_data[0]).ToString());
 
-                    disConnect(serialport);
+                    //disConnect(serialport);
                 }
                 Console.Out.Flush();
             }
