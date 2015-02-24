@@ -65,9 +65,9 @@ namespace MVCC.View
         private void CamOn(object sender, RoutedEventArgs e)
         {
             // 카메라 없을때, 테스트용        
-            //MockCameraOn();
+            MockCameraOn();
             // 카메라 연결했을때
-            CameraOnAndDetectThings();
+            //CameraOnAndDetectThings();
         }
 
         #region TestMock
