@@ -710,7 +710,7 @@ namespace MVCC.Utill
             // Case 1 : 우측 아래 도착점에서 좌측 위 시작점으로 거슬러 가는 경우
             else if ((relative_position_x <= 0) && (relative_position_y <= 0))
             {
-                Console.WriteLine("Case 1");
+                //Console.WriteLine("Case 1");
 
                 try
                 {
@@ -795,7 +795,7 @@ namespace MVCC.Utill
             // Case 2 : 좌측 위 도착점에서 우측 아래 시작점으로 거슬러 가는 경우
             else if ((relative_position_x >= 0) && (relative_position_y >= 0))
             {
-                Console.WriteLine("Case 2");
+                //Console.WriteLine("Case 2");
 
                 try
                 {
@@ -879,7 +879,7 @@ namespace MVCC.Utill
             // Case 3 : 좌측 아래 도착점에서 우측 위 시작점으로 거슬러 가는 경우
             else if ((relative_position_x <= 0) && (relative_position_y >= 0))
             {
-                Console.WriteLine("Case 3");
+                //Console.WriteLine("Case 3");
 
                 try
                 {
@@ -963,7 +963,7 @@ namespace MVCC.Utill
             // Case 4 : 우측 위 도착점에서 좌측 아래 시작점으로 거슬러 가는 경우
             else if ((relative_position_x >= 0) && (relative_position_y <= 0))
             {
-                Console.WriteLine("Case 4");
+                //Console.WriteLine("Case 4");
 
                 try
                 {

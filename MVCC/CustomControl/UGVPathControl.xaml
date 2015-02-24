@@ -9,6 +9,6 @@
         <TranslateTransform  X="{Binding StartX}" Y="{Binding StartY}"/>
     </UserControl.RenderTransform>
     
-    <Rectangle Width="15"  Height="60"
-            Stroke="{Binding Stroke}" Fill="{Binding Stroke}" StrokeThickness = "2" Canvas.ZIndex="0" Opacity="0.3" />
+    <Rectangle Width="45"  Height="45"
+            Stroke="{Binding Stroke}" Fill="{Binding Stroke}" StrokeThickness = "2" Canvas.ZIndex="0" Opacity="0.8" />
 </UserControl>
