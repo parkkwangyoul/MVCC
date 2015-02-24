@@ -1305,9 +1305,9 @@ namespace MVCC.Utill
             {
                 Movement_Command();
             }
-
+            
             Console.WriteLine("");
-
+            /*
             for (int i = 0; i < path_count; i++)
             {
                 Console.Write("{0}", follow_command[i]);
@@ -1318,17 +1318,19 @@ namespace MVCC.Utill
             {
                 Console.Write("{0}", movement[i].ToString());
             }
+             */ 
             Console.WriteLine("");
-
+            
             for (int i = 0; i < path_count - 1; i++)
             {
                 ugv.MovementCommandList.Add(movement[i].ToString());
             }
-
+           
             for (int i = 0; i < path_count - 1; i++)
             {
                 Console.Write("{0}", ugv.MovementCommandList[i][0].ToString());
             }
+              
             Console.WriteLine("");
 
             #endregion

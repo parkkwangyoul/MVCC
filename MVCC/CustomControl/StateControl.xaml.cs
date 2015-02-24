@@ -28,18 +28,15 @@ namespace MVCC.CustomControl
         public StateControl()
         {
             InitializeComponent();
-                        
-            this.Loaded += new RoutedEventHandler(UserControl1_Loaded);
-        }
-
-        private void UserControl1_Loaded(object sender, RoutedEventArgs e)
-        {
-            var datacontext = this.DataContext as State;
         }
 
         private void StopUGV(object sender, MouseButtonEventArgs e)
-        {
+        {/*
             State state = this.DataContext as State;
+
+            //임시 방편(refresh로 인하여 Datacontext가 null이 들어오는 현상때문에, 이런식으로 만듬)
+            if (state == null)
+                return;
 
             if (state.IsDriving)
             {
@@ -49,6 +46,7 @@ namespace MVCC.CustomControl
 
                 bluetoothAndPathPlanning.connect(state.ugv, state);
             }
+          * */
         }
     }
 }

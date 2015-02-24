@@ -187,7 +187,7 @@ namespace MVCC.View
                             {
                                 double matchScore = matches[y, x, 0];
 
-                                if (matchScore >= 0.9)
+                                if (matchScore >= 0.85)
                                 {
                                     colorTracking.colorCheck(matchColorCheck, totalPicxel, x, y, globals.TemplateWidth, globals.TemplateHeight); //어떤 색인지 체크                        
                                     y += img1.Height; //x축 다음 y축(세로)이 변화기 때문에 속도를 높이기 위해 검출된 y좌표 + 이미지 사이즈 함.                             
@@ -220,7 +220,6 @@ namespace MVCC.View
 
                                 Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
                                 {
-
                                     for (int j = 0; j < mapViewModel.MVCCItemList.Count; j++)
                                     {
                                         if (!(mapViewModel.MVCCItemList[j] is UGV))
@@ -237,6 +236,8 @@ namespace MVCC.View
 
                                             //temp_x = (int)(ugv.X / 15);
                                             //temp_y = (int)(ugv.Y / 15);
+                                            globals.UGVStopCommandLock.EnterWriteLock();
+
                                             if (ugv.PathList.Count != 0)
                                             {
                                                 KeyValuePair<int, int> temp = new KeyValuePair<int, int>();
@@ -246,6 +247,7 @@ namespace MVCC.View
 
                                                 if (Math.Abs(ugv.X - temp.Key) <= 10 && Math.Abs(ugv.Y - temp.Value) <= 10)
                                                 {
+
                                                     for (int p = mapViewModel.MVCCUGVPathList.Count - 1; p >= 0; p--)
                                                     {
                                                         UGVPath tempPath = mapViewModel.MVCCUGVPathList[p] as UGVPath;
@@ -259,10 +261,13 @@ namespace MVCC.View
                                                             break;
                                                         }
                                                     }
+
                                                 }
 
                                                 refreshViewPath();
                                             }
+
+                                            globals.UGVStopCommandLock.ExitWriteLock();
 
                                             break;
                                         }
@@ -315,8 +320,7 @@ namespace MVCC.View
                 if (obstacle_check == true) //frame의 추적 영상 처리가 끝나고 처리
                 {
                     globals.theLock.EnterWriteLock(); //critical section start
-                    Console.WriteLine("설마 여기 들어오나?");
-                            
+
                     Array.Clear(globals.Map_obstacle, 0, globals.rect_height / globals.y_grid * globals.rect_width / globals.x_grid);
 
                     blob_count = obstacleDetection.detectBlob(obstacle_image, globals.Map_obstacle, tracking_rect); //장애물 검출
@@ -349,6 +353,10 @@ namespace MVCC.View
                                     continue;
 
                                 UGV tempUGV = mapViewModel.MVCCItemList[i] as UGV;
+
+                                if (!AllUGVStateMap.ContainsKey(tempUGV.Id))
+                                    continue;
+
                                 State tempUGVState = AllUGVStateMap[tempUGV.Id];
 
 
@@ -611,7 +619,7 @@ namespace MVCC.View
                 UGV tempUGV = mapViewModel.MVCCItemList[i] as UGV;
 
                 // 개인이 선택된 것인지 검사
-                if (tempUGV.IsClicked)
+                if (tempUGV.IsClicked && !tempUGV.IsGroupClicked)
                 {
                     individualUGV = tempUGV;
 
@@ -654,9 +662,10 @@ namespace MVCC.View
             // 개인
             if (mode.Equals("I"))
             {
+                /*
                 int index;
                 int.TryParse(individualUGV.Id[1].ToString(), out index);
-                
+
                 globals.theLock.EnterWriteLock(); //critical section start
 
                 for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
@@ -666,16 +675,14 @@ namespace MVCC.View
                         if (globals.Map_obstacle[j, i] != 0 && globals.Map_obstacle[j, i] != index + 1 && individualUGVState.IsDriving == false)
                         {
                             globals.Map_obstacle[j, i] = '*';
-                            Console.WriteLine("여긴 들어오나");
                         }
                     }
                 }
 
-                for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
+                for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
                 {
-                    for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
+                    for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
                     {
-                  
                         Console.Write(globals.Map_obstacle[j, i]);
                     }
 
@@ -683,7 +690,8 @@ namespace MVCC.View
                 }
 
                 globals.theLock.ExitWriteLock(); //critical section end
-                
+                */
+
                 individualUGVState.EndPointX = endPointX;
                 individualUGVState.EndPointY = endPointY;
 
@@ -714,7 +722,7 @@ namespace MVCC.View
                     index_list.Add(index);     
                 }
 
-
+                /*
                 globals.theLock.EnterWriteLock(); //critical section start
 
                 for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
@@ -763,7 +771,7 @@ namespace MVCC.View
 
 
                 globals.theLock.ExitWriteLock(); //critical section end
-
+                */
                 foreach (var key in GroupMap.Keys)
                 {
                     UGV tempUGV = GroupMap[key];
@@ -779,12 +787,10 @@ namespace MVCC.View
                     tempUGV.PathList.Clear();
 
                     pathFinder.init();
-                       
+
                     pathFinder.find_path(tempUGV, tempState);
 
-                    AddMVCCUGVPathList(tempUGV);
-
-                                    
+                    AddMVCCUGVPathList(tempUGV);                               
                 }
           
 
@@ -798,6 +804,7 @@ namespace MVCC.View
                     State tempState = GroupStateMap[key];
 
                     bluetoothAndPathPlanning.connect(tempUGV, tempState);
+
                     refreshViewPath();
                 }
             }
@@ -991,6 +998,8 @@ namespace MVCC.View
                     {
                         Group selectGroup = new Group();
 
+                        ugv.IsClicked = true;
+
                         for (int i = 0; i < mapViewModel.MVCCGroupList.Count; i++)
                         {
                             Group tempGroup = mapViewModel.MVCCGroupList[i];
@@ -1024,19 +1033,14 @@ namespace MVCC.View
 
         private void AddMVCCUGVPathList(UGV ugv)
         {
+            globals.UGVStopCommandLock.EnterWriteLock();
+            
+            removeAllUGVPath(ugv);
+
+
+            globals.UGVStopCommandLock.ExitWriteLock();
+
             List<KeyValuePair<int, int>> pathList = ugv.PathList;
-
-            for (int i = mapViewModel.MVCCUGVPathList.Count - 1; i >= 0; i--)
-            {
-                UGVPath tempUGVPath = mapViewModel.MVCCUGVPathList[i] as UGVPath;
-
-                if (tempUGVPath.Id.Equals(ugv.Id))
-                {
-                    mapViewModel.MVCCUGVPathList.Remove(tempUGVPath);
-                }
-            }
-
-            refreshViewPath();
 
             for (int i = 0; i < pathList.Count; i++)
             {
@@ -1053,6 +1057,27 @@ namespace MVCC.View
                 int endY = currentPathTemp.Value;
 
                 mapViewModel.MVCCUGVPathList.Add(new UGVPath(ugv.Id, startX, startY, endX, endY, ugv.UGVColor));
+            }
+        }
+
+        // 현재 UGV의 UGV Path 전체를 지우는 기능
+        private void removeAllUGVPath(UGV ugv)
+        {
+            if (ugv.PathList.Count != 0)
+            {
+                List<KeyValuePair<int, int>> pathList = ugv.PathList;
+
+                for (int i = mapViewModel.MVCCUGVPathList.Count - 1; i >= 0; i--)
+                {
+                    UGVPath tempUGVPath = mapViewModel.MVCCUGVPathList[i] as UGVPath;
+
+                    if (tempUGVPath.Id.Equals(ugv.Id))
+                    {
+                        mapViewModel.MVCCUGVPathList.Remove(tempUGVPath);
+                    }
+                }
+
+                refreshViewPath();
             }
         }
 
@@ -1077,7 +1102,89 @@ namespace MVCC.View
                 }
             }
 
-            // 해당 그룹 번호를 누르면 해당그룹이 선택됨.
+            // S 누르면 정지              
+            else if (e.Key == Key.S)
+            {
+                // 정지시킬 UGV
+                UGV stopUGV = null;
+                // 정지시킬 UGV의 상태값
+                State stopUGVState = null;
+
+                for (int i = 0; i < mapViewModel.MVCCItemStateList.Count; i++)
+                {
+                    State tempState = mapViewModel.MVCCItemStateList[i];
+                    UGV tempUGV = tempState.ugv;
+                    if (tempUGV.IsClicked && tempState.IsDriving)
+                    {
+                        tempUGV.Command = "q";
+
+                        stopUGV = tempUGV;
+                        stopUGVState = tempState;
+
+                        stopUGVState.IsDriving = false;
+
+                        stopUGV.IsClicked = false;
+
+                        bluetoothAndPathPlanning.connect(tempUGV, tempState);
+
+                        globals.UGVStopCommandLock.EnterWriteLock();
+                        removeAllUGVPath(stopUGV);
+                        globals.UGVStopCommandLock.ExitWriteLock();
+
+                        break;
+                    }
+                }
+
+                if (stopUGV == null && stopUGVState == null)
+                {
+                    Dictionary<string, State> clickedUGVStateMap = new Dictionary<string, State>();
+
+                    for (int i = 0; i < mapViewModel.MVCCItemStateList.Count; i++)
+                    {
+                        State tempState = mapViewModel.MVCCItemStateList[i];
+                        UGV tempUGV = tempState.ugv;
+                        if (tempUGV.IsGroupClicked)
+                        {
+                            clickedUGVStateMap.Add(tempUGV.Id, tempState);
+
+                            stopUGV = tempUGV;
+                        }
+                    }
+
+                    Group clickedGroup = new Group();
+
+                    for (int i = 0; i < mapViewModel.MVCCGroupList.Count; i++)
+                    {
+                        Group tempGroup = mapViewModel.MVCCGroupList[i];
+                        if (tempGroup.MemberList.Contains(stopUGV))
+                        {
+                            clickedGroup = tempGroup;
+                            break;
+                        }
+                    }
+
+                    for (int i = 0; i < clickedGroup.MemberList.Count; i++)
+                    {
+                        UGV tempUGV = clickedGroup.MemberList[i];
+
+                        if (clickedUGVStateMap[tempUGV.Id].IsDriving)
+                        {
+                            tempUGV.Command = "q";
+
+                            clickedUGVStateMap[tempUGV.Id].IsDriving = false;
+
+                            bluetoothAndPathPlanning.connect(tempUGV, clickedUGVStateMap[tempUGV.Id]);
+
+                            globals.UGVStopCommandLock.EnterWriteLock();
+                            removeAllUGVPath(tempUGV);
+                            globals.UGVStopCommandLock.ExitWriteLock();
+                        }
+                    }
+                }
+
+            }
+
+            // 해당 그룹 번호를 누르면 해당그룹이 선택됨
             else
             {
                 int groupNum = findGroupNum(e.Key);
