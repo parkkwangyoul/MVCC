@@ -89,7 +89,7 @@ namespace MVCC.Utill
                     {
                         pixCount++;
 
-                        if (totalPicxel / 10 <= pixCount) //일정 픽섹 이상시 색상배열 변경후 종료
+                        if (totalPicxel / 5 <= pixCount) //일정 픽섹 이상시 색상배열 변경후 종료
                         {
                             color[index] = true;
                             color_ROI[index].X = x;

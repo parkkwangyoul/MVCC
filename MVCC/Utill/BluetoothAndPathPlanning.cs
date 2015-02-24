@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using System.Windows;
+
 using System.ComponentModel;
 using System.IO.Ports;
 
@@ -42,6 +44,13 @@ namespace MVCC.Utill
 
             SerialPort serialport = new SerialPort();
 
+            if (!globals.UGVSettingDictionary.ContainsKey(convertId(ugv.Id)))
+            {
+                MessageBox.Show("블루투스 설정이 되어있지 않습니다.");
+
+                return;
+            }
+
             UGV settingUGV = globals.UGVSettingDictionary[convertId(ugv.Id)];
 
             serialport.PortName = settingUGV.ComPort;
@@ -53,15 +62,21 @@ namespace MVCC.Utill
 
             Console.WriteLine("serialport.isopen : " + serialport.IsOpen);
 
-            if(!serialport.IsOpen){ serialport.Open(); }
+            try
+            {
+                if (!serialport.IsOpen) { serialport.Open(); }
+            }
+            catch (System.IO.IOException e)
+            {
+                MessageBox.Show("블루투스 COMPort 설정을 다시해주세요.");
+                return;
+            }
             
             if (serialport.IsOpen)
             {
                 Console.WriteLine("serialport.isopen : " + serialport.IsOpen);
                 Console.WriteLine("ugv command : " + write_data);
                 
-                ugv.IsBluetoothConnected = true;
-                state.BluetoothOnOff = true;
 
                 if (write_data.Equals("f")) 
                 {
@@ -244,7 +259,7 @@ namespace MVCC.Utill
                 {
                     serialport.WriteLine((write_data[0]).ToString());
 
-                    //disConnect(serialport);
+                    disConnect(serialport);
                 }
                 Console.Out.Flush();
             }
@@ -253,8 +268,6 @@ namespace MVCC.Utill
         private void disConnect(SerialPort serialport)
         {
             serialport.Close();
-            ugv.IsBluetoothConnected = false;
-            state.BluetoothOnOff = false;
         }
 
         private StopBits getStopBit(int bit)
