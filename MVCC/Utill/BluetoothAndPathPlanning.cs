@@ -63,7 +63,7 @@ namespace MVCC.Utill
                 ugv.IsBluetoothConnected = true;
                 state.BluetoothOnOff = true;
 
-                if (write_data.Equals("f"))
+                if (write_data.Equals("f")) 
                 {
                     serialport.WriteLine((write_data[0]).ToString());
 
