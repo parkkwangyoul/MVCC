@@ -411,6 +411,8 @@ namespace MVCC.View
                                     Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
                                     {
                                         AddMVCCUGVPathList(tempUGV);
+
+                                        refreshViewPath();
                                     }));
 
                                     Console.WriteLine("tempUGV.PathList.Count " + tempUGV.PathList.Count);

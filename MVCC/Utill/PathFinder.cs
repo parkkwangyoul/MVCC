@@ -1182,6 +1182,9 @@ namespace MVCC.Utill
             size_ = 5;
             size = 5;
 
+            ugv.MovementCommandList.Clear();
+            ugv.PathList.Clear();
+
             map_classification(); //차량 구별한 장애물 맵 세팅
 
             #region Graph_Node_Initialization
