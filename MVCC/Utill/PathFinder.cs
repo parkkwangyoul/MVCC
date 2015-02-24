@@ -1182,9 +1182,6 @@ namespace MVCC.Utill
             size_ = 5;
             size = 5;
 
-            ugv.MovementCommandList.Clear();
-            ugv.PathList.Clear();
-
             map_classification(); //차량 구별한 장애물 맵 세팅
 
             #region Graph_Node_Initialization
@@ -1296,14 +1293,7 @@ namespace MVCC.Utill
                 return;
             }
 
-//            Console.WriteLine("index = " + index + " path_count = " + path_count);
-
-  //          for (int k = 0; k < path_count; k++ )
-     //       {
-             // Console.WriteLine("k = " + k + " ugv.PathList[path_count - 1].Key = " + ugv.PathList[k].Key);
-
-    //        }
-                globals.first_point_x[index] = ugv.PathList[path_count - 1].Key / 15;
+            globals.first_point_x[index] = ugv.PathList[path_count - 1].Key / 15;
             globals.first_point_y[index] = ugv.PathList[path_count - 1].Value / 15;
 
 
