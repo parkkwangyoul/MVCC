@@ -353,7 +353,7 @@ namespace MVCC.View
                                 AllUGVStateMap.Add(tempState.ugv.Id, tempState);
                             }
 
-                            //정지신호
+                            //차량 전체에 정지신호
                             for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
                             {
                                 if (!(mapViewModel.MVCCItemList[i] is UGV))
@@ -380,6 +380,7 @@ namespace MVCC.View
                                 }
                             }
 
+                            //전체차량 다시 길 찾고 보냄
                             for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
                             {
                                 if (!(mapViewModel.MVCCItemList[i] is UGV))
@@ -485,6 +486,60 @@ namespace MVCC.View
             }
         }
         #endregion obstacle 검출
+
+
+
+        public void UGV_priority_sort(Dictionary<string, UGV> GroupMap, Dictionary<string, State> GroupStateMap)
+        {
+            SortedList<int, UGV> sortedUGVList = new SortedList<int, UGV>();
+
+            //path 길이 순으로 정렬(짧은선 부터 긴선으로)     
+            foreach (var key in GroupMap.Keys)
+            {
+                UGV tempUGV = GroupMap[key];
+                sortedUGVList.Add(tempUGV.PathList.Count, tempUGV);
+            }
+
+            /* 정렬 확인
+            foreach (var key in sortedUGVList.Keys)
+            {
+                UGV tempUGV = sortedUGVList[key];
+                Console.WriteLine("tempUGV.Id = " + tempUGV.Id);
+            }
+            */
+
+
+
+
+
+
+
+
+            /*
+            foreach (var key in GroupMap.Keys)
+            {
+                UGV tempUGV = GroupMap[key];
+
+                State tempState = GroupStateMap[key];
+
+                tempState.EndPointX = endPointX;
+                tempState.EndPointY = endPointY;
+
+                tempUGV.Command = "f";
+
+                tempUGV.PathList.Clear();
+
+                pathFinder.init();
+
+                pathFinder.find_path(tempUGV, tempState);
+
+                AddMVCCUGVPathList(tempUGV);
+
+                
+            }
+            */
+        }
+
 
         public MapView()
         {
@@ -646,8 +701,19 @@ namespace MVCC.View
 
                     AddMVCCUGVPathList(tempUGV);
 
-                    bluetoothAndPathPlanning.connect(tempUGV, tempState);
+                                    
+                }
 
+                //여기서 도착 지점 배치 함수
+                UGV_priority_sort(GroupMap, GroupStateMap);
+
+
+                foreach (var key in GroupMap.Keys)
+                {
+                    UGV tempUGV = GroupMap[key];
+                    State tempState = GroupStateMap[key];
+
+                    bluetoothAndPathPlanning.connect(tempUGV, tempState);
                     refreshViewPath();
                 }
             }
