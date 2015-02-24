@@ -244,7 +244,7 @@ namespace MVCC.View
                                                 temp = ugv.PathList[ugv.PathList.Count - 1];
 
 
-                                                if (Math.Abs(ugv.X - temp.Key) <= 12 && Math.Abs(ugv.Y - temp.Value) <= 12)
+                                                if (Math.Abs(ugv.X - temp.Key) <= 10 && Math.Abs(ugv.Y - temp.Value) <= 10)
                                                 {
                                                     for (int p = mapViewModel.MVCCUGVPathList.Count - 1; p >= 0; p--)
                                                     {
@@ -255,19 +255,7 @@ namespace MVCC.View
                                                             mapViewModel.MVCCUGVPathList.Remove(tempPath);
 
                                                             ugv.PathList.RemoveAt(ugv.PathList.Count - 1);
-                                                            Console.WriteLine("하나씩 제거");                                                            
-                                                            if(ugv.PathList.Count - 1 == 0)
-                                                            {
-                                                                for (int k = 0; k < mapViewModel.MVCCItemStateList.Count; k++)
-                                                                {
-                                                                    State tempState = mapViewModel.MVCCItemStateList[i];
-                                                                    if(ugv.Id.Equals(tempState.ugv.Id)){
-                                                                        tempState.IsDriving = false;
-
-                                                                        break;
-                                                                    }
-                                                                }
-                                                            }
+                                                            Console.WriteLine("하나씩 제거");
                                                             break;
                                                         }
                                                     }
@@ -500,6 +488,8 @@ namespace MVCC.View
                 sortedUGVList.Add(tempUGV.PathList.Count, tempUGV);
             }
 
+
+
             /* 정렬 확인
             foreach (var key in sortedUGVList.Keys)
             {
@@ -663,6 +653,34 @@ namespace MVCC.View
             // 개인
             if (mode.Equals("I"))
             {
+                int index;
+                int.TryParse(individualUGV.Id[1].ToString(), out index);
+
+                globals.theLock.EnterWriteLock(); //critical section start
+
+                for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
+                {
+                    for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
+                    {
+                        if (globals.Map_obstacle[j, i] != 0 && globals.Map_obstacle[j, i] != index + 1 && individualUGVState.IsDriving == false)
+                        {
+                            globals.Map_obstacle[j, i] = '*';
+                        }
+                    }
+                }
+
+                for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
+                {
+                    for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
+                    {
+                        Console.Write(globals.Map_obstacle[j, i]);
+                    }
+
+                    Console.WriteLine();
+                }
+
+                globals.theLock.ExitWriteLock(); //critical section end
+
                 individualUGVState.EndPointX = endPointX;
                 individualUGVState.EndPointY = endPointY;
 
@@ -682,12 +700,74 @@ namespace MVCC.View
             }
             else if (mode.Equals("G"))
             {
+                List<int> index_list = new List<int>();
+               
+                
+                foreach (var key in GroupMap.Keys)
+                {
+                    UGV tempUGV = GroupMap[key];
+                    int index;
+                    int.TryParse(tempUGV.Id[1].ToString(), out index);
+                    index_list.Add(index);     
+                }
+
+
+                globals.theLock.EnterWriteLock(); //critical section start
+
+                for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
+                {
+                    for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
+                    {
+                        bool index_check = true;
+
+                        for (int k = 0; k < index_list.Count; k++ )
+                        {
+                            if (globals.Map_obstacle[j, i] != 0)
+                            {
+                                if (globals.Map_obstacle[j, i] == index_list.ElementAt(k))
+                                {
+                                    index_check = true;
+                                    break;
+                                }
+                                else if (globals.Map_obstacle[j, i] != index_list.ElementAt(k) || GroupStateMap["A" + index_list.ElementAt(k)].IsDriving == false)
+                                {
+                                    index_check = false;
+                                }
+                            }
+                            else if(globals.Map_obstacle[j, i] == 0)
+                            {
+                                break;
+                            }
+                        }
+
+                        if (index_check == false)
+                        {
+                            globals.Map_obstacle[j, i] = '*';
+                        }                            
+                    }
+                }
+
+                for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
+                {
+                    for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
+                    {
+                        Console.Write(globals.Map_obstacle[j, i]);
+                    }
+
+                    Console.WriteLine();
+                }
+
+
+
+                globals.theLock.ExitWriteLock(); //critical section end
+
                 foreach (var key in GroupMap.Keys)
                 {
                     UGV tempUGV = GroupMap[key];
 
                     State tempState = GroupStateMap[key];
 
+                    
                     tempState.EndPointX = endPointX;
                     tempState.EndPointY = endPointY;
 
@@ -696,13 +776,14 @@ namespace MVCC.View
                     tempUGV.PathList.Clear();
 
                     pathFinder.init();
-
+                       
                     pathFinder.find_path(tempUGV, tempState);
 
                     AddMVCCUGVPathList(tempUGV);
 
                                     
                 }
+          
 
                 //여기서 도착 지점 배치 함수
                 UGV_priority_sort(GroupMap, GroupStateMap);
