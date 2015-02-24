@@ -244,7 +244,7 @@ namespace MVCC.View
                                                 temp = ugv.PathList[ugv.PathList.Count - 1];
 
 
-                                                if (Math.Abs(ugv.X - temp.Key) <= 10 && Math.Abs(ugv.Y - temp.Value) <= 10)
+                                                if (Math.Abs(ugv.X - temp.Key) <= 12 && Math.Abs(ugv.Y - temp.Value) <= 12)
                                                 {
                                                     for (int p = mapViewModel.MVCCUGVPathList.Count - 1; p >= 0; p--)
                                                     {
@@ -255,7 +255,19 @@ namespace MVCC.View
                                                             mapViewModel.MVCCUGVPathList.Remove(tempPath);
 
                                                             ugv.PathList.RemoveAt(ugv.PathList.Count - 1);
-                                                            Console.WriteLine("하나씩 제거");
+                                                            Console.WriteLine("하나씩 제거");                                                            
+                                                            if(ugv.PathList.Count - 1 == 0)
+                                                            {
+                                                                for (int k = 0; k < mapViewModel.MVCCItemStateList.Count; k++)
+                                                                {
+                                                                    State tempState = mapViewModel.MVCCItemStateList[i];
+                                                                    if(ugv.Id.Equals(tempState.ugv.Id)){
+                                                                        tempState.IsDriving = false;
+
+                                                                        break;
+                                                                    }
+                                                                }
+                                                            }
                                                             break;
                                                         }
                                                     }
