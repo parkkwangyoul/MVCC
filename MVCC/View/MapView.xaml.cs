@@ -228,6 +228,7 @@ namespace MVCC.View
 
                                 Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
                                 {
+
                                     for (int j = 0; j < mapViewModel.MVCCItemList.Count; j++)
                                     {
                                         if (!(mapViewModel.MVCCItemList[j] is UGV))
@@ -240,41 +241,52 @@ namespace MVCC.View
                                             ugv.X = tracking_rect[i].X;
                                             ugv.Y = tracking_rect[i].Y;
 
-                                            UGV_move_check[i].x = tracking_rect[i].X / 15;
-                                            UGV_move_check[i].y = tracking_rect[i].Y / 15;
+                                            int temp_x, temp_y;
+
+                                            temp_x = (int)(ugv.X / 15);
+                                            temp_y = (int)(ugv.Y / 15);
+
+                                            //UGV_move_check[i].x = tracking_rect[i].X / 15;
+                                            //UGV_move_check[i].y = tracking_rect[i].Y / 15;
 
                                             if (ugv.PathList.Count != 0)
                                             {
                                                 KeyValuePair<int, int> temp = new KeyValuePair<int, int>();
 
-                                                if (pre_UGV_move_check[i].x != UGV_move_check[i].x || pre_UGV_move_check[i].y != UGV_move_check[i].y)
+                                                temp = ugv.PathList[ugv.PathList.Count - 1];
+
+                                                //Console.WriteLine("temp_x = " + temp_x + " temp.Key = " + temp.Key + " temp_y = " + temp_y + " temp.Value = " + temp.Value);
+
+                                                //Console.WriteLine("temp_x - temp.Key = " + (temp_x - temp.Key) + " temp_y - temp.Value = " + (temp_y - temp.Value));
+
+
+                                                if (Math.Abs(temp_x - temp.Key / 15) <= 1 && Math.Abs(temp_y - temp.Value / 15) <= 1)
                                                 {
-                                                    temp = ugv.PathList[ugv.PathList.Count - 1];
+                                                    //Console.WriteLine("여기는 들어옴????");
+                                                   // Console.WriteLine("temp_x - temp.Key = " + Math.Abs(temp_x - temp.Key / 15) + " temp_y - temp.Value = " + Math.Abs(temp_y - temp.Value / 15));
 
                                                     for (int p = mapViewModel.MVCCUGVPathList.Count - 1; p >= 0; p--)
                                                     {
                                                         UGVPath tempPath = mapViewModel.MVCCUGVPathList[p] as UGVPath;
 
-
-                                                        if (tempPath.Id.Equals(ugv.Id) && tempPath.EndX == temp.Key && tempPath.EndY == temp.Value)
+                                                        //if (tempPath.Id.Equals(ugv.Id) && tempPath.EndX == temp.Key && tempPath.EndY == temp.Value)
+                                                        if (tempPath.Id.Equals(ugv.Id))
                                                         {
                                                             mapViewModel.MVCCUGVPathList.Remove(tempPath);
 
                                                             ugv.PathList.RemoveAt(ugv.PathList.Count - 1);
-
+                                                            Console.WriteLine("하나씩 제거");
                                                             break;
                                                         }
                                                     }
-
-
-                                                    refreshViewPath();
                                                 }
+
+                                                refreshViewPath();
+
                                             }
-
-                                            pre_UGV_move_check[i] = UGV_move_check[i];
-
                                             break;
                                         }
+
                                     }
 
                                     refreshView();
@@ -391,10 +403,15 @@ namespace MVCC.View
                                 {
                                     State tempUGVState = AllUGVStateMap[tempUGV.Id];
                                     tempUGV.Command = "f";
-
+                                    
                                     pathFinder.init();
 
                                     pathFinder.find_path(tempUGV, tempUGVState);
+
+                                    Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
+                                    {
+                                        AddMVCCUGVPathList(tempUGV);
+                                    }));
 
                                     Console.WriteLine("tempUGV.PathList.Count " + tempUGV.PathList.Count);
 
@@ -609,38 +626,7 @@ namespace MVCC.View
 
                 pathFinder.find_path(individualUGV, individualUGVState);
 
-                List<KeyValuePair<int, int>> pathList = individualUGV.PathList;
-
-                for (int i = mapViewModel.MVCCUGVPathList.Count - 1; i >= 0; i--)
-                {
-                    UGVPath tempUGVPath = mapViewModel.MVCCUGVPathList[i] as UGVPath;
-
-                    if (tempUGVPath.Id.Equals(individualUGV.Id))
-                    {
-                        mapViewModel.MVCCUGVPathList.Remove(tempUGVPath);
-                    }
-                }
-
-                refreshViewPath();
-
-                for (int i = 0; i < pathList.Count; i++)
-                {
-                    //Console.WriteLine("Path : " + pathList[i]);
-
-                    if (i == 0)
-                        continue;
-
-                    KeyValuePair<int, int> beforePathTemp = pathList[i - 1];
-                    KeyValuePair<int, int> currentPathTemp = pathList[i];
-
-                    int startX = beforePathTemp.Key;
-                    int startY = beforePathTemp.Value;
-
-                    int endX = currentPathTemp.Key;
-                    int endY = currentPathTemp.Value;
-
-                    mapViewModel.MVCCUGVPathList.Add(new UGVPath(individualUGV.Id, startX, startY, endX, endY, individualUGV.UGVColor));
-                }
+                AddMVCCUGVPathList(individualUGV);
 
                 bluetoothAndPathPlanning.connect(individualUGV, individualUGVState);
 
@@ -665,36 +651,7 @@ namespace MVCC.View
 
                     pathFinder.find_path(tempUGV, tempState);
 
-                    List<KeyValuePair<int, int>> pathList = tempUGV.PathList;
-
-                    for (int i = mapViewModel.MVCCUGVPathList.Count - 1; i >= 0; i--)
-                    {
-                        UGVPath tempUGVPath = mapViewModel.MVCCUGVPathList[i] as UGVPath;
-
-                        if (tempUGVPath.Id.Equals(tempUGV.Id))
-                        {
-                            mapViewModel.MVCCUGVPathList.Remove(tempUGVPath);
-                        }
-                    }
-
-                    refreshViewPath();
-
-                    for (int i = 0; i < pathList.Count; i++)
-                    {
-                        if (i == 0)
-                            continue;
-
-                        KeyValuePair<int, int> beforePathTemp = pathList[i - 1];
-                        KeyValuePair<int, int> currentPathTemp = pathList[i];
-
-                        int startX = beforePathTemp.Key;
-                        int startY = beforePathTemp.Value;
-
-                        int endX = currentPathTemp.Key;
-                        int endY = currentPathTemp.Value;
-
-                        mapViewModel.MVCCUGVPathList.Add(new UGVPath(tempUGV.Id, startX, startY, endX, endY, tempUGV.UGVColor));
-                    }
+                    AddMVCCUGVPathList(tempUGV);
 
                     bluetoothAndPathPlanning.connect(tempUGV, tempState);
 
@@ -919,6 +876,40 @@ namespace MVCC.View
 
                     refreshView();
                 }
+            }
+        }
+
+        private void AddMVCCUGVPathList(UGV ugv)
+        {
+            List<KeyValuePair<int, int>> pathList = ugv.PathList;
+
+            for (int i = mapViewModel.MVCCUGVPathList.Count - 1; i >= 0; i--)
+            {
+                UGVPath tempUGVPath = mapViewModel.MVCCUGVPathList[i] as UGVPath;
+
+                if (tempUGVPath.Id.Equals(ugv.Id))
+                {
+                    mapViewModel.MVCCUGVPathList.Remove(tempUGVPath);
+                }
+            }
+
+            refreshViewPath();
+
+            for (int i = 0; i < pathList.Count; i++)
+            {
+                if (i == 0)
+                    continue;
+
+                KeyValuePair<int, int> beforePathTemp = pathList[i - 1];
+                KeyValuePair<int, int> currentPathTemp = pathList[i];
+
+                int startX = beforePathTemp.Key;
+                int startY = beforePathTemp.Value;
+
+                int endX = currentPathTemp.Key;
+                int endY = currentPathTemp.Value;
+
+                mapViewModel.MVCCUGVPathList.Add(new UGVPath(ugv.Id, startX, startY, endX, endY, ugv.UGVColor));
             }
         }
 

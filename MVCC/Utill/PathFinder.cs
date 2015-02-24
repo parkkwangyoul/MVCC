@@ -1062,12 +1062,14 @@ namespace MVCC.Utill
             int dx = (ugv.PathList[path_count - path_num - 1].Key / 15) - (ugv.PathList[path_count - path_num].Key / 15);
             int dy = (ugv.PathList[path_count - path_num - 1].Value / 15) - (ugv.PathList[path_count - path_num].Value / 15);
 
+            /*
             Console.WriteLine("ugv.PathList[path_count - path_num].Key = {0}", ugv.PathList[path_count - path_num].Key / 15);
             Console.WriteLine("ugv.PathList[path_count - path_num].Value = {0}", ugv.PathList[path_count - path_num].Value / 15);
 
             Console.WriteLine("ugv.PathList[path_count - path_num - 1].Key = {0}", ugv.PathList[path_count - path_num - 1].Key / 15);
             Console.WriteLine("ugv.PathList[path_count - path_num].Value = {0}", ugv.PathList[path_count - path_num - 1].Value / 15);
             Console.WriteLine();
+            */
 
             if (dx == 0 && dy == -1) { follow_command[path_num] = 0; }
             if (dx == 1 && dy == -1) { follow_command[path_num] = 1; }
@@ -1339,7 +1341,7 @@ namespace MVCC.Utill
             #endregion
 
 
-            UGV_confict_check(); //UGV 경로 충돌 검사  
+            //UGV_confict_check(); //UGV 경로 충돌 검사  
             //UGV_path_evasion(); //USG 경로 회피
 
         }
