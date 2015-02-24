@@ -86,7 +86,7 @@ namespace MVCC.Utill
                         //Console.WriteLine("start_point_x {0}", start_x);
                         //Console.WriteLine("start_point_y {0}", start_y);
 
-                        //Console.WriteLine("Direction Value : {0}", globals.direction[index]);
+                        Console.WriteLine("Direction Value : {0}", globals.direction[index]);
 
                         #region Direction Calculation
 

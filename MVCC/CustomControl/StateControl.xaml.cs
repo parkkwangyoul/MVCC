@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using MVCC.Model;
+using MVCC.Utill;
 
 namespace MVCC.CustomControl
 {
@@ -24,6 +25,8 @@ namespace MVCC.CustomControl
     {
         private State state;
 
+        private BluetoothAndPathPlanning bluetoothAndPathPlanning = new BluetoothAndPathPlanning();
+
         public StateControl()
         {
             InitializeComponent();
@@ -32,6 +35,13 @@ namespace MVCC.CustomControl
         private void StopUGV(object sender, MouseButtonEventArgs e)
         {
             state = DataContext as State;
+
+            if (state.IsDriving)
+            {
+                state.ugv.Command = "q";
+
+                bluetoothAndPathPlanning.connect(state.ugv, state);
+            }
         }
     }
 }
