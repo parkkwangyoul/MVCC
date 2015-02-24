@@ -237,26 +237,26 @@ namespace MVCC.View
 
                                         if (ugv.Id.Equals("A" + i))
                                         {
-                                            ugv.X = tracking_rect[i].X / 15;
-                                            ugv.Y = tracking_rect[i].Y / 15;
+                                            ugv.X = tracking_rect[i].X;
+                                            ugv.Y = tracking_rect[i].Y;
 
-                                            //UGV_move_check[i].x = tracking_rect[i].X / 15;
-                                            //UGV_move_check[i].y = tracking_rect[i].Y / 15;
+                                            UGV_move_check[i].x = tracking_rect[i].X / 15;
+                                            UGV_move_check[i].y = tracking_rect[i].Y / 15;
 
                                             if (ugv.PathList.Count != 0)
                                             {
                                                 KeyValuePair<int, int> temp = new KeyValuePair<int, int>();
 
-                                                temp = ugv.PathList[ugv.PathList.Count - 1];
-
-                                                if (Math.Abs(ugv.X - temp.Key) <= 1 && Math.Abs(ugv.Y - temp.Value) <= 1)
+                                                if (pre_UGV_move_check[i].x != UGV_move_check[i].x || pre_UGV_move_check[i].y != UGV_move_check[i].y)
                                                 {
+                                                    temp = ugv.PathList[ugv.PathList.Count - 1];
+
                                                     for (int p = mapViewModel.MVCCUGVPathList.Count - 1; p >= 0; p--)
                                                     {
                                                         UGVPath tempPath = mapViewModel.MVCCUGVPathList[p] as UGVPath;
 
-                                                        //if (tempPath.Id.Equals(ugv.Id) && tempPath.EndX == temp.Key && tempPath.EndY == temp.Value)
-                                                        if (tempPath.Id.Equals(ugv.Id))
+
+                                                        if (tempPath.Id.Equals(ugv.Id) && tempPath.EndX == temp.Key && tempPath.EndY == temp.Value)
                                                         {
                                                             mapViewModel.MVCCUGVPathList.Remove(tempPath);
 
@@ -265,10 +265,10 @@ namespace MVCC.View
                                                             break;
                                                         }
                                                     }
+
+
+                                                    refreshViewPath();
                                                 }
-
-                                                refreshViewPath();
-
                                             }
 
                                             pre_UGV_move_check[i] = UGV_move_check[i];

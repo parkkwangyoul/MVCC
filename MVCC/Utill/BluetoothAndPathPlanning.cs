@@ -23,7 +23,7 @@ namespace MVCC.Utill
             this.ugv = ugv;
             this.state = state;
 
-            bluetoothConnect();
+            //bluetoothConnect();
 
             /*
             //bluetooth 연결쓰레드
