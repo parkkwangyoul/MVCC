@@ -23,22 +23,29 @@ namespace MVCC.CustomControl
     /// </summary>
     public partial class StateControl : UserControl
     {
-        private State state;
-
         private BluetoothAndPathPlanning bluetoothAndPathPlanning = new BluetoothAndPathPlanning();
 
         public StateControl()
         {
             InitializeComponent();
+                        
+            this.Loaded += new RoutedEventHandler(UserControl1_Loaded);
+        }
+
+        private void UserControl1_Loaded(object sender, RoutedEventArgs e)
+        {
+            var datacontext = this.DataContext as State;
         }
 
         private void StopUGV(object sender, MouseButtonEventArgs e)
         {
-            state = DataContext as State;
+            State state = this.DataContext as State;
 
             if (state.IsDriving)
             {
                 state.ugv.Command = "q";
+
+                state.IsDriving = false;
 
                 bluetoothAndPathPlanning.connect(state.ugv, state);
             }
