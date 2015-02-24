@@ -23,7 +23,7 @@ namespace MVCC.Utill
             this.ugv = ugv;
             this.state = state;
 
-            //bluetoothConnect();
+            bluetoothConnect();
 
             /*
             //bluetooth 연결쓰레드
@@ -66,6 +66,8 @@ namespace MVCC.Utill
                 if (write_data.Equals("f"))
                 {
                     serialport.WriteLine((write_data[0]).ToString());
+
+                    state.IsDriving = true;
 
                     try
                     {

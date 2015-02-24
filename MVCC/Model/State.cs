@@ -8,6 +8,8 @@ namespace MVCC.Model
 {
     public class State : ModelBase
     {
+        public State() { }
+
         public State(UGV ugv)
         {
             this.ugv = ugv;
