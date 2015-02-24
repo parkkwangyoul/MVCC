@@ -80,7 +80,7 @@ namespace MVCC.View
 
                 ugvList.Add(ugv);
             }
-            
+
             mapViewModel.AddUGV(ugvList);
 
             //test_thread();
@@ -136,7 +136,7 @@ namespace MVCC.View
         #endregion TestMock
 
         private void CameraOnAndDetectThings()
-        {            
+        {
             webcam = new Capture(0); //cam 설정
             thread_start(); //thread 시작
         }
@@ -155,7 +155,7 @@ namespace MVCC.View
         }
         #endregion 카메라 and thread start
 
-        #region color 트레킹    
+        #region color 트레킹
         //색상 트레킹
         private void colorTracking(object sender, DoWorkEventArgs e)
         {
@@ -170,7 +170,7 @@ namespace MVCC.View
             globals.TemplateHeight = img1.Height + 30;
             List<UGV> ugvList = new List<UGV>();
             int average_val = 0; //떨림 방지를 위한 count
-          
+
 
             UGV_move[] UGV_move_check = new UGV_move[4];
             UGV_move[] pre_UGV_move_check = new UGV_move[4];
@@ -225,7 +225,7 @@ namespace MVCC.View
                             if (tracking_rect[i].Width != 0 && tracking_rect[i].Height != 0)
                             {
                                 //Console.WriteLine("index = " + i + " direction = " + globals.direction[i]);
-                       
+
                                 Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
                                 {
                                     for (int j = 0; j < mapViewModel.MVCCItemList.Count; j++)
@@ -237,41 +237,41 @@ namespace MVCC.View
 
                                         if (ugv.Id.Equals("A" + i))
                                         {
-                                            ugv.X = tracking_rect[i].X;
-                                            ugv.Y = tracking_rect[i].Y;
+                                            ugv.X = tracking_rect[i].X / 15;
+                                            ugv.Y = tracking_rect[i].Y / 15;
 
-                                            UGV_move_check[i].x = tracking_rect[i].X / 15;
-                                            UGV_move_check[i].y = tracking_rect[i].Y / 15;
-                                            
+                                            //UGV_move_check[i].x = tracking_rect[i].X / 15;
+                                            //UGV_move_check[i].y = tracking_rect[i].Y / 15;
+
                                             if (ugv.PathList.Count != 0)
                                             {
-                                                KeyValuePair<int, int> temp = new KeyValuePair<int,int>();
-                                       
-                                                if (pre_UGV_move_check[i].x != UGV_move_check[i].x || pre_UGV_move_check[i].y != UGV_move_check[i].y)
-                                                {
-                                                    temp = ugv.PathList[ugv.PathList.Count - 1];
+                                                KeyValuePair<int, int> temp = new KeyValuePair<int, int>();
 
-                                                for (int p = mapViewModel.MVCCUGVPathList.Count - 1; p >= 0; p--)
-                                                {
-                                                    UGVPath tempPath = mapViewModel.MVCCUGVPathList[p] as UGVPath;
-                                   
+                                                temp = ugv.PathList[ugv.PathList.Count - 1];
 
-                                                    if (tempPath.Id.Equals(ugv.Id) && tempPath.EndX == temp.Key && tempPath.EndY == temp.Value)
+                                                if (Math.Abs(ugv.X - temp.Key) <= 1 && Math.Abs(ugv.Y - temp.Value) <= 1)
+                                                {
+                                                    for (int p = mapViewModel.MVCCUGVPathList.Count - 1; p >= 0; p--)
                                                     {
-                                                        mapViewModel.MVCCUGVPathList.Remove(tempPath);
+                                                        UGVPath tempPath = mapViewModel.MVCCUGVPathList[p] as UGVPath;
 
-                                                        ugv.PathList.RemoveAt(ugv.PathList.Count - 1);
+                                                        //if (tempPath.Id.Equals(ugv.Id) && tempPath.EndX == temp.Key && tempPath.EndY == temp.Value)
+                                                        if (tempPath.Id.Equals(ugv.Id))
+                                                        {
+                                                            mapViewModel.MVCCUGVPathList.Remove(tempPath);
 
-                                                        break;
+                                                            ugv.PathList.RemoveAt(ugv.PathList.Count - 1);
+
+                                                            break;
+                                                        }
                                                     }
                                                 }
 
-
                                                 refreshViewPath();
-                                                }
+
                                             }
 
-                                                pre_UGV_move_check[i] = UGV_move_check[i];
+                                            pre_UGV_move_check[i] = UGV_move_check[i];
 
                                             break;
                                         }
@@ -314,8 +314,8 @@ namespace MVCC.View
             ObstacleDetection obstacleDetection = new ObstacleDetection();
             globals.Map_obstacle = new int[globals.rect_height / globals.y_grid, globals.rect_width / globals.x_grid]; //Map의 장애물의 정보 
             globals.pre_Map_obstacle = new int[globals.rect_height / globals.y_grid, globals.rect_width / globals.x_grid]; //이전 Map의 장애물의 정보 
-         
-           int blob_count = 0, pre_blob_count = 0; //blob count의 변화감지를 위해      
+
+            int blob_count = 0, pre_blob_count = 0; //blob count의 변화감지를 위해      
             bool frist_change_check = false;
             List<Building> building_List = new List<Building>();
 
@@ -324,13 +324,13 @@ namespace MVCC.View
                 if (obstacle_check == true) //frame의 추적 영상 처리가 끝나고 처리
                 {
                     globals.theLock.EnterWriteLock(); //critical section start
-                    
+
                     Array.Clear(globals.Map_obstacle, 0, globals.rect_height / globals.y_grid * globals.rect_width / globals.x_grid);
 
                     blob_count = obstacleDetection.detectBlob(obstacle_image, globals.Map_obstacle, tracking_rect); //장애물 검출
 
                     globals.theLock.ExitWriteLock(); //critical section end
-                  
+
 
                     if (frist_change_check == true) //제일 처음 변화감지는 건너 뜀
                     {
@@ -361,7 +361,7 @@ namespace MVCC.View
 
 
                                 //if (tempUGV.MovementCommandList.Count != 0)
-                                if(!(tempUGVState.EndPointX == -1 && tempUGVState.EndPointY == -1))
+                                if (!(tempUGVState.EndPointX == -1 && tempUGVState.EndPointY == -1))
                                 {
                                     Console.WriteLine("q 보낼 id = " + tempUGV.Id + " tempUGV.MovementCommandList.Count = " + tempUGV.MovementCommandList.Count);
 
@@ -374,7 +374,7 @@ namespace MVCC.View
                                     tempUGV.Command = "q";
 
                                     bluetoothAndPathPlanning.connect(tempUGV, tempUGVState);
-                                }   
+                                }
                             }
 
                             for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
@@ -398,19 +398,19 @@ namespace MVCC.View
 
                                     Console.WriteLine("tempUGV.PathList.Count " + tempUGV.PathList.Count);
 
-                                    if(tempUGV.PathList.Count != 0)
+                                    if (tempUGV.PathList.Count != 0)
                                         bluetoothAndPathPlanning.connect(tempUGV, tempUGVState);
-                             
+
                                 }
                             }
-                            
-                             
+
+
                         }
                         else
                         {
                             //장애물이 옮겨짐을 검사. 옮겨지고 있어도 차량은 정지 해야함
                             int moving_check_count = 0;
-                            
+
                             for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
                                 for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
                                     if (globals.Map_obstacle[j, i] == '*' || globals.pre_Map_obstacle[j, i] == '*')
@@ -418,7 +418,7 @@ namespace MVCC.View
                                             moving_check_count++;
 
                             if (moving_check_count >= 7) //배열이 5개 이상 차이날 경우 장애물이 옮겨지고 있음
-                                Console.WriteLine("장애물 옮기는 중! moving_check_count = " + moving_check_count);                        
+                                Console.WriteLine("장애물 옮기는 중! moving_check_count = " + moving_check_count);
                         }
                     }
                     else
@@ -427,17 +427,17 @@ namespace MVCC.View
                     pre_blob_count = blob_count; //현재 blob_count를 이전 blob_count에 저장
                     globals.pre_Map_obstacle = (int[,])globals.Map_obstacle.Clone(); //비교를 위해 이전 Map정보 설정
 
-                   
+
                     Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
                     {
                         building_List = obstacleDetection.get_building();
                         mapViewModel.AddBuilding(building_List);
 
-                       
+
                         for (int i = 0; i < building_List.Count; i++) //DisapperCheck 가 false경우 추적에서 사라진거므로 list에 제거
                         {
                             Building remov_tmp = building_List[i];
-                
+
                             if (remov_tmp.DisapperCheck == false)
                             {
                                 building_List.Remove(remov_tmp);
@@ -494,7 +494,7 @@ namespace MVCC.View
 
             for (int i = 15; i <= globals.rect_width; i += 15)
             {
-                Line line = new Line();               
+                Line line = new Line();
 
                 line.X1 = i;
                 line.Y1 = 0;
@@ -502,7 +502,7 @@ namespace MVCC.View
                 line.Y2 = globals.rect_height;
 
                 line.Stroke = Brushes.Gray;
-                
+
                 MapItemControlWrapGrid.Children.Add(line);
             }
 
@@ -514,7 +514,7 @@ namespace MVCC.View
 
                 line.X1 = 0;
                 line.Y1 = i;
-                line.X2 = globals.rect_width ;
+                line.X2 = globals.rect_width;
                 line.Y2 = i;
 
                 line.Stroke = Brushes.Gray;
@@ -529,7 +529,7 @@ namespace MVCC.View
         private void MoveUGV(object sender, MouseButtonEventArgs e)
         {
             Point p = e.GetPosition(this);
-            
+
             // 클릭한 위치를 현재 좌표계 값으로 변경
             int endPointX = ((int)Math.Round(p.X) - 155) / 15;
             int endPointY = ((int)Math.Round(p.Y) - 160) / 15;
@@ -542,7 +542,7 @@ namespace MVCC.View
             Dictionary<string, UGV> GroupMap = new Dictionary<string, UGV>();
             Dictionary<string, State> GroupStateMap = new Dictionary<string, State>();
             string groupName = null;
-            
+
             //모드 검사용
             string mode = "N";
 
@@ -575,11 +575,14 @@ namespace MVCC.View
             }
 
             //State
-            for(int i = 0 ; i < mapViewModel.MVCCItemStateList.Count; i ++){
+            for (int i = 0; i < mapViewModel.MVCCItemStateList.Count; i++)
+            {
                 State tempState = mapViewModel.MVCCItemStateList[i];
 
-                if(mode.Equals("I")){
-                    if(tempState.ugv.Id.Equals(individualUGV.Id)){
+                if (mode.Equals("I"))
+                {
+                    if (tempState.ugv.Id.Equals(individualUGV.Id))
+                    {
                         individualUGVState = tempState;
                     }
                 }
@@ -607,12 +610,13 @@ namespace MVCC.View
                 pathFinder.find_path(individualUGV, individualUGVState);
 
                 List<KeyValuePair<int, int>> pathList = individualUGV.PathList;
-                                
-                for (int i = mapViewModel.MVCCUGVPathList.Count - 1; i >= 0 ; i--)
+
+                for (int i = mapViewModel.MVCCUGVPathList.Count - 1; i >= 0; i--)
                 {
                     UGVPath tempUGVPath = mapViewModel.MVCCUGVPathList[i] as UGVPath;
 
-                    if(tempUGVPath.Id.Equals(individualUGV.Id)){
+                    if (tempUGVPath.Id.Equals(individualUGV.Id))
+                    {
                         mapViewModel.MVCCUGVPathList.Remove(tempUGVPath);
                     }
                 }
@@ -674,7 +678,7 @@ namespace MVCC.View
                     }
 
                     refreshViewPath();
-                    
+
                     for (int i = 0; i < pathList.Count; i++)
                     {
                         if (i == 0)
