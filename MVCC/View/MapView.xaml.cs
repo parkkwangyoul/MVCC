@@ -40,13 +40,6 @@ namespace MVCC.View
         bool obstacle_check = false; //트래킹과 장애물검사랑 동기화 위해
         bool image_is_changed = true; //영상을 비교했을때 차이가 날경우 (초기화를 true하는이유는 차가 놓여진상태에서 시작하면 바로 탬플릿 매칭을 수행해야되기때문)
 
-        struct UGV_move
-        {
-            public int x;
-            public int y;
-        };
-
-
         // MapViewModel 가져옴
         private MapViewModel mapViewModel;
 
@@ -172,9 +165,8 @@ namespace MVCC.View
             int average_val = 0; //떨림 방지를 위한 count
 
 
-            UGV_move[] UGV_move_check = new UGV_move[4];
-            UGV_move[] pre_UGV_move_check = new UGV_move[4];
-
+            //int[] UGV_int = new UGV[4];
+        
             while (true)
             {
                 using (Image<Bgr, Byte> frame = webcam.QueryFrame().Flip(Emgu.CV.CvEnum.FLIP.HORIZONTAL).Flip(Emgu.CV.CvEnum.FLIP.VERTICAL)) //webcam에서 영상 받음
@@ -243,33 +235,21 @@ namespace MVCC.View
 
                                             int temp_x, temp_y;
 
-                                            temp_x = (int)(ugv.X / 15);
-                                            temp_y = (int)(ugv.Y / 15);
-
-                                            //UGV_move_check[i].x = tracking_rect[i].X / 15;
-                                            //UGV_move_check[i].y = tracking_rect[i].Y / 15;
-
+                                            //temp_x = (int)(ugv.X / 15);
+                                            //temp_y = (int)(ugv.Y / 15);
                                             if (ugv.PathList.Count != 0)
                                             {
                                                 KeyValuePair<int, int> temp = new KeyValuePair<int, int>();
 
                                                 temp = ugv.PathList[ugv.PathList.Count - 1];
 
-                                                //Console.WriteLine("temp_x = " + temp_x + " temp.Key = " + temp.Key + " temp_y = " + temp_y + " temp.Value = " + temp.Value);
 
-                                                //Console.WriteLine("temp_x - temp.Key = " + (temp_x - temp.Key) + " temp_y - temp.Value = " + (temp_y - temp.Value));
-
-
-                                                if (Math.Abs(temp_x - temp.Key / 15) <= 1 && Math.Abs(temp_y - temp.Value / 15) <= 1)
+                                                if (Math.Abs(ugv.X - temp.Key) <= 10 && Math.Abs(ugv.Y - temp.Value) <= 10)
                                                 {
-                                                    //Console.WriteLine("여기는 들어옴????");
-                                                   // Console.WriteLine("temp_x - temp.Key = " + Math.Abs(temp_x - temp.Key / 15) + " temp_y - temp.Value = " + Math.Abs(temp_y - temp.Value / 15));
-
                                                     for (int p = mapViewModel.MVCCUGVPathList.Count - 1; p >= 0; p--)
                                                     {
                                                         UGVPath tempPath = mapViewModel.MVCCUGVPathList[p] as UGVPath;
 
-                                                        //if (tempPath.Id.Equals(ugv.Id) && tempPath.EndX == temp.Key && tempPath.EndY == temp.Value)
                                                         if (tempPath.Id.Equals(ugv.Id))
                                                         {
                                                             mapViewModel.MVCCUGVPathList.Remove(tempPath);
@@ -282,11 +262,10 @@ namespace MVCC.View
                                                 }
 
                                                 refreshViewPath();
-
                                             }
+
                                             break;
                                         }
-
                                     }
 
                                     refreshView();
