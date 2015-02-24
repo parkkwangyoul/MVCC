@@ -315,7 +315,8 @@ namespace MVCC.View
                 if (obstacle_check == true) //frame의 추적 영상 처리가 끝나고 처리
                 {
                     globals.theLock.EnterWriteLock(); //critical section start
-
+                    Console.WriteLine("설마 여기 들어오나?");
+                            
                     Array.Clear(globals.Map_obstacle, 0, globals.rect_height / globals.y_grid * globals.rect_width / globals.x_grid);
 
                     blob_count = obstacleDetection.detectBlob(obstacle_image, globals.Map_obstacle, tracking_rect); //장애물 검출
@@ -655,7 +656,7 @@ namespace MVCC.View
             {
                 int index;
                 int.TryParse(individualUGV.Id[1].ToString(), out index);
-
+                
                 globals.theLock.EnterWriteLock(); //critical section start
 
                 for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
@@ -665,14 +666,16 @@ namespace MVCC.View
                         if (globals.Map_obstacle[j, i] != 0 && globals.Map_obstacle[j, i] != index + 1 && individualUGVState.IsDriving == false)
                         {
                             globals.Map_obstacle[j, i] = '*';
+                            Console.WriteLine("여긴 들어오나");
                         }
                     }
                 }
 
-                for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
+                for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
                 {
-                    for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
+                    for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
                     {
+                  
                         Console.Write(globals.Map_obstacle[j, i]);
                     }
 
@@ -680,7 +683,7 @@ namespace MVCC.View
                 }
 
                 globals.theLock.ExitWriteLock(); //critical section end
-
+                
                 individualUGVState.EndPointX = endPointX;
                 individualUGVState.EndPointY = endPointY;
 
@@ -786,7 +789,7 @@ namespace MVCC.View
           
 
                 //여기서 도착 지점 배치 함수
-                UGV_priority_sort(GroupMap, GroupStateMap);
+                //UGV_priority_sort(GroupMap, GroupStateMap);
 
 
                 foreach (var key in GroupMap.Keys)
