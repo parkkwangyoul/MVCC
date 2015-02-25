@@ -687,19 +687,6 @@ namespace MVCC.View
                         if (globals.Map_obstacle[j, i] != 0 && globals.Map_obstacle[j, i] != index + 1 && individualUGVState.IsDriving == false)
                             globals.Map_obstacle[j, i] = '*';
 
-                /*           
-                for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
-                {
-                    for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
-                    {                     
-                        Console.Write("{0, 3} ", globals.Map_obstacle[j, i]);
-                    }
-
-                    Console.WriteLine();
-                }
-                Console.WriteLine();
-                */
-
                 globals.mapObstacleLock.ExitWriteLock(); //critical section end
 
 
@@ -715,19 +702,17 @@ namespace MVCC.View
                 pathFinder.find_path(individualUGV, individualUGVState);
 
                 //여기서 도착 지점 배치 함수
-                //UGV_priority_sort(GroupMap, GroupStateMap);
                 mapEndCoordinateArrange(individualUGVState);
 
                 AddMVCCUGVPathList(individualUGV);
 
-                bluetoothAndPathPlanning.connect(individualUGV, individualUGVState);
-
                 refreshViewPath();
+
+                bluetoothAndPathPlanning.connect(individualUGV, individualUGVState);
             }
             else if (mode.Equals("G"))
             {
                 List<int> index_list = new List<int>();
-
 
                 foreach (var key in GroupMap.Keys)
                 {
@@ -771,19 +756,6 @@ namespace MVCC.View
                         }
                     }
                 }
-
-                /*
-                for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
-                {
-                    for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
-                    {
-                        Console.Write("{0, 3} ", globals.Map_obstacle[j, i]);
-                    }
-
-                    Console.WriteLine();
-                }
-                Console.WriteLine();
-                */
 
                 globals.mapObstacleLock.ExitWriteLock(); //critical section end
 
@@ -829,9 +801,9 @@ namespace MVCC.View
                     State tempState = GroupStateMap[key];
 
                     bluetoothAndPathPlanning.connect(tempUGV, tempState);
-
-                    refreshViewPath();
                 }
+
+                refreshViewPath();
             }
 
         }
