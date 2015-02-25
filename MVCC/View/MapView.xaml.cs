@@ -58,9 +58,9 @@ namespace MVCC.View
         private void CamOn(object sender, RoutedEventArgs e)
         {
             // 카메라 없을때, 테스트용        
-            //MockCameraOn();
+            MockCameraOn();
             // 카메라 연결했을때
-            CameraOnAndDetectThings();
+            //CameraOnAndDetectThings();
         }
 
         #region TestMock
@@ -130,8 +130,11 @@ namespace MVCC.View
 
         private void CameraOnAndDetectThings()
         {
-            webcam = new Capture(0); //cam 설정
-            thread_start(); //thread 시작
+            if (webcam == null)
+            {
+                webcam = new Capture(0); //cam 설정
+                thread_start(); //thread 시작
+            }
         }
 
         private void thread_start()
