@@ -260,7 +260,7 @@ namespace MVCC.Utill
                     int result = (int)Math.Ceiling(E * (180 / 3.14192));
 
 
-                   // glo.theLock.EnterWriteLock(); //critical section start
+                   // glo.mapObstacleLock.EnterWriteLock(); //critical section start
 
                     if (75 <= result && result <= 105)
                         glo.direction[index] = 0;
@@ -281,7 +281,7 @@ namespace MVCC.Utill
                     else
                         glo.direction[index] = -1;
 
-                    //glo.theLock.ExitWriteLock(); //critical section end
+                    //glo.mapObstacleLock.ExitWriteLock(); //critical section end
                     /*
                       if (glo.direction[index] == -1)
                             Console.WriteLine("i = " + index + " direction[index] = " + glo.direction[index] + "알수 없는 각도" + " result = " + result);

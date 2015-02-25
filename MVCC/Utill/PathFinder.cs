@@ -1185,7 +1185,8 @@ namespace MVCC.Utill
             ugv.MovementCommandList.Clear();
             ugv.PathList.Clear();
 
-            map_classification(); //차량 구별한 장애물 맵 세팅
+            if((map_classification() == false))//차량 구별한 장애물 맵 세팅, 도착지점에 잘못찍으면 return
+                return;
 
             #region Graph_Node_Initialization
 
@@ -1344,7 +1345,7 @@ namespace MVCC.Utill
         }
 
 
-        public void map_classification()
+        public bool map_classification()
         {
 
             int index;
@@ -1352,8 +1353,14 @@ namespace MVCC.Utill
 
             direct = globals.direction[index];
 
-            globals.theLock.EnterReadLock(); //critical section start
-            
+            globals.mapObstacleLock.EnterReadLock(); //critical section start
+
+            //도착 지점 테두리 안에 찍였을시에 경로 없음
+            for (int x = state.EndPointX + 1; x < state.EndPointX + 3; x++)
+                for (int y = state.EndPointY + 1; y < state.EndPointY + 3; y++)
+                    if (globals.Map_obstacle[y, x] == '@')
+                        return false;     
+             
             for (int x = 0; x < globals.rect_width / globals.x_grid; x++)
             {
                 for (int y = 0; y < globals.rect_height / globals.y_grid; y++)
@@ -1369,7 +1376,9 @@ namespace MVCC.Utill
                 }
             }
 
-            globals.theLock.ExitReadLock(); //critical section end
+            globals.mapObstacleLock.ExitReadLock(); //critical section end
+
+            return true;
         }
 
         public void UGV_confict_check()

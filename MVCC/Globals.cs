@@ -21,13 +21,10 @@ namespace MVCC
         public int[] first_point_x = new int[4];
         public int[] first_point_y = new int[4];
 
-        public ReaderWriterLockSlim theLock = new ReaderWriterLockSlim();
+        public ReaderWriterLockSlim mapObstacleLock = new ReaderWriterLockSlim();
         public ReaderWriterLockSlim bluetoothLock = new ReaderWriterLockSlim();
         public ReaderWriterLockSlim UGVStopCommandLock = new ReaderWriterLockSlim();
         
-       // public int[,] UGVs_movement = new int[4, 24 + 40];
-        //public int[] UGVs_path_count = new int[4];
-
         private static Globals _Instance;
         public static Globals Instance
         {

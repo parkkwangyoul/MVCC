@@ -166,7 +166,7 @@ namespace MVCC.View
 
 
             //int[] UGV_int = new UGV[4];
-        
+
             while (true)
             {
                 using (Image<Bgr, Byte> frame = webcam.QueryFrame().Flip(Emgu.CV.CvEnum.FLIP.HORIZONTAL).Flip(Emgu.CV.CvEnum.FLIP.VERTICAL)) //webcam에서 영상 받음
@@ -319,13 +319,13 @@ namespace MVCC.View
             {
                 if (obstacle_check == true) //frame의 추적 영상 처리가 끝나고 처리
                 {
-                    globals.theLock.EnterWriteLock(); //critical section start
+                    globals.mapObstacleLock.EnterWriteLock(); //critical section start
 
                     Array.Clear(globals.Map_obstacle, 0, globals.rect_height / globals.y_grid * globals.rect_width / globals.x_grid);
 
                     blob_count = obstacleDetection.detectBlob(obstacle_image, globals.Map_obstacle, tracking_rect); //장애물 검출
 
-                    globals.theLock.ExitWriteLock(); //critical section end
+                    globals.mapObstacleLock.ExitWriteLock(); //critical section end
 
 
                     if (frist_change_check == true) //제일 처음 변화감지는 건너 뜀
@@ -392,7 +392,7 @@ namespace MVCC.View
                                 {
                                     State tempUGVState = AllUGVStateMap[tempUGV.Id];
                                     tempUGV.Command = "f";
-                                    
+
                                     pathFinder.init();
 
                                     pathFinder.find_path(tempUGV, tempUGVState);
@@ -488,56 +488,28 @@ namespace MVCC.View
         {
             public string UGV_Id;
             public UGV ugv;
-            public int path_count;
         }
 
-        public int compare(int x, int y)
-        {
-
-            return x.CompareTo(y);
-
-        }
-
+        //path_count 우선 순위 정하기
         public void UGV_priority_sort(Dictionary<string, UGV> GroupMap, Dictionary<string, State> GroupStateMap)
         {
-        
-            
-            /*
-            SortedList<int, UGV> sortedUGVList = new SortedList<int, UGV>();
 
-            //path 길이 순으로 정렬(짧은선 부터 긴선으로)     
-            foreach (var key in GroupMap.Keys)
-            {
-                UGV tempUGV = GroupMap[key];
-                sortedUGVList.Add(tempUGV.PathList.Count, tempUGV);
-            }
+            List<UGV_Info> info_list = new List<UGV_Info>();
 
-
-
-            //정렬 확인
-            foreach (var key in sortedUGVList.Keys)
-            {
-                UGV tempUGV = sortedUGVList[key];
-                Console.WriteLine("tempUGV.Id = " + tempUGV.Id + " path_count = " + key);
-            }
-            */
-
-            List <UGV_Info> info_list = new List<UGV_Info>();
-         
+            //정렬을 위해 list에 넣음
             foreach (var key in GroupMap.Keys)
             {
                 UGV_Info info;
-  
+
                 info.UGV_Id = key;
                 info.ugv = GroupMap[key];
-                info.path_count = GroupMap[key].PathList.Count;
+
                 info_list.Add(info);
             }
 
-            //Array.Sort<Dictionary<string, UGV>>(GroupMap, ();
-            //info_list.OrderByDescending(x => x.ugv.PathList.Count);
-            //info_list.Sort(compare);
+            info_list = info_list.OrderBy(o => o.ugv.PathList.Count).ToList(); //path_count를 오름차순 정렬
 
+            //정렬확인
             foreach (var list in info_list)
             {
                 UGV tempUGV = list.ugv;
@@ -545,32 +517,40 @@ namespace MVCC.View
                 Console.WriteLine("tempUGV.Id = " + tempUGV.Id + " pathCount = " + pathCount);
             }
 
-
-
-
-            /*
-            foreach (var key in GroupMap.Keys)
+            //map에 도착 자리 배치
+            foreach (var list in info_list)
             {
-                UGV tempUGV = GroupMap[key];
-
-                State tempState = GroupStateMap[key];
-
-                tempState.EndPointX = endPointX;
-                tempState.EndPointY = endPointY;
-
-                tempUGV.Command = "f";
-
-                tempUGV.PathList.Clear();
-
-                pathFinder.init();
-
-                pathFinder.find_path(tempUGV, tempState);
-
-                AddMVCCUGVPathList(tempUGV);
-
-                
+                mapEndCoordinateArrange(GroupStateMap[list.UGV_Id]);
             }
-            */
+        }
+
+        //UGV 도착 좌표 배치
+        public void mapEndCoordinateArrange(State state)
+        {
+            globals.mapObstacleLock.EnterReadLock(); //critical section start
+
+       
+
+            for (int x = state.EndPointX; x < state.EndPointX + 5; x++)
+            {
+                for (int y = state.EndPointY; y < state.EndPointY + 5; y++)
+                {
+                    globals.Map_obstacle[y, x] = '@'; //장애물은                        
+                }
+            }
+
+            for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
+            {
+                for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
+                {
+                    Console.Write("{0, 3} ", globals.Map_obstacle[j, i]);
+                }
+
+                Console.WriteLine();
+            }
+            Console.WriteLine();
+
+            globals.mapObstacleLock.ExitReadLock(); //critical section end
         }
 
 
@@ -696,12 +676,12 @@ namespace MVCC.View
             // 개인
             if (mode.Equals("I"))
             {
-                
+
                 int index;
                 int.TryParse(individualUGV.Id[1].ToString(), out index);
 
-                globals.theLock.EnterWriteLock(); //critical section start
-                
+                globals.mapObstacleLock.EnterWriteLock(); //critical section start
+
                 for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
                     for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
                         if (globals.Map_obstacle[j, i] != 0 && globals.Map_obstacle[j, i] != index + 1 && individualUGVState.IsDriving == false)
@@ -718,10 +698,10 @@ namespace MVCC.View
                     Console.WriteLine();
                 }
                 Console.WriteLine();
-                */ 
+                */
 
-                globals.theLock.ExitWriteLock(); //critical section end
-                
+                globals.mapObstacleLock.ExitWriteLock(); //critical section end
+
 
                 individualUGVState.EndPointX = endPointX;
                 individualUGVState.EndPointY = endPointY;
@@ -734,6 +714,10 @@ namespace MVCC.View
 
                 pathFinder.find_path(individualUGV, individualUGVState);
 
+                //여기서 도착 지점 배치 함수
+                //UGV_priority_sort(GroupMap, GroupStateMap);
+                mapEndCoordinateArrange(individualUGVState);
+
                 AddMVCCUGVPathList(individualUGV);
 
                 bluetoothAndPathPlanning.connect(individualUGV, individualUGVState);
@@ -743,17 +727,17 @@ namespace MVCC.View
             else if (mode.Equals("G"))
             {
                 List<int> index_list = new List<int>();
-               
-                
+
+
                 foreach (var key in GroupMap.Keys)
                 {
                     UGV tempUGV = GroupMap[key];
                     int index;
                     int.TryParse(tempUGV.Id[1].ToString(), out index);
-                    index_list.Add(index);     
+                    index_list.Add(index);
                 }
-            
-                globals.theLock.EnterWriteLock(); //critical section start
+
+                globals.mapObstacleLock.EnterWriteLock(); //critical section start
 
                 for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
                 {
@@ -761,7 +745,7 @@ namespace MVCC.View
                     {
                         bool index_check = true;
 
-                        for (int k = 0; k < index_list.Count; k++ )
+                        for (int k = 0; k < index_list.Count; k++)
                         {
                             if (globals.Map_obstacle[j, i] != 0)
                             {
@@ -775,7 +759,7 @@ namespace MVCC.View
                                     index_check = false;
                                 }
                             }
-                            else if(globals.Map_obstacle[j, i] == 0)
+                            else if (globals.Map_obstacle[j, i] == 0)
                             {
                                 break;
                             }
@@ -784,7 +768,7 @@ namespace MVCC.View
                         if (index_check == false)
                         {
                             globals.Map_obstacle[j, i] = '*';
-                        }                            
+                        }
                     }
                 }
 
@@ -801,7 +785,7 @@ namespace MVCC.View
                 Console.WriteLine();
                 */
 
-                globals.theLock.ExitWriteLock(); //critical section end
+                globals.mapObstacleLock.ExitWriteLock(); //critical section end
 
                 List<string> temp_list = new List<string>();
 
@@ -811,7 +795,7 @@ namespace MVCC.View
 
                     State tempState = GroupStateMap[key];
 
-                    
+
                     tempState.EndPointX = endPointX;
                     tempState.EndPointY = endPointY;
 
@@ -822,7 +806,7 @@ namespace MVCC.View
                     pathFinder.init();
 
                     pathFinder.find_path(tempUGV, tempState);
-         
+
                     AddMVCCUGVPathList(tempUGV);
 
                     if (tempUGV.PathList.Count == 0)
@@ -831,12 +815,12 @@ namespace MVCC.View
 
                 foreach (var remov_key in temp_list)
                 {
-                    removeAllUGVPath(GroupMap[remov_key]);                 
-                    GroupMap.Remove(remov_key);             
+                    removeAllUGVPath(GroupMap[remov_key]);
+                    GroupMap.Remove(remov_key);
                 }
-                
+
                 //여기서 도착 지점 배치 함수
-                //UGV_priority_sort(GroupMap, GroupStateMap);
+                UGV_priority_sort(GroupMap, GroupStateMap);
 
 
                 foreach (var key in GroupMap.Keys)
@@ -1073,7 +1057,7 @@ namespace MVCC.View
         }
 
         private void AddMVCCUGVPathList(UGV ugv)
-        {  
+        {
             removeAllUGVPath(ugv);
 
             List<KeyValuePair<int, int>> pathList = ugv.PathList;
@@ -1098,25 +1082,25 @@ namespace MVCC.View
 
         // 현재 UGV의 UGV Path 전체를 지우는 기능
         private void removeAllUGVPath(UGV ugv)
-        {   
-            
+        {
+
             globals.UGVStopCommandLock.EnterWriteLock();
-               
+
             //if (ugv.PathList.Count != 0)
             //{
-                List<KeyValuePair<int, int>> pathList = ugv.PathList;
+            List<KeyValuePair<int, int>> pathList = ugv.PathList;
 
-                for (int i = mapViewModel.MVCCUGVPathList.Count - 1; i >= 0; i--)
+            for (int i = mapViewModel.MVCCUGVPathList.Count - 1; i >= 0; i--)
+            {
+                UGVPath tempUGVPath = mapViewModel.MVCCUGVPathList[i] as UGVPath;
+
+                if (tempUGVPath.Id.Equals(ugv.Id))
                 {
-                    UGVPath tempUGVPath = mapViewModel.MVCCUGVPathList[i] as UGVPath;
-
-                    if (tempUGVPath.Id.Equals(ugv.Id))
-                    {
-                        mapViewModel.MVCCUGVPathList.Remove(tempUGVPath);
-                    }
+                    mapViewModel.MVCCUGVPathList.Remove(tempUGVPath);
                 }
+            }
 
-                refreshViewPath();
+            refreshViewPath();
             //}
             globals.UGVStopCommandLock.ExitWriteLock();
         }
@@ -1168,7 +1152,7 @@ namespace MVCC.View
                         bluetoothAndPathPlanning.connect(tempUGV, tempState);
 
                         removeAllUGVPath(stopUGV);
-                      
+
                         break;
                     }
                 }
