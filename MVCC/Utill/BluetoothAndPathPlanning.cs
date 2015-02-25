@@ -25,7 +25,7 @@ namespace MVCC.Utill
             this.ugv = ugv;
             this.state = state;
 
-            bluetoothConnect();
+            //bluetoothConnect();
 
             /*
             //bluetooth 연결쓰레드
@@ -57,8 +57,8 @@ namespace MVCC.Utill
             serialport.BaudRate = settingUGV.Baudrate;
             serialport.DataBits = settingUGV.Databit;
             serialport.StopBits = getStopBit(settingUGV.Stopbit);
-            serialport.ReadTimeout = 200;
-            serialport.WriteTimeout = 200;
+            serialport.ReadTimeout = 500;
+            serialport.WriteTimeout = 500;
 
             Console.WriteLine("serialport.isopen : " + serialport.IsOpen);
 

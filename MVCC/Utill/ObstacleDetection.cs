@@ -251,44 +251,52 @@ namespace MVCC.Utill
                             topB = temp_y;
                             bottomB = temp_y + temp_height;
 
+                            /*
                             if (bottomA < topB)
                             {
-                                if (topB - bottomA <= 2)
-                                    Console.WriteLine(i + " 번쨰 장애물과 충돌함 (아래) 아직 떨어져있을때 \n");
+                                //if (topB - bottomA <= 2)
+                                //    Console.WriteLine(i + " 번쨰 장애물과 충돌함 (아래) 아직 떨어져있을때 \n");
 
                                 continue; //아래
                             }
 
                             if (topA > bottomB)
                             {
-                                if (topA - bottomB <= 2)
-                                    Console.WriteLine(i + " 번쨰 장애물과 충돌함 (위) 아직 떨어져있을때\n");
+                                //if (topA - bottomB <= 2)
+                                //    Console.WriteLine(i + " 번쨰 장애물과 충돌함 (위) 아직 떨어져있을때\n");
 
                                 continue; //위
                             }
                             if (rightA < leftB)
                             {
-                                if (leftB - rightA <= 2)
-                                    Console.WriteLine(i + " 번쨰 장애물과 충돌함 (오른쪽) 아직 떨어져있을때\n");
+                                //if (leftB - rightA <= 2)
+                                //    Console.WriteLine(i + " 번쨰 장애물과 충돌함 (오른쪽) 아직 떨어져있을때\n");
 
                                 continue; //오른쪽
                             }
                             if (leftA > rightB)
                             {
-                                if (leftA - rightB <= 2)
-                                    Console.WriteLine(i + " 번쨰 장애물과 충돌함 (왼쪽) 아직 떨어져있을때\n");
+                                //if (leftA - rightB <= 2)
+                                //    Console.WriteLine(i + " 번쨰 장애물과 충돌함 (왼쪽) 아직 떨어져있을때\n");
 
                                 continue; //왼쪽
                             }
+                            */
+                            if (bottomA < topB) continue; //아래
+                            if (topA > bottomB) continue; //위
+                            if (rightA < leftB) continue; //오른쪽
+                            if (leftA > rightB) continue; //왼쪽
 
-                            if (bottomA - topB <= 2)
-                                Console.WriteLine(i + " 번쨰 장애물과 충돌함 (아래)\n");
-                            else if (bottomB - topA <= 2)
-                                Console.WriteLine(i + " 번쨰 장애물과 충돌함 (위)\n");
-                            else if (rightA - leftB <= 2)
-                                Console.WriteLine(i + " 번쨰 장애물과 충돌함 (오른쪽)\n");
-                            else if (rightB - leftA <= 2)
-                                Console.WriteLine(i + " 번쨰 장애물과 충돌함 (왼쪽)\n");
+
+                            if (bottomA - topB <= 7)
+                                Console.WriteLine(i + " 번쨰 장애물과 충돌함 (아래) 차이 = " + (bottomA - topB) + "\n");
+                            else if (bottomB - topA <= 7)
+                                Console.WriteLine(i + " 번쨰 장애물과 충돌함 (위) 차이 = " + (bottomB - topA) + "\n");
+                            else if (rightA - leftB <= 7)
+                                Console.WriteLine(i + " 번쨰 장애물과 충돌함 (오른쪽) 차이 = " + (rightA - leftB) + "\n");
+                            else if (rightB - leftA <= 7)
+                                Console.WriteLine(i + " 번쨰 장애물과 충돌함 (왼쪽) 차이 = " + (rightB - leftA) + "\n");
+                                                                          
                             /*
                             if (bottomA < topB) continue; //아래
                             if (topA > bottomB) continue; //위

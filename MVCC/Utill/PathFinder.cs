@@ -1261,6 +1261,7 @@ namespace MVCC.Utill
 
             find_path_BFS(vehicle_1, dest_x, dest_y);
 
+            /*
             for (int i = 0; i < grid_y; i++)
             {
                 for (int j = 0; j < grid_x; j++)
@@ -1269,6 +1270,7 @@ namespace MVCC.Utill
                 }
                 Console.WriteLine(" ");
             }
+            */
 
             #endregion
 
