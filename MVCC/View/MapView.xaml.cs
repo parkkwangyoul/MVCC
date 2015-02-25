@@ -477,6 +477,7 @@ namespace MVCC.View
                                 }
                             }
                         }
+
                         refreshView();
                     }));
                 }
@@ -1371,7 +1372,7 @@ namespace MVCC.View
 
         private void refreshViewPath()
         {
-            refreshView();
+            //refreshView();
 
             (FindResource("UGVPathSrc") as CollectionViewSource).View.Refresh();
         }
