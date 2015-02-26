@@ -189,7 +189,22 @@ namespace MVCC
         }
 
         // 블루투스 통신하는 시리얼포트
-        public List<SerialPort> SerialPortList = new List<SerialPort>();
+        private List<SerialPort> serialPortList;
+        public readonly List<SerialPort> SerialPortList
+        {
+            get
+            {
+                if (serialPortList.Count != 4)
+                {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        serialPortList.Add(new SerialPort());
+                    }
+                }
+
+                return serialPortList;
+            }
+        }
     }
 }
 
