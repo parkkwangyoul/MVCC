@@ -13,6 +13,10 @@ namespace MVCC
         /// <summary>
         /// Initializes a new instance of the MainWindow class.
         /// </summary>
+        /// 
+
+        Globals globals = Globals.Instance;
+
         public MainWindow()
         {
             // 로고시간 길게
@@ -41,6 +45,11 @@ namespace MVCC
         }
         private void OnCloseWindow(object sender, RoutedEventArgs e)
         {
+            for (int i = 0; i < globals.SerialPortList.Count; i++)
+            {
+                globals.SerialPortList[i].Close();
+            }
+
             this.Close();
         }
     }

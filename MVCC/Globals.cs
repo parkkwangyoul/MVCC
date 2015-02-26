@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Threading;
 using MVCC.Model;
+using System.IO.Ports;
 
 namespace MVCC
 {
@@ -186,6 +187,9 @@ namespace MVCC
                 return _UGVSettingDictionary;
             }
         }
+
+        // 블루투스 통신하는 시리얼포트
+        public List<SerialPort> SerialPortList = new List<SerialPort>();
     }
 }
 

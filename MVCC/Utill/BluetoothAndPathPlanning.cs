@@ -25,8 +25,9 @@ namespace MVCC.Utill
             this.ugv = ugv;
             this.state = state;
 
-            bluetoothConnect();
+            bluetoothConnect(ugv);
 
+            bluetoothCommand(ugv, state);
             /*
             //bluetooth 연결쓰레드
             BackgroundWorker thread = new BackgroundWorker();
@@ -35,243 +36,246 @@ namespace MVCC.Utill
              * */
         }
 
-        private void bluetoothConnect()
+        private void bluetoothConnect(UGV ugv)
         {
-            string write_data = ugv.Command;
-  
-            int index;
+            int index = 0;
             int.TryParse(ugv.Id[1].ToString(), out index);
-
-            SerialPort serialport = new SerialPort();
-
-            if (!globals.UGVSettingDictionary.ContainsKey(convertId(ugv.Id)))
-            {
-                MessageBox.Show("블루투스 설정이 되어있지 않습니다.");
-                state.IsDriving = true;
-
-                return;
-            }
 
             UGV settingUGV = globals.UGVSettingDictionary[convertId(ugv.Id)];
 
-            serialport.PortName = settingUGV.ComPort;
-            serialport.BaudRate = settingUGV.Baudrate;
-            serialport.DataBits = settingUGV.Databit;
-            serialport.StopBits = getStopBit(settingUGV.Stopbit);
-            serialport.ReadTimeout = 500;
-            serialport.WriteTimeout = 500;
-
-            Console.WriteLine("serialport.isopen : " + serialport.IsOpen);
+            globals.SerialPortList[index].PortName = settingUGV.ComPort;
+            globals.SerialPortList[index].BaudRate = settingUGV.Baudrate;
+            globals.SerialPortList[index].DataBits = settingUGV.Databit;
+            globals.SerialPortList[index].StopBits = getStopBit(settingUGV.Stopbit);
+            globals.SerialPortList[index].ReadTimeout = 500;
+            globals.SerialPortList[index].WriteTimeout = 500;
 
             try
             {
-                if (!serialport.IsOpen) { serialport.Open(); }
+                if (!globals.SerialPortList[index].IsOpen) { globals.SerialPortList[index].Open(); }
             }
             catch (System.IO.IOException e)
             {
                 MessageBox.Show("블루투스 COMPort 설정을 다시해주세요.");
                 return;
-            }
-            
-            if (serialport.IsOpen)
+            }          
+        }
+
+        private void bluetoothCommand(UGV ugv, State state)
+        {
+            string write_data = ugv.Command;
+
+            int index;
+            int.TryParse(ugv.Id[1].ToString(), out index);
+
+            if (ugv.Id.Equals("A0"))
             {
-                Console.WriteLine("serialport.isopen : " + serialport.IsOpen);
-                Console.WriteLine("ugv command : " + write_data);
-                
-
-                if (write_data.Equals("f")) 
+                if (!globals.UGVSettingDictionary.ContainsKey(convertId(ugv.Id)))
                 {
-                    serialport.WriteLine((write_data[0]).ToString());
-
+                    MessageBox.Show("블루투스 설정이 되어있지 않습니다.");
                     state.IsDriving = true;
 
-                    try
-                    {
-                        #region Transmit_Movement_Command
-
-                        int first_x = globals.first_point_x[index];
-                        int first_y = globals.first_point_y[index];
-
-                        int start_x = ((state.CurrentPointX) / 15);
-                        int start_y = ((state.CurrentPointY) / 15);
-
-                        int direction_x = ((state.CurrentPointX) / 15);
-                        int direction_y = ((state.CurrentPointY) / 15);
-
-                        Console.WriteLine("first_x {0}", globals.first_point_x[index]);
-                        Console.WriteLine("first_y {0}", globals.first_point_y[index]);
-
-                        Console.WriteLine("start_point_x {0}", start_x);
-                        Console.WriteLine("start_point_y {0}", start_y);
-
-                        Console.WriteLine("Direction Value : {0}", globals.direction[index]);
-
-                        #region Direction Calculation
-
-                        if (globals.direction[index] == 0)
-                        {
-                            direction_y = direction_y - 1;
-                        }
-                        else if (globals.direction[index] == 1)
-                        {
-                            direction_x = direction_x + 1;
-                            direction_y = direction_y - 1;
-                        }
-                        else if (globals.direction[index] == 2)
-                        {
-                            direction_x = direction_x + 1;
-                        }
-                        else if (globals.direction[index] == 3)
-                        {
-                            direction_x = direction_x + 1;
-                            direction_y = direction_y + 1;
-                        }
-                        else if (globals.direction[index] == 4)
-                        {
-                            direction_y = direction_y + 1;
-                        }
-                        else if (globals.direction[index] == 5)
-                        {
-                            direction_x = direction_x - 1;
-                            direction_y = direction_y + 1;
-                        }
-                        else if (globals.direction[index] == 6)
-                        {
-                            direction_x = direction_x - 1;
-                        }
-                        else if (globals.direction[index] == 7)
-                        {
-                            direction_x = direction_x - 1;
-                            direction_y = direction_y + 1;
-                        }
-
-                        #endregion
-
-                        Console.WriteLine("direction_x {0}", direction_x);
-                        Console.WriteLine("direction_y {0}", direction_y);
-
-                        #region Angle Calculation
-
-                        if ((first_x - start_x == 0) && (first_y - start_y == -1))
-                        {
-                            globals.angle[index] = 0;
-                        }
-                        else if ((first_x - start_x == 1) && (first_y - start_y == -1))
-                        {
-                            globals.angle[index] = 1;
-                        }
-                        else if ((first_x - start_x == 1) && (first_y - start_y == 0))
-                        {
-                            globals.angle[index] = 2;
-                        }
-                        else if ((first_x - start_x == 1) && (first_y - start_y == 1))
-                        {
-                            globals.angle[index] = 3;
-                        }
-                        else if ((first_x - start_x == 0) && (first_y - start_y == 1))
-                        {
-                            globals.angle[index] = 4;
-                        }
-                        else if ((first_x - start_x == -1) && (first_y - start_y == 1))
-                        {
-                            globals.angle[index] = 5;
-                        }
-                        else if ((first_x - start_x == -1) && (first_y - start_y == 0))
-                        {
-                            globals.angle[index] = 6;
-                        }
-                        else if ((first_x - start_x == -1) && (first_y - start_y == -1))
-                        {
-                            globals.angle[index] = 7;
-                        }
-                        #endregion
-
-
-                        #region Send Angle
-
-                        if ((globals.angle[index] - globals.direction[index] == 0))
-                        {
-                            serialport.WriteLine( "0" );
-                            Console.WriteLine("0");
-                        }
-                        else if ((globals.angle[index] - globals.direction[index] == 1))
-                        {
-                            serialport.WriteLine( "1" );
-                            Console.WriteLine("1");
-                        }
-                        else if ((globals.angle[index] - globals.direction[index] == 2) || (globals.angle[index] - globals.direction[index] == -6))
-                        {
-                            serialport.WriteLine( "2" );
-                            Console.WriteLine("2");
-                        }
-                        else if ((globals.angle[index] - globals.direction[index] == 3) || (globals.angle[index] - globals.direction[index] == -5))
-                        {
-                            serialport.WriteLine( "3" );
-                            Console.WriteLine("3");
-                        }
-                        else if ((globals.angle[index] - globals.direction[index] == 4) || (globals.angle[index] - globals.direction[index] == -4))
-                        {
-                            serialport.WriteLine( "4" );
-                            Console.WriteLine("4");
-                        }
-                        else if ((globals.angle[index] - globals.direction[index] == 5) || (globals.angle[index] - globals.direction[index] == -3))
-                        {
-                            serialport.WriteLine( "5" );
-                            Console.WriteLine("5");
-                        }
-                        else if ((globals.angle[index] - globals.direction[index] == 6) || (globals.angle[index] - globals.direction[index] == -2))
-                        {
-                            serialport.WriteLine( "6" );
-                            Console.WriteLine("6");
-                        }
-                        else if ((globals.angle[index] - globals.direction[index] == 7) || (globals.angle[index] - globals.direction[index] == -1))
-                        {
-                            serialport.WriteLine( "7" );
-                            Console.WriteLine("7");
-                        }
-                        else if ((globals.angle[index] - globals.direction[index] == -7) && (globals.angle[index] - globals.direction[index] == 0))
-                        {
-                            serialport.WriteLine( "8" );
-                            Console.WriteLine("8");
-                        }
-                        #endregion
-
-                        //Console.WriteLine("ugv.Id = " + ugv.Id + " direction[index] = " + globals.direction[index]);
-
-                        #region Transmit Movement Commands
-
-                        for (int i = 0; i < ugv.MovementCommandList.Count; i++)
-                        {
-                            serialport.WriteLine(ugv.MovementCommandList[i][0].ToString());
-                        } 
-                        serialport.WriteLine("e");
-
-                        Console.WriteLine("TX Complete");
-
-                        disConnect(serialport);
-
-                        #endregion
-
-                        #endregion
-                    }
-                    catch (TimeoutException)
-                    {
-                        Console.WriteLine("TimeOutException");
-
-                        Console.Write("Buffer : ");
-                        Console.WriteLine(serialport.ReadExisting());
-                    }
-
-                    //disConnect(serialport);
+                    return;
                 }
 
-                else if (write_data.Equals("q"))
+                if (globals.SerialPortList[index].IsOpen)
                 {
-                    serialport.WriteLine((write_data[0]).ToString());
+                    Console.WriteLine("serialport.isopen : " + globals.SerialPortList[index].IsOpen);
+                    Console.WriteLine("ugv command : " + write_data);
 
-                    disConnect(serialport);
+
+                    if (write_data.Equals("f"))
+                    {
+                        globals.SerialPortList[index].WriteLine((write_data[0]).ToString());
+
+                        state.IsDriving = true;
+
+                        try
+                        {
+                            #region Transmit_Movement_Command
+
+                            int first_x = globals.first_point_x[index];
+                            int first_y = globals.first_point_y[index];
+
+                            int start_x = ((state.CurrentPointX) / 15);
+                            int start_y = ((state.CurrentPointY) / 15);
+
+                            int direction_x = ((state.CurrentPointX) / 15);
+                            int direction_y = ((state.CurrentPointY) / 15);
+
+                            Console.WriteLine("first_x {0}", globals.first_point_x[index]);
+                            Console.WriteLine("first_y {0}", globals.first_point_y[index]);
+
+                            Console.WriteLine("start_point_x {0}", start_x);
+                            Console.WriteLine("start_point_y {0}", start_y);
+
+                            Console.WriteLine("Direction Value : {0}", globals.direction[index]);
+
+                            #region Direction Calculation
+
+                            if (globals.direction[index] == 0)
+                            {
+                                direction_y = direction_y - 1;
+                            }
+                            else if (globals.direction[index] == 1)
+                            {
+                                direction_x = direction_x + 1;
+                                direction_y = direction_y - 1;
+                            }
+                            else if (globals.direction[index] == 2)
+                            {
+                                direction_x = direction_x + 1;
+                            }
+                            else if (globals.direction[index] == 3)
+                            {
+                                direction_x = direction_x + 1;
+                                direction_y = direction_y + 1;
+                            }
+                            else if (globals.direction[index] == 4)
+                            {
+                                direction_y = direction_y + 1;
+                            }
+                            else if (globals.direction[index] == 5)
+                            {
+                                direction_x = direction_x - 1;
+                                direction_y = direction_y + 1;
+                            }
+                            else if (globals.direction[index] == 6)
+                            {
+                                direction_x = direction_x - 1;
+                            }
+                            else if (globals.direction[index] == 7)
+                            {
+                                direction_x = direction_x - 1;
+                                direction_y = direction_y + 1;
+                            }
+
+                            #endregion
+
+                            Console.WriteLine("direction_x {0}", direction_x);
+                            Console.WriteLine("direction_y {0}", direction_y);
+
+                            #region Angle Calculation
+
+                            if ((first_x - start_x == 0) && (first_y - start_y == -1))
+                            {
+                                globals.angle[index] = 0;
+                            }
+                            else if ((first_x - start_x == 1) && (first_y - start_y == -1))
+                            {
+                                globals.angle[index] = 1;
+                            }
+                            else if ((first_x - start_x == 1) && (first_y - start_y == 0))
+                            {
+                                globals.angle[index] = 2;
+                            }
+                            else if ((first_x - start_x == 1) && (first_y - start_y == 1))
+                            {
+                                globals.angle[index] = 3;
+                            }
+                            else if ((first_x - start_x == 0) && (first_y - start_y == 1))
+                            {
+                                globals.angle[index] = 4;
+                            }
+                            else if ((first_x - start_x == -1) && (first_y - start_y == 1))
+                            {
+                                globals.angle[index] = 5;
+                            }
+                            else if ((first_x - start_x == -1) && (first_y - start_y == 0))
+                            {
+                                globals.angle[index] = 6;
+                            }
+                            else if ((first_x - start_x == -1) && (first_y - start_y == -1))
+                            {
+                                globals.angle[index] = 7;
+                            }
+                            #endregion
+
+
+                            #region Send Angle
+
+                            if ((globals.angle[index] - globals.direction[index] == 0))
+                            {
+                                serialport.WriteLine("0");
+                                Console.WriteLine("0");
+                            }
+                            else if ((globals.angle[index] - globals.direction[index] == 1))
+                            {
+                                serialport.WriteLine("1");
+                                Console.WriteLine("1");
+                            }
+                            else if ((globals.angle[index] - globals.direction[index] == 2) || (globals.angle[index] - globals.direction[index] == -6))
+                            {
+                                serialport.WriteLine("2");
+                                Console.WriteLine("2");
+                            }
+                            else if ((globals.angle[index] - globals.direction[index] == 3) || (globals.angle[index] - globals.direction[index] == -5))
+                            {
+                                serialport.WriteLine("3");
+                                Console.WriteLine("3");
+                            }
+                            else if ((globals.angle[index] - globals.direction[index] == 4) || (globals.angle[index] - globals.direction[index] == -4))
+                            {
+                                serialport.WriteLine("4");
+                                Console.WriteLine("4");
+                            }
+                            else if ((globals.angle[index] - globals.direction[index] == 5) || (globals.angle[index] - globals.direction[index] == -3))
+                            {
+                                serialport.WriteLine("5");
+                                Console.WriteLine("5");
+                            }
+                            else if ((globals.angle[index] - globals.direction[index] == 6) || (globals.angle[index] - globals.direction[index] == -2))
+                            {
+                                serialport.WriteLine("6");
+                                Console.WriteLine("6");
+                            }
+                            else if ((globals.angle[index] - globals.direction[index] == 7) || (globals.angle[index] - globals.direction[index] == -1))
+                            {
+                                serialport.WriteLine("7");
+                                Console.WriteLine("7");
+                            }
+                            else if ((globals.angle[index] - globals.direction[index] == -7) && (globals.angle[index] - globals.direction[index] == 0))
+                            {
+                                serialport.WriteLine("8");
+                                Console.WriteLine("8");
+                            }
+                            #endregion
+
+                            //Console.WriteLine("ugv.Id = " + ugv.Id + " direction[index] = " + globals.direction[index]);
+
+                            #region Transmit Movement Commands
+
+                            for (int i = 0; i < ugv.MovementCommandList.Count; i++)
+                            {
+                                serialport.WriteLine(ugv.MovementCommandList[i][0].ToString());
+                            }
+                            serialport.WriteLine("e");
+
+                            Console.WriteLine("TX Complete");
+
+                            disConnect(serialport);
+
+                            #endregion
+
+                            #endregion
+                        }
+                        catch (TimeoutException)
+                        {
+                            Console.WriteLine("TimeOutException");
+
+                            Console.Write("Buffer : ");
+                            Console.WriteLine(globals.SerialPortList[index].ReadExisting());
+                        }
+
+                        //disConnect(serialport);
+                    }
+
+                    else if (write_data.Equals("q"))
+                    {
+                        globals.SerialPortList[index].WriteLine((write_data[0]).ToString());
+                    }
+                    Console.Out.Flush();
                 }
-                Console.Out.Flush();
             }
         }
 
