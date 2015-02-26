@@ -1347,6 +1347,8 @@ namespace MVCC.Utill
                 return false;
             }
 
+            globals.MovementCommandCount.Add(ugv.Id, ugv.PathList.Count);
+
             globals.first_point_x[index] = ugv.PathList[ugv.PathList.Count - 2].Key / 15;
             globals.first_point_y[index] = ugv.PathList[ugv.PathList.Count - 2].Value / 15;
 
@@ -1383,12 +1385,12 @@ namespace MVCC.Utill
             {
                 ugv.MovementCommandList.Add(movement[i].ToString());
             }
-            /*
+            
             for (int i = 0; i < path_count; i++)
             {
                 Console.WriteLine("ugv.MovementCommandList[i][0] : {0}", ugv.MovementCommandList[i][0].ToString());
             }
-            */
+            
 
             Console.WriteLine("");
 

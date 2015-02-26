@@ -17,6 +17,8 @@ namespace MVCC
         public int[,] pre_Map_obstacle;
         public int[,] EndPointMap;
 
+        public Dictionary<string, int> MovementCommandCount = new Dictionary<string, int>();
+ 
         public string[] rotate = new string[4];
         public int[] angle = new int[4];
         public int[] direction = new int[4];
@@ -189,8 +191,8 @@ namespace MVCC
         }
 
         // 블루투스 통신하는 시리얼포트
-        private List<SerialPort> serialPortList;
-        public readonly List<SerialPort> SerialPortList
+        private List<SerialPort> serialPortList = new List<SerialPort>();
+        public  List<SerialPort> SerialPortList
         {
             get
             {

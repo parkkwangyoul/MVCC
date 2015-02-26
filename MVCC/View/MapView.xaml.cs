@@ -248,13 +248,30 @@ namespace MVCC.View
                                                 temp = ugv.PathList[ugv.PathList.Count - 1];
 
                                                 //Console.WriteLine("ugv.X = " + ugv.X + " temp.Key = " + temp.Key);
+                                                //if()
 
-                                                if (Math.Abs(ugv.X - temp.Key) <= 20 && Math.Abs(ugv.Y - temp.Value) <= 20)
+
+                                                //if (Math.Abs(ugv.X - temp.Key) < 15 && Math.Abs(ugv.Y - temp.Value) < 15)
+                                                if(Math.Abs(ugv.X - temp.Key) == 0 && Math.Abs(ugv.Y - temp.Value) == 0)
                                                 {
 
                                                     for (int p = mapViewModel.MVCCUGVPathList.Count - 1; p >= 0; p--)
                                                     {
                                                         UGVPath tempPath = mapViewModel.MVCCUGVPathList[p] as UGVPath;
+
+                                                        
+                                                        //if (ugv.MovementCommandList[globals.MovementCommandCount[ugv.Id]] == 0)
+                                                        //    AllUGVStateMap[tempUGV.Id];
+                                                        //bluetoothAndPathPlanning.connect(ugv.MovementCommandList)
+
+                                                        //직진 명령
+                                                        //ugv.MovementCommandList;
+                                                        
+                                                        //좌측 회전 명령
+
+                                                        //우측 회전 명령
+
+
 
                                                         if (tempPath.Id.Equals(ugv.Id))
                                                         {
@@ -267,6 +284,11 @@ namespace MVCC.View
                                                         }
 
                                                     }
+                                                }
+                                                else
+                                                {
+                                                  // Console.WriteLine(" 아닐경우 피드백 " );
+
                                                 }
 
                                             }
