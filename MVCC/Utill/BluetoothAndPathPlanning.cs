@@ -196,47 +196,47 @@ namespace MVCC.Utill
 
                             if ((globals.angle[index] - globals.direction[index] == 0))
                             {
-                                serialport.WriteLine("0");
+                                globals.SerialPortList[index].WriteLine("0");
                                 Console.WriteLine("0");
                             }
                             else if ((globals.angle[index] - globals.direction[index] == 1))
                             {
-                                serialport.WriteLine("1");
+                                globals.SerialPortList[index].WriteLine("1");
                                 Console.WriteLine("1");
                             }
                             else if ((globals.angle[index] - globals.direction[index] == 2) || (globals.angle[index] - globals.direction[index] == -6))
                             {
-                                serialport.WriteLine("2");
+                                globals.SerialPortList[index].WriteLine("2");
                                 Console.WriteLine("2");
                             }
                             else if ((globals.angle[index] - globals.direction[index] == 3) || (globals.angle[index] - globals.direction[index] == -5))
                             {
-                                serialport.WriteLine("3");
+                                globals.SerialPortList[index].WriteLine("3");
                                 Console.WriteLine("3");
                             }
                             else if ((globals.angle[index] - globals.direction[index] == 4) || (globals.angle[index] - globals.direction[index] == -4))
                             {
-                                serialport.WriteLine("4");
+                                globals.SerialPortList[index].WriteLine("4");
                                 Console.WriteLine("4");
                             }
                             else if ((globals.angle[index] - globals.direction[index] == 5) || (globals.angle[index] - globals.direction[index] == -3))
                             {
-                                serialport.WriteLine("5");
+                                globals.SerialPortList[index].WriteLine("5");
                                 Console.WriteLine("5");
                             }
                             else if ((globals.angle[index] - globals.direction[index] == 6) || (globals.angle[index] - globals.direction[index] == -2))
                             {
-                                serialport.WriteLine("6");
+                                globals.SerialPortList[index].WriteLine("6");
                                 Console.WriteLine("6");
                             }
                             else if ((globals.angle[index] - globals.direction[index] == 7) || (globals.angle[index] - globals.direction[index] == -1))
                             {
-                                serialport.WriteLine("7");
+                                globals.SerialPortList[index].WriteLine("7");
                                 Console.WriteLine("7");
                             }
                             else if ((globals.angle[index] - globals.direction[index] == -7) && (globals.angle[index] - globals.direction[index] == 0))
                             {
-                                serialport.WriteLine("8");
+                                globals.SerialPortList[index].WriteLine("8");
                                 Console.WriteLine("8");
                             }
                             #endregion
@@ -247,13 +247,13 @@ namespace MVCC.Utill
 
                             for (int i = 0; i < ugv.MovementCommandList.Count; i++)
                             {
-                                serialport.WriteLine(ugv.MovementCommandList[i][0].ToString());
+                                globals.SerialPortList[index].WriteLine(ugv.MovementCommandList[i][0].ToString());
                             }
-                            serialport.WriteLine("e");
+                            globals.SerialPortList[index].WriteLine("e");
 
                             Console.WriteLine("TX Complete");
 
-                            disConnect(serialport);
+                            disConnect(globals.SerialPortList[index]);
 
                             #endregion
 
