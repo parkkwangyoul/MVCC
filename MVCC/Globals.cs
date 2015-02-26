@@ -17,6 +17,8 @@ namespace MVCC
         public int[,] pre_Map_obstacle;
         public int[,] EndPointMap;
 
+        public Dictionary<string, int> MovementCommandCount = new Dictionary<string, int>();
+ 
         public string[] rotate = new string[4];
         public int[] angle = new int[4];
         public int[] direction = new int[4];

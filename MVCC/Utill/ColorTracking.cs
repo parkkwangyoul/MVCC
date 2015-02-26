@@ -257,7 +257,7 @@ namespace MVCC.Utill
                     int D = big_center_y - small_center_y;
 
                     double E = Math.Atan2(D, C);
-                    int result = (int)Math.Ceiling(E * (180 / 3.14192));
+                    double result = E * (180 / 3.14192);
 
 
                    // glo.mapObstacleLock.EnterWriteLock(); //critical section start
@@ -266,8 +266,11 @@ namespace MVCC.Utill
                         glo.direction[index] = 0;
                     else if (115 <= result && result <= 155)
                         glo.direction[index] = 1;
-                    else if (165 <= result && result < 180 || -179 <= result && result <= -165 || result == 180)
+                    else if (179 <= result && result <= 181)
+                    //else if (173 <= result && result < 173 || -174 <= result && result <= -171)
                         glo.direction[index] = 2;
+                    //else if (165 <= result && result < 180 || -179 <= result && result <= -165 || result == 180)
+                    //    glo.direction[index] = 2;
                     else if (-155 <= result && result <= -115)
                         glo.direction[index] = 3;
                     else if (-105 <= result && result <= -75)
@@ -282,19 +285,22 @@ namespace MVCC.Utill
                         glo.direction[index] = -1;
 
                     //glo.mapObstacleLock.ExitWriteLock(); //critical section end
-                    /*
-                      if (glo.direction[index] == -1)
-                            Console.WriteLine("i = " + index + " direction[index] = " + glo.direction[index] + "알수 없는 각도" + " result = " + result);
-                      else
-                            Console.WriteLine("i = " + index + " direction[index] = " + glo.direction[index] + " result = " + result);
-                              
-                      if (index == 3)
-                         Console.WriteLine("");
-                  */
 
-                    //if (glo.direction[index] == -1)
-                    //    Console.WriteLine("i = " + index + " direction[index] = " + glo.direction[index] + " result = " + result);
-                    
+                    if (index == 0)
+                    {
+                        if (glo.direction[index] == -1)
+                            Console.WriteLine("i = " + index + " direction[index] = " + glo.direction[index] + "알수 없는 각도" + " result = " + result);
+                        else
+                            Console.WriteLine("i = " + index + " direction[index] = " + glo.direction[index] + " result = " + result);
+                    }     
+                     // if (index == 3)
+                      //   Console.WriteLine("");
+                  
+                    /*
+                    if (glo.direction[index] == -1)
+                       Console.WriteLine("i = " + index + " direction[index] = " + glo.direction[index] + " result = " + result);
+                    */
+
                 }
                 else
                 {

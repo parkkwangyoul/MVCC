@@ -1347,6 +1347,8 @@ namespace MVCC.Utill
                 return false;
             }
 
+            globals.MovementCommandCount.Add(ugv.Id, ugv.PathList.Count);
+
             globals.first_point_x[index] = ugv.PathList[ugv.PathList.Count - 2].Key / 15;
             globals.first_point_y[index] = ugv.PathList[ugv.PathList.Count - 2].Value / 15;
 
