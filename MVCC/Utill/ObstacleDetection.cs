@@ -97,24 +97,27 @@ namespace MVCC.Utill
                         {
                             if (!(tracking_rect[j].Width == 0 && tracking_rect[j].Height == 0))
                             {
-                                leftA = tracking_rect[i].X;
-                                rightA = tracking_rect[i].X + tracking_rect[i].Width;
-                                topA = tracking_rect[i].Y;
-                                bottomA = tracking_rect[i].Y + tracking_rect[i].Height;
+                                int add_size = 23;
+                                
+                                leftA = tracking_rect[i].X - add_size;
+                                rightA = tracking_rect[i].X + tracking_rect[i].Width + add_size;
+                                topA = tracking_rect[i].Y - add_size;
+                                bottomA = tracking_rect[i].Y + tracking_rect[i].Height + add_size;
 
-                                leftB = tracking_rect[j].X;
-                                rightB = tracking_rect[j].X + tracking_rect[j].Width;
-                                topB = tracking_rect[j].Y;
-                                bottomB = tracking_rect[j].Y + tracking_rect[j].Height;
+                                leftB = tracking_rect[j].X - add_size;
+                                rightB = tracking_rect[j].X + tracking_rect[j].Width + add_size;
+                                topB = tracking_rect[j].Y - add_size;
+                                bottomB = tracking_rect[j].Y + tracking_rect[j].Height + add_size;
 
                                 if (bottomA < topB) continue; //아래
                                 if (topA > bottomB) continue; //위
                                 if (rightA < leftB) continue; //오른쪽
                                 if (leftA > rightB) continue; //왼쪽
 
+                                int boarder_size = 18;
 
-                                if (bottomA - topB <= 4 || bottomB - topA <= 4 || rightA - leftB <= 4 || rightB - leftA <= 4)
-                                    Console.WriteLine(i + " 차량과 " + j + " 차량이 충돌 위기");
+                                if (bottomA - topB <= boarder_size || bottomB - topA <= boarder_size || rightA - leftB <= boarder_size || rightB - leftA <= boarder_size)
+                                    Console.WriteLine(i + " 차량과 " + j + " 차량이 충돌 위기");                  
                                 else
                                     Console.WriteLine(i + " 차량과 " + j + " 차량이 충돌함\n");
                             }

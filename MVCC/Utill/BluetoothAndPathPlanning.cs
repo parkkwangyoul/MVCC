@@ -25,7 +25,7 @@ namespace MVCC.Utill
             this.ugv = ugv;
             this.state = state;
 
-            //bluetoothConnect();
+            bluetoothConnect();
 
             /*
             //bluetooth 연결쓰레드
@@ -47,7 +47,7 @@ namespace MVCC.Utill
             if (!globals.UGVSettingDictionary.ContainsKey(convertId(ugv.Id)))
             {
                 MessageBox.Show("블루투스 설정이 되어있지 않습니다.");
-                //state.IsDriving = true;
+                state.IsDriving = true;
 
                 return;
             }

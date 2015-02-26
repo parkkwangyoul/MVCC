@@ -239,8 +239,9 @@ namespace MVCC.Utill
 
             for (i = 0; i < size; i++)
             {
-                if (vehicle_1.outer_1.x - 1 < 0 || vehicle_1.outer_1.y + i < 0) { 
-                    
+                if (vehicle_1.outer_1.x - 1 < 0 || vehicle_1.outer_1.y + i < 0)
+                {
+
                     return false;
                 }
                 else if (vehicle_1.outer_1.x - 1 >= 0 && vehicle_1.outer_1.y + i < grid_y)
@@ -283,7 +284,8 @@ namespace MVCC.Utill
 
             for (i = 0; i < size; i++)
             {
-                if (vehicle_1.outer_1.y - 1 < 0 || vehicle_1.outer_1.x + i < 0) {
+                if (vehicle_1.outer_1.y - 1 < 0 || vehicle_1.outer_1.x + i < 0)
+                {
 
                     return false;
                 }
@@ -327,7 +329,8 @@ namespace MVCC.Utill
 
             for (i = 0; i < size; i++)
             {
-                if (vehicle_1.outer_3.y + 1 < 0 || vehicle_1.outer_3.x + i < 0) {
+                if (vehicle_1.outer_3.y + 1 < 0 || vehicle_1.outer_3.x + i < 0)
+                {
 
                     return false;
                 }
@@ -641,8 +644,8 @@ namespace MVCC.Utill
 
                     q[i] = q[i + 1];
                 }
-                
-                
+
+
                 if (0 <= dest_x && dest_x <= 2 || grid_x - 2 <= dest_x && dest_x <= grid_x)
                 {
                     //Console.WriteLine("Case 1");
@@ -671,15 +674,15 @@ namespace MVCC.Utill
                 {
                     //Console.WriteLine("Case 3");
                     if ((pop.outer_1.x + node_1.size / 2 == dest_x) && (pop.outer_1.y + node_1.size / 2 == dest_y))
-                    { 
-                        
+                    {
+
                         Console.WriteLine("x : {0} y : {1}", pop.outer_1.x + node_1.size / 2, pop.outer_1.y + node_1.size / 2);
                         Console.WriteLine("Vehicle has arrived at the destination");
                         break;
                     }
-                    
+
                 }
-                
+
                 /*
                 if ((pop.outer_1.x + node_1.size / 2 == target_x) && (pop.outer_1.y + node_1.size / 2 == target_y))
                 {
@@ -1390,42 +1393,10 @@ namespace MVCC.Utill
             Console.WriteLine("");
 
             #endregion
+
+            // 이건 필요 없을지도 ... 길찾기 grid에 안넣어도 될듯 나중에 삭제
+            
             /*
-            int startX, startY, endX, endY;
-
-            startX = state.EndPointX - 2;
-            startY = state.EndPointY - 2;
-
-            endX = state.EndPointX + 2;
-            endY = state.EndPointY + 2;
-
-            //범위 초과일 경우 설정
-            if (startX < 0)
-            {
-                endX -= startX;
-                startX = 0;
-            }
-            if (startY < 0)
-            {
-                endY -= startY;
-                startY = 0;
-            }
-
-            if (endX > globals.rect_width / globals.x_grid)
-            {
-                startX -= (endX - globals.rect_width / globals.x_grid);
-                endX = globals.rect_width;
-            }
-            if (endY > globals.rect_height)
-            {
-                startY -= (endY - globals.rect_height / globals.y_grid);
-                endY = globals.rect_height;
-            }
-
-            for (int x = startX; x <= endX; x++)
-                for (int y = startY; y <= endY; y++)
-                    grid[y, x] = 'x'; 
-            */
             for (int x = 0; x < globals.rect_width / globals.x_grid; x++)
             {
                 for (int y = 0; y < globals.rect_height / globals.y_grid; y++)
@@ -1434,9 +1405,10 @@ namespace MVCC.Utill
                         grid[y, x] = 'x';
                 }
             }
+             */
             return true;
         }
-         
+
 
         public bool map_classification()
         {
@@ -1445,10 +1417,10 @@ namespace MVCC.Utill
             int.TryParse(ugv.Id[1].ToString(), out index);
 
             direct = globals.direction[index];
-            
+
             globals.mapObstacleLock.EnterReadLock(); //critical section start
-                       
-            /*
+
+
             bool endPointCheck = false;
 
             if (endPointCheck == false && state.EndPointY - 1 >= 0 && globals.EndPointMap[state.EndPointY - 1, state.EndPointX] == 0)
@@ -1457,9 +1429,9 @@ namespace MVCC.Utill
                 endPointCheck = true;
             if (endPointCheck == false && state.EndPointX + 1 <= globals.rect_width / globals.x_grid && globals.EndPointMap[state.EndPointY, state.EndPointX + 1] == 0)
                 endPointCheck = true;
-            if (endPointCheck == false && state.EndPointY + 1 <= globals.rect_height / globals.y_grid  && state.EndPointX + 1 <= globals.rect_width / globals.x_grid && globals.EndPointMap[state.EndPointY + 1, state.EndPointX + 1] == 0)
+            if (endPointCheck == false && state.EndPointY + 1 <= globals.rect_height / globals.y_grid && state.EndPointX + 1 <= globals.rect_width / globals.x_grid && globals.EndPointMap[state.EndPointY + 1, state.EndPointX + 1] == 0)
                 endPointCheck = true;
-            if (endPointCheck == false && state.EndPointY + 1 <= globals.rect_height / globals.y_grid  && globals.EndPointMap[state.EndPointY + 1, state.EndPointX] == 0)
+            if (endPointCheck == false && state.EndPointY + 1 <= globals.rect_height / globals.y_grid && globals.EndPointMap[state.EndPointY + 1, state.EndPointX] == 0)
                 endPointCheck = true;
             if (endPointCheck == false && state.EndPointY + 1 <= globals.rect_height / globals.y_grid && state.EndPointX - 1 >= 0 && globals.EndPointMap[state.EndPointY + 1, state.EndPointX - 1] == 0)
                 endPointCheck = true;
@@ -1468,36 +1440,39 @@ namespace MVCC.Utill
             if (endPointCheck == false && state.EndPointY - 1 >= 0 && state.EndPointY - 1 >= 0 && globals.EndPointMap[state.EndPointY - 1, state.EndPointX - 1] == 0)
                 endPointCheck = true;
 
+            if (endPointCheck != false)
+            {
+
+
+                for (int x = 0; x < globals.rect_width / globals.x_grid; x++)
+                {
+                    for (int y = 0; y < globals.rect_height / globals.y_grid; y++)
+                    {
+                        if (globals.Map_obstacle[y, x] == '*') //장애물은 x 로
+                            grid[y, x] = 'x';
+                        // else if (globals.EndPointMap[y, x] == 0)
+                        //    grid[y, x] = '0';
+                        // else if (globals.EndPointMap[y, x] == index + 1)
+                        //     grid[y, x] = '1';
+                        else
+                            grid[y, x] = '0';
+
+
+                    }
+                }                    
+            }
+
+            globals.mapObstacleLock.ExitReadLock(); //critical section end
+
             if (endPointCheck == false)
             {
                 Console.WriteLine("chu !! 찍은 도착 지점은 갈 수가 없습니다");
                 return false;
             }
-            */
-            for (int x = 0; x < globals.rect_width / globals.x_grid; x++)
-            {
-                for (int y = 0; y < globals.rect_height / globals.y_grid; y++)
-                {
-                    if (globals.Map_obstacle[y, x] == '*') //장애물은 x 로
-                        grid[y, x] = 'x';
-                    // else if (globals.EndPointMap[y, x] == 0)
-                    //    grid[y, x] = '0';
-                    // else if (globals.EndPointMap[y, x] == index + 1)
-                    //     grid[y, x] = '1';
-                    else
-                        grid[y, x] = '0';
-
-       
-                }
-            }
-
-            globals.mapObstacleLock.ExitReadLock(); //critical section end
-
- 
-
 
             return true;
         }
-
     }
+
+
 }
