@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:base="clr-namespace:System.Windows;assembly=PresentationFramework"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" Content="Infomation View" DataContext="{Binding Source={StaticResource Locator}, Path=InfomationViewModel}">
+             d:DesignHeight="300" d:DesignWidth="300" DataContext="{Binding Source={StaticResource Locator}, Path=InfomationViewModel}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -16,4 +16,9 @@
     <UserControl.Style>
         <base:StaticResource ResourceKey="BaseViewStyle" />
     </UserControl.Style>
+    <StackPanel>
+        <Grid>
+            <TextBlock FontSize="40px">Overview Of MVCC</TextBlock>
+        </Grid>
+    </StackPanel>
 </UserControl>
