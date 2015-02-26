@@ -57,6 +57,18 @@ namespace MVCC.Model
             }
         }
 
+        // UGV 그릴때 쓰는 좌표 X
+        public double DrawX
+        {
+            get { return this.X - 30; }
+        }
+
+        // UGV 그릴때 쓰는 좌표 Y
+        public double DrawY
+        {
+            get { return this.Y - 30; }
+        }
+
         public string UGVResource
         {
             get

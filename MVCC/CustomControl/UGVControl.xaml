@@ -7,7 +7,7 @@
              d:DesignHeight="300" d:DesignWidth="300" >
     
     <UserControl.RenderTransform>
-        <TranslateTransform  X="{Binding X}" Y="{Binding Y}"/>
+        <TranslateTransform  X="{Binding DrawX}" Y="{Binding DrawY}"/>
     </UserControl.RenderTransform>
 
     <Grid>

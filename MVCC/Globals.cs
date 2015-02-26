@@ -14,6 +14,7 @@ namespace MVCC
     {
         public int[,] Map_obstacle;
         public int[,] pre_Map_obstacle;
+        public int[,] EndPointMap;
 
         public string[] rotate = new string[4];
         public int[] angle = new int[4];

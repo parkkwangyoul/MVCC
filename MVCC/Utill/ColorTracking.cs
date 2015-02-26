@@ -96,7 +96,7 @@ namespace MVCC.Utill
                             color_ROI[index].Y = y;
                             color_count++;
                             change_check[index] = false;
-                            ugvList.Add(new UGV("A" + index, glo.TemplateWidth, glo.TemplateHeight, x, y, colorStr[index]));
+                            ugvList.Add(new UGV("A" + index, glo.TemplateWidth, glo.TemplateHeight, x + 30, y + 30, colorStr[index]));
                             return;
                         }
                     }

@@ -23,8 +23,9 @@ namespace MVCC.Utill
 
 
         #region Path_Planning_Part
-        
-        public void init(){
+
+        public void init()
+        {
             grid_x = globals.rect_width / globals.x_grid;
             grid_y = globals.rect_height / globals.y_grid;
 
@@ -137,17 +138,17 @@ namespace MVCC.Utill
 
                 current_perspective = perspective;
 
-                outer_1.x = x;
-                outer_1.y = y;
+                outer_1.x = x - size_ / 2;
+                outer_1.y = y - size_ / 2;
 
-                outer_2.x = x + size_ - 1;
-                outer_2.y = y;
+                outer_2.x = x + size_ / 2 + 1;
+                outer_2.y = y - size_ / 2;
 
-                outer_3.x = x;
-                outer_3.y = y + size_ - 1;
+                outer_3.x = x - size_ / 2;
+                outer_3.y = y + size_ / 2 + 1;
 
-                outer_4.x = x + size_ - 1;
-                outer_4.y = y + size_ - 1;
+                outer_4.x = x + size_ / 2 + 1;
+                outer_4.y = y + size_ / 2 + 1;
 
                 path_num = num;
 
@@ -195,8 +196,11 @@ namespace MVCC.Utill
 
             for (i = 0; i < size; i++)
             {
-
-                if (vehicle_1.outer_2.x + 1 < grid_x && vehicle_1.outer_2.y + i < grid_y)
+                if (vehicle_1.outer_2.x + 1 < 0 || vehicle_1.outer_2.y + i < 0)
+                {
+                    return false;
+                }
+                else if (vehicle_1.outer_2.x + 1 < grid_x && vehicle_1.outer_2.y + i < grid_y)
                 {
                     if (grid[vehicle_1.outer_2.y + i, vehicle_1.outer_2.x + 1] == '0') { count++; }
                 }
@@ -235,7 +239,11 @@ namespace MVCC.Utill
 
             for (i = 0; i < size; i++)
             {
-                if (vehicle_1.outer_1.x - 1 >= 0 && vehicle_1.outer_1.y + i < grid_y)
+                if (vehicle_1.outer_1.x - 1 < 0 || vehicle_1.outer_1.y + i < 0) { 
+                    
+                    return false;
+                }
+                else if (vehicle_1.outer_1.x - 1 >= 0 && vehicle_1.outer_1.y + i < grid_y)
                 {
                     if (grid[vehicle_1.outer_1.y + i, vehicle_1.outer_1.x - 1] == '0') { count++; }
                 }
@@ -275,7 +283,11 @@ namespace MVCC.Utill
 
             for (i = 0; i < size; i++)
             {
-                if (vehicle_1.outer_1.y - 1 >= 0 && vehicle_1.outer_1.x + i < grid_x)
+                if (vehicle_1.outer_1.y - 1 < 0 || vehicle_1.outer_1.x + i < 0) {
+
+                    return false;
+                }
+                else if (vehicle_1.outer_1.y - 1 >= 0 && vehicle_1.outer_1.x + i < grid_x)
                 {
                     if (grid[vehicle_1.outer_1.y - 1, vehicle_1.outer_1.x + i] == '0') { count++; }
                 }
@@ -315,7 +327,11 @@ namespace MVCC.Utill
 
             for (i = 0; i < size; i++)
             {
-                if (vehicle_1.outer_3.y + 1 < grid_y && vehicle_1.outer_3.x + i < grid_x)
+                if (vehicle_1.outer_3.y + 1 < 0 || vehicle_1.outer_3.x + i < 0) {
+
+                    return false;
+                }
+                else if (vehicle_1.outer_3.y + 1 < grid_y && vehicle_1.outer_3.x + i < grid_x)
                 {
                     if (grid[vehicle_1.outer_3.y + 1, vehicle_1.outer_3.x + i] == '0') { count++; }
                 }
@@ -350,6 +366,8 @@ namespace MVCC.Utill
         {
 
             int size = vehicle_1.size;
+
+            if (vehicle_1.outer_2.x + 1 < 0 || vehicle_1.outer_2.y < 0) { return false; }
 
             if (vehicle_1.outer_2.x + 1 == grid_x - 1 || vehicle_1.outer_2.y == grid_y - 1) { return false; }
 
@@ -389,6 +407,8 @@ namespace MVCC.Utill
         {
 
             int size = vehicle_1.size;
+
+            if (vehicle_1.outer_2.x + 1 < 0 || vehicle_1.outer_2.y < 0) { return false; }
 
             if (vehicle_1.outer_2.x + 1 == grid_x - 1 || vehicle_1.outer_2.y == grid_y - 1) { return false; }
 
@@ -430,6 +450,8 @@ namespace MVCC.Utill
 
             int size = vehicle_1.size;
 
+            if (vehicle_1.outer_2.x + 1 < 0 || vehicle_1.outer_2.y < 0) { return false; }
+
             if (vehicle_1.outer_2.x + 1 == grid_x - 1 || vehicle_1.outer_2.y == grid_y - 1) { return false; }
 
             if (left_move_check(vehicle_1) && up_move_check(vehicle_1) && (grid[vehicle_1.outer_1.y - 1, vehicle_1.outer_1.x - 1] == '0'))
@@ -468,6 +490,8 @@ namespace MVCC.Utill
         {
 
             int size = vehicle_1.size;
+
+            if (vehicle_1.outer_2.x + 1 < 0 || vehicle_1.outer_2.y < 0) { return false; }
 
             if (vehicle_1.outer_2.x + 1 == grid_x - 1 || vehicle_1.outer_2.y == grid_y - 1) { return false; }
 
@@ -598,7 +622,7 @@ namespace MVCC.Utill
 
             i = 0; j = 0;
 
-            root = node[node_1.outer_1.y, node_1.outer_1.x];
+            root = node[node_1.outer_1.y + node_1.size / 2, node_1.outer_1.x + node_1.size / 2];
 
             q_level++;		// q_level 0에서 시작 / -1 : q가 비워짐
             q[q_level] = root;
@@ -610,34 +634,75 @@ namespace MVCC.Utill
 
                 pop = q[0];
 
-                node[q[0].outer_1.y, q[0].outer_1.x].visited = 1;
+                node[q[0].outer_1.y + node_1.size / 2, q[0].outer_1.x + node_1.size / 2].visited = 1;
                 q_level--;
                 for (i = 0; i <= q_level; i++)
                 {
 
                     q[i] = q[i + 1];
                 }
-
-                if ((pop.outer_1.x == target_x) && (pop.outer_1.y == target_y))
+                
+                
+                if (0 <= dest_x && dest_x <= 2 || grid_x - 2 <= dest_x && dest_x <= grid_x)
+                {
+                    //Console.WriteLine("Case 1");
+                    if (abs((pop.outer_1.x + node_1.size / 2) - target_x) <= 2 && abs((pop.outer_1.y + node_1.size / 2) - target_y) <= 2)
+                    {
+                        dest_x = pop.outer_1.x + node_1.size / 2;
+                        dest_y = pop.outer_1.y + node_1.size / 2;
+                        Console.WriteLine("x : {0} y : {1}", pop.outer_1.x + node_1.size / 2, pop.outer_1.y + node_1.size / 2);
+                        Console.WriteLine("Vehicle has arrived at the destination");
+                        break;
+                    }
+                }
+                else if (0 <= dest_y && dest_y <= 2 || grid_y - 2 <= dest_y && dest_y <= grid_y)
+                {
+                    //Console.WriteLine("Case 2");
+                    if (abs((pop.outer_1.x + node_1.size / 2) - target_x) <= 2 && abs((pop.outer_1.y + node_1.size / 2) - target_y) <= 2)
+                    {
+                        dest_x = pop.outer_1.x + node_1.size / 2;
+                        dest_y = pop.outer_1.y + node_1.size / 2;
+                        Console.WriteLine("x : {0} y : {1}", pop.outer_1.x + node_1.size / 2, pop.outer_1.y + node_1.size / 2);
+                        Console.WriteLine("Vehicle has arrived at the destination");
+                        break;
+                    }
+                }
+                else
+                {
+                    //Console.WriteLine("Case 3");
+                    if ((pop.outer_1.x + node_1.size / 2 == dest_x) && (pop.outer_1.y + node_1.size / 2 == dest_y))
+                    { 
+                        
+                        Console.WriteLine("x : {0} y : {1}", pop.outer_1.x + node_1.size / 2, pop.outer_1.y + node_1.size / 2);
+                        Console.WriteLine("Vehicle has arrived at the destination");
+                        break;
+                    }
+                    
+                }
+                
+                /*
+                if ((pop.outer_1.x + node_1.size / 2 == target_x) && (pop.outer_1.y + node_1.size / 2 == target_y))
                 {
 
-                    Console.WriteLine("x : {0} y : {1}", pop.outer_1.x, pop.outer_1.y);
+                    Console.WriteLine("x : {0} y : {1}", pop.outer_1.x + node_1.size / 2, pop.outer_1.y + node_1.size / 2);
                     Console.WriteLine("Vehicle has arrived at the destination");
                     break;
                 }
+                */
+
                 for (i = 0; i < 8; i++)
                 {
 
-                    if ((pop.children[i] != null) && (node[(pop.children[i]).outer_1.y, (pop.children[i]).outer_1.x].visited == 0))
+                    if ((pop.children[i] != null) && (node[(pop.children[i]).outer_1.y + node_1.size / 2, (pop.children[i]).outer_1.x + node_1.size / 2].visited == 0))
                     {
 
-                        node[(pop.children[i]).outer_1.y, (pop.children[i]).outer_1.x].weight = node[pop.outer_1.y, pop.outer_1.x].weight + 1;
+                        node[(pop.children[i]).outer_1.y + node_1.size / 2, (pop.children[i]).outer_1.x + node_1.size / 2].weight = node[pop.outer_1.y + node_1.size / 2, pop.outer_1.x + node_1.size / 2].weight + 1;
 
                         q_level++;
 
-                        q[q_level] = node[pop.outer_1.y, pop.outer_1.x].children[i];
+                        q[q_level] = node[pop.outer_1.y + node_1.size / 2, pop.outer_1.x + node_1.size / 2].children[i];
 
-                        node[q[q_level].outer_1.y, q[q_level].outer_1.x].visited = 1;
+                        node[q[q_level].outer_1.y + node_1.size / 2, q[q_level].outer_1.x + node_1.size / 2].visited = 1;
                     }
                 }
             }
@@ -677,28 +742,10 @@ namespace MVCC.Utill
             int dir_6 = 0;
             int dir_7 = 0;
 
-            vehicle_compare.size = vehicle_1.size;
-
-            vehicle_compare.outer_1.x = start_point_x;
-            vehicle_compare.outer_1.y = start_point_y;
-
-            vehicle_compare.outer_2.x = start_point_x + vehicle_1.size - 1;
-            vehicle_compare.outer_2.y = start_point_y;
-
-            vehicle_compare.outer_3.x = start_point_x;
-            vehicle_compare.outer_3.y = start_point_y + vehicle_1.size - 1;
-
-            vehicle_compare.outer_4.x = start_point_x + vehicle_1.size - 1;
-            vehicle_compare.outer_4.y = start_point_y + vehicle_1.size - 1;
-
-            vehicle_compare.visited = 1;
-
-            vehicle_compare.weight = 0;
-
             Console.Write("{0} ", current_weight);
             grid[start_point_y, start_point_x] = '5';
 
-            ugv.PathList.Add(new KeyValuePair<int, int>((start_point_x)* 15, (start_point_y) * 15));
+            ugv.PathList.Add(new KeyValuePair<int, int>((start_point_x) * 15, (start_point_y) * 15));
 
             if ((relative_position_x == 0) && (relative_position_y == 0))
             {
@@ -877,7 +924,7 @@ namespace MVCC.Utill
                 catch { Console.WriteLine("Catch"); }
             }
             // Case 3 : 좌측 아래 도착점에서 우측 위 시작점으로 거슬러 가는 경우
-            else if ((relative_position_x <= 0) && (relative_position_y >= 0))
+            else if ((relative_position_x >= 0) && (relative_position_y <= 0))
             {
                 //Console.WriteLine("Case 3");
 
@@ -961,7 +1008,7 @@ namespace MVCC.Utill
                 catch { Console.WriteLine("Catch"); }
             }
             // Case 4 : 우측 위 도착점에서 좌측 아래 시작점으로 거슬러 가는 경우
-            else if ((relative_position_x >= 0) && (relative_position_y <= 0))
+            else if ((relative_position_x <= 0) && (relative_position_y >= 0))
             {
                 //Console.WriteLine("Case 4");
 
@@ -1091,9 +1138,8 @@ namespace MVCC.Utill
         public int dest_y;
         public int size_;
 
-        
-
-        public void Movement_Command() {
+        public void Movement_Command()
+        {
 
             if (path_following(follow_command[path_num], follow_command[path_num + 1]) == 0)
             {
@@ -1160,12 +1206,12 @@ namespace MVCC.Utill
                 path_num++;
 
             }
-        
+
         }
 
         #endregion
 
-        public void find_path(UGV ugv, State state)
+        public bool find_path(UGV ugv, State state)
         {
             this.ugv = ugv;
             this.state = state;
@@ -1176,7 +1222,7 @@ namespace MVCC.Utill
             dest_x = state.EndPointX;
             dest_y = state.EndPointY;
 
-            Console.WriteLine("ugv.Id = " + ugv.Id + " start_x = " + start_x + " start_y = " + start_y +" dest_x = " + dest_x + " dest_y = " + dest_y);
+            Console.WriteLine("ugv.Id = " + ugv.Id + " start_x = " + start_x + " start_y = " + start_y + " dest_x = " + dest_x + " dest_y = " + dest_y);
 
             //Console.WriteLine("dest_x = " + dest_x + " dest_y = " + dest_y + " current_perspective =" + current_perspective);
             size_ = 5;
@@ -1185,25 +1231,25 @@ namespace MVCC.Utill
             ugv.MovementCommandList.Clear();
             ugv.PathList.Clear();
 
-            if((map_classification() == false))//차량 구별한 장애물 맵 세팅, 도착지점에 잘못찍으면 return
-                return;
+            if ((map_classification() == false))//차량 구별한 장애물 맵 세팅, 도착지점에 잘못찍으면 return
+                return false;
 
             #region Graph_Node_Initialization
 
             ///////////////////////////////////////////////////////////
             vehicle_1.size = size_;
 
-            vehicle_1.outer_1.x = start_x;
-            vehicle_1.outer_1.y = start_y;
+            vehicle_1.outer_1.x = start_x - size_ / 2;
+            vehicle_1.outer_1.y = start_y - size_ / 2;
 
-            vehicle_1.outer_2.x = start_x + size_ - 1;
-            vehicle_1.outer_2.y = start_y;
+            vehicle_1.outer_2.x = start_x + size_ / 2 + 1;
+            vehicle_1.outer_2.y = start_y - size_ / 2;
 
-            vehicle_1.outer_3.x = start_x;
-            vehicle_1.outer_3.y = start_y + size_ - 1;
+            vehicle_1.outer_3.x = start_x - size_ / 2;
+            vehicle_1.outer_3.y = start_y + size_ / 2 + 1;
 
-            vehicle_1.outer_4.x = start_x + size_ - 1;
-            vehicle_1.outer_4.y = start_y + size_ - 1;
+            vehicle_1.outer_4.x = start_x + size_ / 2 + 1;
+            vehicle_1.outer_4.y = start_y + size_ / 2 + 1;
 
             vehicle_1.visited = 1;
 
@@ -1272,7 +1318,6 @@ namespace MVCC.Utill
                 Console.WriteLine(" ");
             }
             */
-
             #endregion
 
             #region Path_Following
@@ -1287,28 +1332,35 @@ namespace MVCC.Utill
                 Follow_Command();
             }
 
-          
+
             int index;
             int.TryParse(ugv.Id[1].ToString(), out index);
 
-            if(path_count == 0)
+            if (path_count == 0)
             {
-                Console.WriteLine("길 찾기결과 길 없음!!!!!!!!!!!!!!");
+                Console.WriteLine("path_count = 0 길 찾기결과 길 없음!!!!!!!!!!!!!!");
                 ugv.MovementCommandList.Clear();
                 ugv.PathList.Clear();
-                return;
+                return false;
             }
 
-            globals.first_point_x[index] = ugv.PathList[path_count - 1].Key / 15;
-            globals.first_point_y[index] = ugv.PathList[path_count - 1].Value / 15;
+            globals.first_point_x[index] = ugv.PathList[ugv.PathList.Count - 2].Key / 15;
+            globals.first_point_y[index] = ugv.PathList[ugv.PathList.Count - 2].Value / 15;
 
+            /*
+            Console.WriteLine("globals.first_point_x[index] : " + globals.first_point_x[index]);
+            Console.WriteLine("globals.first_point_y[index] : " + globals.first_point_y[index]);
+
+            Console.WriteLine("state.CurrentPointX / 15 : " + state.CurrentPointX / 15);
+            Console.WriteLine("state.CurrentPointY / 15 : " + state.CurrentPointY / 15);
+            */
 
             path_num = 0;
             for (int i = 0; i < path_count - 1; i++)
             {
                 Movement_Command();
             }
-            
+
             Console.WriteLine("");
             /*
             for (int i = 0; i < path_count; i++)
@@ -1321,29 +1373,70 @@ namespace MVCC.Utill
             {
                 Console.Write("{0}", movement[i].ToString());
             }
-             */ 
+             */
             Console.WriteLine("");
-            
-            for (int i = 0; i < path_count - 1; i++)
+
+            for (int i = 0; i < path_count; i++)
             {
                 ugv.MovementCommandList.Add(movement[i].ToString());
             }
-           
-            for (int i = 0; i < path_count - 1; i++)
+            /*
+            for (int i = 0; i < path_count; i++)
             {
-                Console.Write("{0}", ugv.MovementCommandList[i][0].ToString());
+                Console.WriteLine("ugv.MovementCommandList[i][0] : {0}", ugv.MovementCommandList[i][0].ToString());
             }
-              
+            */
+
             Console.WriteLine("");
 
             #endregion
+            /*
+            int startX, startY, endX, endY;
 
+            startX = state.EndPointX - 2;
+            startY = state.EndPointY - 2;
 
-            //UGV_confict_check(); //UGV 경로 충돌 검사  
-            //UGV_path_evasion(); //USG 경로 회피
+            endX = state.EndPointX + 2;
+            endY = state.EndPointY + 2;
 
+            //범위 초과일 경우 설정
+            if (startX < 0)
+            {
+                endX -= startX;
+                startX = 0;
+            }
+            if (startY < 0)
+            {
+                endY -= startY;
+                startY = 0;
+            }
+
+            if (endX > globals.rect_width / globals.x_grid)
+            {
+                startX -= (endX - globals.rect_width / globals.x_grid);
+                endX = globals.rect_width;
+            }
+            if (endY > globals.rect_height)
+            {
+                startY -= (endY - globals.rect_height / globals.y_grid);
+                endY = globals.rect_height;
+            }
+
+            for (int x = startX; x <= endX; x++)
+                for (int y = startY; y <= endY; y++)
+                    grid[y, x] = 'x'; 
+            */
+            for (int x = 0; x < globals.rect_width / globals.x_grid; x++)
+            {
+                for (int y = 0; y < globals.rect_height / globals.y_grid; y++)
+                {
+                    if (globals.EndPointMap[y, x] == '@')
+                        grid[y, x] = 'x';
+                }
+            }
+            return true;
         }
-
+         
 
         public bool map_classification()
         {
@@ -1352,151 +1445,59 @@ namespace MVCC.Utill
             int.TryParse(ugv.Id[1].ToString(), out index);
 
             direct = globals.direction[index];
-
+            
             globals.mapObstacleLock.EnterReadLock(); //critical section start
+                       
+            /*
+            bool endPointCheck = false;
 
-            //도착 지점 테두리 안에 찍였을시에 경로 없음
-            for (int x = state.EndPointX + 1; x < state.EndPointX + 3; x++)
-                for (int y = state.EndPointY + 1; y < state.EndPointY + 3; y++)
-                    if (globals.Map_obstacle[y, x] == '@')
-                        return false;     
-             
+            if (endPointCheck == false && state.EndPointY - 1 >= 0 && globals.EndPointMap[state.EndPointY - 1, state.EndPointX] == 0)
+                endPointCheck = true;
+            if (endPointCheck == false && state.EndPointY - 1 >= 0 && state.EndPointX + 1 <= globals.rect_width / globals.x_grid && globals.EndPointMap[state.EndPointY - 1, state.EndPointX + 1] == 0)
+                endPointCheck = true;
+            if (endPointCheck == false && state.EndPointX + 1 <= globals.rect_width / globals.x_grid && globals.EndPointMap[state.EndPointY, state.EndPointX + 1] == 0)
+                endPointCheck = true;
+            if (endPointCheck == false && state.EndPointY + 1 <= globals.rect_height / globals.y_grid  && state.EndPointX + 1 <= globals.rect_width / globals.x_grid && globals.EndPointMap[state.EndPointY + 1, state.EndPointX + 1] == 0)
+                endPointCheck = true;
+            if (endPointCheck == false && state.EndPointY + 1 <= globals.rect_height / globals.y_grid  && globals.EndPointMap[state.EndPointY + 1, state.EndPointX] == 0)
+                endPointCheck = true;
+            if (endPointCheck == false && state.EndPointY + 1 <= globals.rect_height / globals.y_grid && state.EndPointX - 1 >= 0 && globals.EndPointMap[state.EndPointY + 1, state.EndPointX - 1] == 0)
+                endPointCheck = true;
+            if (endPointCheck == false && state.EndPointX - 1 >= 0 && globals.EndPointMap[state.EndPointY, state.EndPointX - 1] == 0)
+                endPointCheck = true;
+            if (endPointCheck == false && state.EndPointY - 1 >= 0 && state.EndPointY - 1 >= 0 && globals.EndPointMap[state.EndPointY - 1, state.EndPointX - 1] == 0)
+                endPointCheck = true;
+
+            if (endPointCheck == false)
+            {
+                Console.WriteLine("chu !! 찍은 도착 지점은 갈 수가 없습니다");
+                return false;
+            }
+            */
             for (int x = 0; x < globals.rect_width / globals.x_grid; x++)
             {
                 for (int y = 0; y < globals.rect_height / globals.y_grid; y++)
                 {
                     if (globals.Map_obstacle[y, x] == '*') //장애물은 x 로
                         grid[y, x] = 'x';
-                   // else if (globals.Map_obstacle[y, x] == 0)
+                    // else if (globals.EndPointMap[y, x] == 0)
                     //    grid[y, x] = '0';
-                   // else if (globals.Map_obstacle[y, x] == index + 1)
-                   //     grid[y, x] = '1';
+                    // else if (globals.EndPointMap[y, x] == index + 1)
+                    //     grid[y, x] = '1';
                     else
                         grid[y, x] = '0';
+
+       
                 }
             }
 
             globals.mapObstacleLock.ExitReadLock(); //critical section end
 
+ 
+
+
             return true;
         }
-
-        public void UGV_confict_check()
-        {
-            //Console.WriteLine("mapViewModel.MVCCItemList.Count = " + mapViewModel.MVCCItemList.Count);
-            MapViewModel mapViewModel = new MapViewModel();
-
-            for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
-            {
-                Console.WriteLine("i = " + i + " mapViewModel.MVCCItemList.Count = " + mapViewModel.MVCCItemList.Count);
-
-                if (!(mapViewModel.MVCCItemList[i] is UGV))
-                    continue;
-
-                UGV temp_ugv = mapViewModel.MVCCItemList[i] as UGV;
-
-                Console.WriteLine("회피 검사하는데로 들어오니?");
-
-                if (ugv.Id != temp_ugv.Id)
-                {
-                    if (temp_ugv.PathList.Count != 0)
-                    {
-                        //List<string> temp_movent = temp_ugv.MovementCommandList;
-                        int max_path_count;
-
-                        if (ugv.MovementCommandList.Count > temp_ugv.MovementCommandList.Count)
-                            max_path_count = ugv.MovementCommandList.Count;
-                        else
-                            max_path_count = temp_ugv.MovementCommandList.Count;
-
-                        bool confilt_check = false;
-                        int confilt_x;
-                        int confilt_y;
-                        int confilt_count_first = 0;
-                        int confilt_count_second = 0;
-
-                        for (int j = 0; j < ugv.MovementCommandList.Count; j++) //두번째로 가고 있는 차
-                        {
-                            for (int k = 0; k < temp_ugv.MovementCommandList.Count; k++) //첫번째로 가려고 하는 차
-                            {
-                                if (ugv.PathList[j].Value == temp_ugv.PathList[k].Value)
-                                {
-                                    confilt_check = true;
-                                    confilt_x = ugv.PathList[j].Key;
-                                    confilt_y = ugv.PathList[j].Value;
-
-                                    confilt_count_first = k;
-                                    confilt_count_second = j;
-
-                                    Console.WriteLine("경로 충돌한다");
-                                    break;
-                                }
-                            }
-
-                            if (confilt_check == true)
-                                break;
-                        }
-
-                        if (confilt_check == true)
-                        {
-                            if (confilt_count_first > confilt_count_second) //첫번재 차량이 만나는 경로가 길었을대 
-                            {
-
-
-
-
-
-
-                            }
-                            else //두번재 차량이 만나는 경로가 길었을대
-                            {
-
-
-                            }
-                        }
-                        else
-                        {
-
-                            Console.WriteLine("경로 충돌안한다");
-                            continue;
-                        }
-                    }
-                }
-            }
-        }
-
-        /*
-                public void UGV_path_upgrade(object sender, DoWorkEventArgs e)
-                {
-                    object object_ugv = e.Argument;
-                    UGV temp_ugv = (UGV)object_ugv;
-
-                    int index;
-                    int.TryParse(temp_ugv.Id[1].ToString(), out index);
-           
-                    while(ugv.MovementCommandList.Count != 0)
-                    {
-
-
-                    }
-                }
-
-        */
-
-        public void UGV_path_evasion()
-        {
-
-
-
-
-
-
-
-
-        }
-
-
-
 
     }
 }

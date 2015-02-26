@@ -47,6 +47,7 @@ namespace MVCC.Utill
             if (!globals.UGVSettingDictionary.ContainsKey(convertId(ugv.Id)))
             {
                 MessageBox.Show("블루투스 설정이 되어있지 않습니다.");
+                //state.IsDriving = true;
 
                 return;
             }
@@ -97,11 +98,11 @@ namespace MVCC.Utill
                         int direction_x = ((state.CurrentPointX) / 15);
                         int direction_y = ((state.CurrentPointY) / 15);
 
-                        //Console.WriteLine("first_x {0}", globals.first_point_x[index]);
-                        //Console.WriteLine("first_y {0}", globals.first_point_y[index]);
+                        Console.WriteLine("first_x {0}", globals.first_point_x[index]);
+                        Console.WriteLine("first_y {0}", globals.first_point_y[index]);
 
-                        //Console.WriteLine("start_point_x {0}", start_x);
-                        //Console.WriteLine("start_point_y {0}", start_y);
+                        Console.WriteLine("start_point_x {0}", start_x);
+                        Console.WriteLine("start_point_y {0}", start_y);
 
                         Console.WriteLine("Direction Value : {0}", globals.direction[index]);
 
@@ -146,8 +147,8 @@ namespace MVCC.Utill
 
                         #endregion
 
-                        //Console.WriteLine("direction_x {0}", direction_x);
-                        //Console.WriteLine("direction_y {0}", direction_y);
+                        Console.WriteLine("direction_x {0}", direction_x);
+                        Console.WriteLine("direction_y {0}", direction_y);
 
                         #region Angle Calculation
 
@@ -191,38 +192,47 @@ namespace MVCC.Utill
                         if ((globals.angle[index] - globals.direction[index] == 0))
                         {
                             serialport.WriteLine( "0" );
+                            Console.WriteLine("0");
                         }
                         else if ((globals.angle[index] - globals.direction[index] == 1))
                         {
                             serialport.WriteLine( "1" );
+                            Console.WriteLine("1");
                         }
                         else if ((globals.angle[index] - globals.direction[index] == 2) || (globals.angle[index] - globals.direction[index] == -6))
                         {
                             serialport.WriteLine( "2" );
+                            Console.WriteLine("2");
                         }
                         else if ((globals.angle[index] - globals.direction[index] == 3) || (globals.angle[index] - globals.direction[index] == -5))
                         {
                             serialport.WriteLine( "3" );
+                            Console.WriteLine("3");
                         }
                         else if ((globals.angle[index] - globals.direction[index] == 4) || (globals.angle[index] - globals.direction[index] == -4))
                         {
                             serialport.WriteLine( "4" );
+                            Console.WriteLine("4");
                         }
                         else if ((globals.angle[index] - globals.direction[index] == 5) || (globals.angle[index] - globals.direction[index] == -3))
                         {
                             serialport.WriteLine( "5" );
+                            Console.WriteLine("5");
                         }
                         else if ((globals.angle[index] - globals.direction[index] == 6) || (globals.angle[index] - globals.direction[index] == -2))
                         {
                             serialport.WriteLine( "6" );
+                            Console.WriteLine("6");
                         }
                         else if ((globals.angle[index] - globals.direction[index] == 7) || (globals.angle[index] - globals.direction[index] == -1))
                         {
                             serialport.WriteLine( "7" );
+                            Console.WriteLine("7");
                         }
                         else if ((globals.angle[index] - globals.direction[index] == -7) && (globals.angle[index] - globals.direction[index] == 0))
                         {
                             serialport.WriteLine( "8" );
+                            Console.WriteLine("8");
                         }
                         #endregion
 
