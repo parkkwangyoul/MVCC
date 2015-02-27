@@ -259,33 +259,49 @@ namespace MVCC.Utill
                     double E = Math.Atan2(D, C);
                     double result = E * (180 / 3.14192);
 
+                    if (result < 0)
+                        result = 360 + result;
 
-                   // glo.mapObstacleLock.EnterWriteLock(); //critical section start
+                    // glo.mapObstacleLock.EnterWriteLock(); //critical section start
 
-                    if (75 <= result && result <= 105)
+                    double ref_angle = 45;
+                    double margin = 4;
+
+
+
+                    if (ref_angle * 2 - margin <= result && result <= ref_angle * 2 + margin)
                         glo.direction[index] = 0;
-                    else if (115 <= result && result <= 155)
+                    else if (ref_angle * 3 - margin <= result && result <= ref_angle * 3 + margin)
                         glo.direction[index] = 1;
-                    else if (179 <= result && result <= 181)
-                    //else if (173 <= result && result < 173 || -174 <= result && result <= -171)
+                    else if (ref_angle * 4 - margin <= result && result <= ref_angle * 4 + margin)
                         glo.direction[index] = 2;
-                    //else if (165 <= result && result < 180 || -179 <= result && result <= -165 || result == 180)
-                    //    glo.direction[index] = 2;
-                    else if (-155 <= result && result <= -115)
+                    else if (ref_angle * 5 - margin <= result && result <= ref_angle * 5 + margin)
                         glo.direction[index] = 3;
-                    else if (-105 <= result && result <= -75)
+                    else if (ref_angle * 6 - margin <= result && result <= ref_angle * 6 + margin)
                         glo.direction[index] = 4;
-                    else if (-65 <= result && result <= -25)
+                    else if (ref_angle * 7 - margin <= result && result <= ref_angle * 7 + margin)
                         glo.direction[index] = 5;
-                    else if (-15 <= result && result < 0 || 0 <= result && result < 15)
+                    else if (ref_angle * 0 <= result && result <= ref_angle * 0 + margin || ref_angle * 8 - margin <= result && result <= ref_angle * 8)
                         glo.direction[index] = 6;
-                    else if (25 <= result && result <= 65)
+                    else if (ref_angle * 1 - margin <= result && result <= ref_angle * 1 + margin)
                         glo.direction[index] = 7;
                     else
                         glo.direction[index] = -1;
-
+                    
+                    /*
+                     if (index == 0)
+                     {
+                         if (glo.direction[index] != -1)
+                         {
+                             Console.WriteLine("result = " + result);
+                             Console.WriteLine("globals.direction[i] = " + glo.direction[index]);
+                         }
+                                                  
+                     }
+                     */
+ 
                     //glo.mapObstacleLock.ExitWriteLock(); //critical section end
-
+                    /*
                     if (index == 0)
                     {
                         if (glo.direction[index] == -1)
@@ -293,9 +309,10 @@ namespace MVCC.Utill
                         else
                             Console.WriteLine("i = " + index + " direction[index] = " + glo.direction[index] + " result = " + result);
                     }     
-                     // if (index == 3)
-                      //   Console.WriteLine("");
-                  
+                     */
+                    // if (index == 3)
+                    //   Console.WriteLine("");
+
                     /*
                     if (glo.direction[index] == -1)
                        Console.WriteLine("i = " + index + " direction[index] = " + glo.direction[index] + " result = " + result);
