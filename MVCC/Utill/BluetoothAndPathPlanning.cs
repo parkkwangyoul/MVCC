@@ -25,7 +25,7 @@ namespace MVCC.Utill
             this.ugv = ugv;
             this.state = state;
 
-            //bluetoothConnect(ugv);
+            bluetoothConnect(ugv);
 
             bluetoothCommand(ugv, state);
 
@@ -91,7 +91,7 @@ namespace MVCC.Utill
                 */
                 Console.Out.Flush();
 
-                if (write_data.Equals("f"))
+                if (write_data.Equals("d"))
                 {
                     globals.SerialPortList[index].WriteLine((write_data[0]).ToString());
 
@@ -99,6 +99,7 @@ namespace MVCC.Utill
 
                     try
                     {
+/*
                         #region Transmit_Movement_Command
 
                         int first_x = globals.first_point_x[index];
@@ -197,8 +198,8 @@ namespace MVCC.Utill
                             globals.angle[index] = 7;
                         }
                         #endregion
-
-
+                        */
+                        /*
                         #region Send Angle
 
                         if ((globals.angle[index] - globals.direction[index] == 0))
@@ -247,9 +248,10 @@ namespace MVCC.Utill
                             Console.WriteLine("8");
                         }
                         #endregion
+                        */
 
                         //Console.WriteLine("ugv.Id = " + ugv.Id + " direction[index] = " + globals.direction[index]);
-
+                        /*
                         #region Transmit Movement Commands
 
                         for (int i = 0; i < ugv.MovementCommandList.Count; i++)
@@ -261,8 +263,9 @@ namespace MVCC.Utill
                         Console.WriteLine("TX Complete");
 
                         #endregion
-
+                        
                         #endregion
+                        */
                     }
                     catch (TimeoutException)
                     {
@@ -279,6 +282,16 @@ namespace MVCC.Utill
                 {
                     globals.SerialPortList[index].WriteLine((write_data[0]).ToString());
                 }
+
+                else
+                {
+                    Console.WriteLine("index = " + index);
+                    Console.WriteLine("globals.SerialPortList[index] = " + globals.SerialPortList[index]);
+                    Console.WriteLine("write_data[0] =" + write_data[0]);
+
+                    globals.SerialPortList[index].WriteLine((write_data[0]).ToString());
+                }
+
                 Console.Out.Flush();
 
                 

@@ -51,6 +51,9 @@ namespace MVCC.View
 
         private PathFinder pathFinder;
 
+        string rotation = "1";
+        string prev_rotation = "1";
+
         #region 카메라, thread start
         /**
         * 카메라를 켬
@@ -167,8 +170,11 @@ namespace MVCC.View
             List<UGV> ugvList = new List<UGV>();
             int average_val = 0; //떨림 방지를 위한 count
 
-
-            //int[] UGV_int = new UGV[4];
+            for (int i = 0; i < 4; i++)
+            {
+                globals.copy_pathList[i] = new List<KeyValuePair<int, int>>();
+            }
+                //int[] UGV_int = new UGV[4];
 
             while (true)
             {
@@ -236,42 +242,28 @@ namespace MVCC.View
                                             ugv.Y = tracking_rect[i].Y + 30;
 
                                             int temp_x, temp_y;
-
-                                            //temp_x = (int)(ugv.X / 15);
-                                            //temp_y = (int)(ugv.Y / 15);
+                                    
                                             globals.UGVStopCommandLock.EnterWriteLock();
-
+                                            
                                             if (ugv.PathList.Count != 0)
                                             {
                                                 KeyValuePair<int, int> temp = new KeyValuePair<int, int>();
 
                                                 temp = ugv.PathList[ugv.PathList.Count - 1];
 
-                                                //Console.WriteLine("ugv.X = " + ugv.X + " temp.Key = " + temp.Key);
-                                                //if()
+                                                Console.WriteLine("temp.x = " + temp.Key);
+                                                Console.WriteLine("temp.y = " + temp.Value);
+                                                Console.WriteLine("ugv.X = " + ugv.X);
+                                                Console.WriteLine("ugv.Y = " + ugv.Y);
 
 
-                                                //if (Math.Abs(ugv.X - temp.Key) < 15 && Math.Abs(ugv.Y - temp.Value) < 15)
-                                                if(Math.Abs(ugv.X - temp.Key) == 0 && Math.Abs(ugv.Y - temp.Value) == 0)
+                                                if (Math.Abs(ugv.X - temp.Key) < 16 && Math.Abs(ugv.Y - temp.Value) < 16)
+                                                //if(Math.Abs(ugv.X - temp.Key) < 10 && Math.Abs(ugv.Y - temp.Value) < 10)
                                                 {
-
+                                                  
                                                     for (int p = mapViewModel.MVCCUGVPathList.Count - 1; p >= 0; p--)
                                                     {
-                                                        UGVPath tempPath = mapViewModel.MVCCUGVPathList[p] as UGVPath;
-
-                                                        
-                                                        //if (ugv.MovementCommandList[globals.MovementCommandCount[ugv.Id]] == 0)
-                                                        //    AllUGVStateMap[tempUGV.Id];
-                                                        //bluetoothAndPathPlanning.connect(ugv.MovementCommandList)
-
-                                                        //직진 명령
-                                                        //ugv.MovementCommandList;
-                                                        
-                                                        //좌측 회전 명령
-
-                                                        //우측 회전 명령
-
-
+                                                        UGVPath tempPath = mapViewModel.MVCCUGVPathList[p] as UGVPath;                                                                                                   
 
                                                         if (tempPath.Id.Equals(ugv.Id))
                                                         {
@@ -285,12 +277,236 @@ namespace MVCC.View
 
                                                     }
                                                 }
-                                                else
+
+
+
+
+
+
+
+
+                                                Dictionary<string, State> AllUGVStateMap = new Dictionary<string, State>();
+
+                                                for (int m = 0; m < mapViewModel.MVCCItemStateList.Count; m++)
                                                 {
-                                                  // Console.WriteLine(" 아닐경우 피드백 " );
+                                                    State tempState = mapViewModel.MVCCItemStateList[m];
+                                                    AllUGVStateMap.Add(tempState.ugv.Id, tempState);
+                                                }
+
+                                                State tempUGVState = AllUGVStateMap[ugv.Id];
+
+                                                int first_x = ugv.PathList[ugv.PathList.Count - 2].Key / 15;
+                                                int first_y = ugv.PathList[ugv.PathList.Count - 2].Value / 15;
+
+                                                /*
+                                                int first_x = ((tempUGVState.CurrentPointX) / 15);
+                                                int first_y = ((tempUGVState.CurrentPointY) / 15);
+
+                                                
+                                                if (ugv.PathList.Count - 2 >= 0)
+                                                {
+
+                                                    first_x = globals.first_point_x[ugv.PathList.Count - 2];
+                                                    first_y = globals.first_point_y[ugv.PathList.Count - 2];
+                                                }
+                                                */
+
+                                                int start_x = ((tempUGVState.CurrentPointX) / 15);
+                                                int start_y = ((tempUGVState.CurrentPointY) / 15);
+
+                                                int direction_x = ((tempUGVState.CurrentPointX) / 15);
+                                                int direction_y = ((tempUGVState.CurrentPointY) / 15);
+
+                                                Console.WriteLine("first_x {0}", first_x);
+                                                Console.WriteLine("first_y {0}", first_y);
+
+                                                Console.WriteLine("start_point_x {0}", start_x);
+                                                Console.WriteLine("start_point_y {0}", start_y);
+
+                                                Console.WriteLine("Direction Value : {0}", globals.direction[i]);
+                                                
+                                                
+                                                if (globals.direction[i] == 0)
+                                                {
+                                                    direction_y = direction_y - 1;
+                                                }
+                                                else if (globals.direction[i] == 1)
+                                                {
+                                                    direction_x = direction_x + 1;
+                                                    direction_y = direction_y - 1;
+                                                }
+                                                else if (globals.direction[i] == 2)
+                                                {
+                                                    direction_x = direction_x + 1;
+                                                }
+                                                else if (globals.direction[i] == 3)
+                                                {
+                                                    direction_x = direction_x + 1;
+                                                    direction_y = direction_y + 1;
+                                                }
+                                                else if (globals.direction[i] == 4)
+                                                {
+                                                    direction_y = direction_y + 1;
+                                                }
+                                                else if (globals.direction[i] == 5)
+                                                {
+                                                    direction_x = direction_x - 1;
+                                                    direction_y = direction_y + 1;
+                                                }
+                                                else if (globals.direction[i] == 6)
+                                                {
+                                                    direction_x = direction_x - 1;
+                                                }
+                                                else if (globals.direction[i] == 7)
+                                                {
+                                                    direction_x = direction_x - 1;
+                                                    direction_y = direction_y + 1;
+                                                }
+
+
+                                                Console.WriteLine("direction_x {0}", direction_x);
+                                                Console.WriteLine("direction_y {0}", direction_y);
+
+
+
+                                                if ((first_x - start_x == 0) && (first_y - start_y == -1))
+                                                {
+                                                    globals.angle[i] = 0;
+                                                }
+                                                else if ((first_x - start_x == 1) && (first_y - start_y == -1))
+                                                {
+                                                    globals.angle[i] = 1;
+                                                }
+                                                else if ((first_x - start_x == 1) && (first_y - start_y == 0))
+                                                {
+                                                    globals.angle[i] = 2;
+                                                }
+                                                else if ((first_x - start_x == 1) && (first_y - start_y == 1))
+                                                {
+                                                    globals.angle[i] = 3;
+                                                }
+                                                else if ((first_x - start_x == 0) && (first_y - start_y == 1))
+                                                {
+                                                    globals.angle[i] = 4;
+                                                }
+                                                else if ((first_x - start_x == -1) && (first_y - start_y == 1))
+                                                {
+                                                    globals.angle[i] = 5;
+                                                }
+                                                else if ((first_x - start_x == -1) && (first_y - start_y == 0))
+                                                {
+                                                    globals.angle[i] = 6;
+                                                }
+                                                else if ((first_x - start_x == -1) && (first_y - start_y == -1))
+                                                {
+                                                    globals.angle[i] = 7;
+                                                }
+
+                                                Console.WriteLine("globals.angle[i] = " + globals.angle[i]);
+
+
+
+                                                if (globals.direction[i] != -1)
+                                                {
+                                                    if ((globals.angle[i] - globals.direction[i] == 0))
+                                                    {
+                                                        rotation = "0";
+                                                        prev_rotation = rotation;
+                                                    }
+                                                    else if ((globals.angle[i] - globals.direction[i] == 1))
+                                                    {
+                                                        rotation = "7";
+                                                        prev_rotation = rotation;
+                                                    }
+                                                    else if ((globals.angle[i] - globals.direction[i] == 2) || (globals.angle[i] - globals.direction[i] == -6))
+                                                    {
+                                                        rotation = "7";
+                                                        prev_rotation = rotation;
+                                                    }
+                                                    else if ((globals.angle[i] - globals.direction[i] == 3) || (globals.angle[i] - globals.direction[i] == -5))
+                                                    {
+                                                        rotation = "7";
+                                                        prev_rotation = rotation;
+                                                    }
+                                                    else if ((globals.angle[i] - globals.direction[i] == 4) || (globals.angle[i] - globals.direction[i] == -4))
+                                                    {
+                                                        rotation = "7";
+                                                        prev_rotation = rotation;
+                                                    }
+                                                    else if ((globals.angle[i] - globals.direction[i] == 5) || (globals.angle[i] - globals.direction[i] == -3))
+                                                    {
+                                                        rotation = "1";
+                                                        prev_rotation = rotation;
+                                                    }
+                                                    else if ((globals.angle[i] - globals.direction[i] == 6) || (globals.angle[i] - globals.direction[i] == -2))
+                                                    {
+                                                        rotation = "1";
+                                                        prev_rotation = rotation;
+                                                    }
+                                                    else if ((globals.angle[i] - globals.direction[i] == 7) || (globals.angle[i] - globals.direction[i] == -1))
+                                                    {
+                                                        rotation = "1";
+                                                        prev_rotation = rotation;
+                                                    }
+                                                    else if ((globals.angle[i] - globals.direction[i] == -7) && (globals.angle[i] - globals.direction[i] == 0))
+                                                    {
+                                                        rotation = "1";
+                                                        prev_rotation = rotation;
+                                                    }
+                                                }
+                                                else {
+
+                                                    rotation = prev_rotation;
+                                                }
+
+                                                Console.WriteLine("rotation = " + rotation);
+                                                Console.WriteLine("prev_rotation = " + prev_rotation);
+
+                                                if (globals.direction[i] == globals.angle[i] )
+                                                {                                             
+                                                    tempUGVState = AllUGVStateMap[ugv.Id];
+                                                    ugv.Command = "0";
+                                                    bluetoothAndPathPlanning.connect(ugv, tempUGVState);
+
+                                                    Console.WriteLine("그만 돌아 이제 앞으로 가!!");
+                                                  
+                                                 }
+                                                else 
+                                                {
+                                                    Console.WriteLine(globals.angle[i] + " 방향으로 계속 돌아!!");
+
+                                                    tempUGVState = AllUGVStateMap[ugv.Id];
+                                                    ugv.Command = rotation;
+                                                    bluetoothAndPathPlanning.connect(ugv, tempUGVState);
+
+                                                    Console.WriteLine("스탑하고 돌아!!");
+                                                }
+
+
+
+                                                /*
+
+                                                //방향 바꾸는 명령어가 생기면 스탑 명령과 방향 넘김
+                                                if (ugv.MovementCommandList[globals.MovementCommandCount[i]] != "0")
+                                                {
+                                                    // Console.WriteLine("ugv.MovementCommandList[globals.MovementCommandCount[i]] = " + (ugv.MovementCommandList[globals.MovementCommandCount[i]] - 1));
+
+                                                    //AllUGVStateMap
+                                                    tempUGVState = AllUGVStateMap[ugv.Id];
+                                                    ugv.Command = "s";
+                                                    bluetoothAndPathPlanning.connect(ugv, tempUGVState);
+
+
+                                                    tempUGVState = AllUGVStateMap[ugv.Id];
+                                                    ugv.Command = rotation;
+                                                    bluetoothAndPathPlanning.connect(ugv, tempUGVState);
+
+                                                    Console.WriteLine("스탑하고 돌아!!");
 
                                                 }
 
+                                                globals.MovementCommandCount[i]++;
+                                                */
                                             }
 
                                             globals.UGVStopCommandLock.ExitWriteLock();
@@ -366,11 +582,12 @@ namespace MVCC.View
                             bool[] stop_check = new bool[4];
 
                             Dictionary<string, State> AllUGVStateMap = new Dictionary<string, State>();
-
+                            
                             for (int i = 0; i < mapViewModel.MVCCItemStateList.Count; i++)
                             {
                                 State tempState = mapViewModel.MVCCItemStateList[i];
                                 AllUGVStateMap.Add(tempState.ugv.Id, tempState);
+                                
                             }
 
                             //차량 전체에 정지신호
@@ -899,7 +1116,7 @@ namespace MVCC.View
                 individualUGVState.EndPointX = endPointX;
                 individualUGVState.EndPointY = endPointY;
 
-                individualUGV.Command = "f";
+                individualUGV.Command = "d";
 
                 RemoveEndPoint(individualUGV);
 
@@ -993,7 +1210,7 @@ namespace MVCC.View
                     tempState.EndPointX = endPointX;
                     tempState.EndPointY = endPointY;
 
-                    tempUGV.Command = "f";
+                    tempUGV.Command = "d";
 
                     RemoveEndPoint(tempUGV);
 
