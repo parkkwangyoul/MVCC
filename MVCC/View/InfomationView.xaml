@@ -4,8 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:base="clr-namespace:System.Windows;assembly=PresentationFramework"
+             xmlns:view="clr-namespace:MVCC.View"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" DataContext="{Binding Source={StaticResource Locator}, Path=InfomationViewModel}">
+             d:DesignHeight="1000" d:DesignWidth="2000" DataContext="{Binding Source={StaticResource Locator}, Path=InfomationViewModel}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -16,9 +17,240 @@
     <UserControl.Style>
         <base:StaticResource ResourceKey="BaseViewStyle" />
     </UserControl.Style>
-    <StackPanel>
-        <Grid>
-            <TextBlock FontSize="40px">Overview Of MVCC</TextBlock>
+    <Grid>
+        <Grid x:Name="Introduce1">
+            <Grid.RenderTransform>
+                <TranslateTransform X="0" Y="0" />
+            </Grid.RenderTransform>
+            <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontSize="35px">Welcome To</TextBlock>
+                        <Border Margin="15 0 0 0" BorderBrush="#737AFF" BorderThickness="0 0 0 1">
+                            <TextBlock FontSize="35px" Foreground="#737AFF">MVCC</TextBlock>
+                        </Border>
+                        <TextBlock Margin="5 0 0 0" FontSize="35px">!!!</TextBlock>
+                    </StackPanel>
+        
+                    <Grid Margin="0 30 0 0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25*" />
+                            <RowDefinition Height="75*" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Padding="20 0 0 0" FontSize="23px">1. The Concept of MVCC</TextBlock>
+                        <TextBlock Grid.Row="1" Padding="40 15 0 0" FontSize="15px" TextWrapping="Wrap">
+                            Project MVCC is 
+                            <TextBlock Foreground="#737AFF">
+                                <Underline> miniature version of ‘automated command &amp; control station’</Underline>
+                            </TextBlock> 
+                            that will be introduced in near future as the system that will control the traffic of thousands of UGV and UAV in various fields. 
+                            <TextBlock Foreground="#737AFF">
+                                <Underline> Since it is the scale-downed version, it will focus on the control of UGV elements. </Underline>
+                            </TextBlock>
+                        </TextBlock>
+                    </Grid>
+
+                    <Grid Margin="0 30 0 0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25*" />
+                            <RowDefinition Height="75*" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Padding="20 0 0 0" FontSize="23px">2. Core Technology of MVCC</TextBlock>
+                        <StackPanel Grid.Row="1">
+                            <TextBlock Padding="40 15 0 0" FontSize="15px" TextWrapping="Wrap">                        
+                                <TextBlock Foreground="#737AFF">WPF (Windows Presentation Foundation) </TextBlock>
+                                is next-generation UI framework developed by Microsoft. WPF has been included since .Net Framework 3.0. WPF contains UI for applications, 2D graphics, 3D graphics, and multimedia into one framework. WPF utilizes vector-based rendering engine in order to engage in hardware acceleration for graphic cards. WPF possesses great potential not only because it has combined UI, multimedia, and graphics into one framework, but also it utilizes XML-based programming along with C#. This aspect of WPF increases the efficiency on both design and development.
+                            </TextBlock>
+                    
+                            <TextBlock Padding="40 15 0 0" FontSize="15px" TextWrapping="Wrap">                        
+                                In Project MVCC, we will <TextBlock Foreground="#737AFF">build a two-wheel vehicle that is composed of Atmega 128, stepping motors, Bluetooth module, and aluminum frame. </TextBlock> <LineBreak/>
+                                This vehicle will use Atmega 128 as its microcontroller that will do all the processing work for running the motors and serial communication through Bluetooth. It will use stepping motor to drive around in the simulated environment. We also use stepping motor for this vehicle’s driving part, because through stepping motor, we can easily acquire how far the vehicle has moved through some simple calculations. This vehicle also has Bluetooth module that will be used to conduct serial communication with PC that conducts image processing for tracking the vehicles in the environment and detecting the collisions. Through Bluetooth module, the vehicle will provide its current status to PC. For our project, four vehicles will be produced.
+                            </TextBlock>
+
+                            <TextBlock Padding="40 15 0 0" FontSize="15px" TextWrapping="Wrap">                        
+                                <TextBlock Foreground="#737AFF">Object Tracking : </TextBlock>
+                                Since this project will be conducted in-door, we use camera instead of GPS in order to track the vehicles and detect obstacles. We will use pattern-based image processing in order to detect the objects from the image captured by the camera. We will use one of two patterns given above. We will choose one that produces the best results for the image processing. We will use different color patterns for each vehicle to distinguish between each vehicle.
+                            </TextBlock>
+
+                            <Grid Margin="40 15 0 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="40*" />
+                                    <ColumnDefinition Width="60*" />
+                                </Grid.ColumnDefinitions>
+                                <Image Source="/Resource/IntroduceImage1.png" />
+                                <TextBlock Margin="10 0 0 0" FontSize="15px" TextWrapping="Wrap" Grid.Column="1">                        
+                                    <TextBlock Foreground="#737AFF">Obstacle Detection : </TextBlock>
+                                    Since this project will be conducted in-door, we use camera instead of GPS in order to track the vehicles and detect obstacles. We will use pattern-based image processing in order to detect the objects from the image captured by the camera. We will use one of two patterns given above. We will choose one that produces the best results for the image processing. We will use different color patterns for each vehicle to distinguish between each vehicle.
+                                </TextBlock>
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                    <Grid x:Name="NextToIntroduce2" Opacity="0" Width="100" Height="100" Cursor="Hand">
+                        <Grid.RenderTransform>
+                            <TranslateTransform X="450" Y="-390" />
+                        </Grid.RenderTransform>
+                        <Grid.Triggers>
+                            <EventTrigger RoutedEvent="Grid.MouseLeave">
+                                <BeginStoryboard>
+                                    <!-- Introduce1 Grid Slide in Animation -->
+                                    <Storyboard TargetName="NextToIntroduce2">
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                From="0.8" To="0" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="Grid.MouseEnter">
+                                <BeginStoryboard>
+                                    <!-- Introduce1 Grid Slide in Animation -->
+                                    <Storyboard TargetName="NextToIntroduce2">
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                From="0" To="0.8" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="Grid.MouseLeftButtonDown">
+                                <BeginStoryboard>
+                                    <!-- Introduce2 Grid Slide in Animation -->
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="Introduce2" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                                From="1280" To="0" Duration="0:0:0.3" />
+                                        <DoubleAnimation Storyboard.TargetName="Introduce2" Storyboard.TargetProperty="Opacity"
+                                                From="0" To="1" Duration="0:0:0.8" />
+                                        <DoubleAnimation Storyboard.TargetName="Introduce1" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                                 From="0" To="-1280" Duration="0:0:0.3" />
+                                        <DoubleAnimation Storyboard.TargetName="Introduce1" Storyboard.TargetProperty="Opacity"
+                                                 From="1" To="0" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Grid.Triggers>
+                        <Image Source="/Resource/RightArrow.png" />
+                    </Grid>
+                </StackPanel>
+            </ScrollViewer>
         </Grid>
-    </StackPanel>
+
+        <Grid x:Name="Introduce2">
+            <Grid.RenderTransform>
+                <TranslateTransform X="1280" Y="0" />
+            </Grid.RenderTransform>
+            <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
+                <StackPanel HorizontalAlignment="Left">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontSize="35px">Team</TextBlock>
+                    </StackPanel>
+
+                    <Grid Margin="100 0 0 0" Width="800px">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20*" />
+                            <ColumnDefinition Width="80*" />
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Source="/Resource/PKY.png" >
+                            <Image.RenderTransform>
+                                <ScaleTransform ScaleX="0.8" ScaleY="0.8" />
+                            </Image.RenderTransform>
+                        </Image>
+                        <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10 0 0 0 ">
+                            <TextBlock FontSize="15px">Name : Park Kwang Youl</TextBlock>
+                            <TextBlock FontSize="15px">University : Kyonggi University</TextBlock>
+                            <TextBlock FontSize="15px">Major : Computer Science</TextBlock>
+                            <TextBlock FontSize="13px" Margin="2">Role (<TextBlock Foreground="#737AFF"><Underline>Team Leader</Underline></TextBlock>)<LineBreak />
+                                <TextBlock Padding="10 0 0 0">①	Creating the application using WPF (Window Presentation Foundation) </TextBlock><LineBreak />
+                                <TextBlock Padding="10 0 0 0">②	Creating the grid map </TextBlock><LineBreak />
+                                <TextBlock Padding="10 0 0 0">③	Applying the results of image processing onto GUI</TextBlock>
+                            </TextBlock>
+                            <TextBlock FontSize="15px">Email : rhkdduf63@gmail.com</TextBlock>
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid Margin="100 0 0 0" Width="800px">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20*" />
+                            <ColumnDefinition Width="80*" />
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Source="/Resource/CDY.png">
+                            <Image.RenderTransform>
+                                <ScaleTransform ScaleX="0.8" ScaleY="0.8" />
+                            </Image.RenderTransform>
+                        </Image>
+                        <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10 0 0 0 ">
+                            <TextBlock FontSize="15px">Name : Chu Dae Youn</TextBlock>
+                            <TextBlock FontSize="15px">University : Hankuk University of Foreign Studies</TextBlock>
+                            <TextBlock FontSize="15px">Major : Information &amp; Communication Engineering</TextBlock>
+                            <TextBlock FontSize="13px" Margin="2">Role (SW)<LineBreak />
+                                <TextBlock Padding="10 0 0 0">①	Creating 2WD vehicle tracking algorithm using OpenCV and C# </TextBlock><LineBreak />
+                                <TextBlock Padding="10 0 0 0">②	Creating obstacle detection algorithm using OpenCV and C# </TextBlock><LineBreak />
+                                <TextBlock Padding="10 0 0 0">③	Creating the algorithm that can find the shortest path between the starting point and destination point</TextBlock>
+                            </TextBlock>
+                            <TextBlock FontSize="15px">Email : chudaeyoun@naver.com</TextBlock>
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid Margin="100 0 0 0" Width="800px">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20*" />
+                            <ColumnDefinition Width="80*" />
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Source="/Resource/CBC.png" >
+                            <Image.RenderTransform>
+                                <ScaleTransform ScaleX="0.8" ScaleY="0.8" />
+                            </Image.RenderTransform>
+                        </Image>
+                        <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10 0 0 0 ">
+                            <TextBlock FontSize="15px">Name : Choi Byung Chan</TextBlock>
+                            <TextBlock FontSize="15px">University : Hanyang University</TextBlock>
+                            <TextBlock FontSize="15px">Major : Electronics &amp; Communication Engineering</TextBlock>
+                            <TextBlock FontSize="13px" Margin="2">Role (HW)<LineBreak />
+                                <TextBlock Padding="10 0 0 0">①	Creating two - wheel vehicles that uses Atmega 128 and Bluetooth module (4 vehicles on schedule) </TextBlock><LineBreak />
+                                <TextBlock Padding="10 0 0 0">②	Establishing Bluetooth communication between 2 wheel vehicles and PC using C# </TextBlock><LineBreak />
+                                <TextBlock Padding="10 0 0 0">③	③	Creating the algorithm that can control the vehicles on both GUI and OpenCV</TextBlock>
+                            </TextBlock>
+                            <TextBlock FontSize="15px">Email : luwis93choi@hotmail.com</TextBlock>
+                        </StackPanel>
+                    </Grid>
+                    <Grid x:Name="NextToIntroduce1" Opacity="0" Width="100" Height="100" Cursor="Hand">
+                        <Grid.RenderTransform>
+                            <TranslateTransform X="-410" Y="-430" />
+                        </Grid.RenderTransform>
+                        <Grid.Triggers>
+                            <EventTrigger RoutedEvent="Grid.MouseLeave">
+                                <BeginStoryboard>
+                                    <!-- Introduce1 Grid Slide in Animation -->
+                                    <Storyboard TargetName="NextToIntroduce1">
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                From="0.8" To="0" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="Grid.MouseEnter">
+                                <BeginStoryboard>
+                                    <!-- Introduce1 Grid Slide in Animation -->
+                                    <Storyboard TargetName="NextToIntroduce1">
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                From="0" To="0.8" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="Grid.MouseLeftButtonDown">
+                                <BeginStoryboard>
+                                    <!-- Introduce1 Grid Slide in Animation -->
+                                    <Storyboard TargetName="Introduce1">
+                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                                From="-1280" To="0" Duration="0:0:0.3" />
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                From="0" To="1" Duration="0:0:0.8" />
+                                        <DoubleAnimation Storyboard.TargetName="Introduce2" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                                 From="0" To="1280" Duration="0:0:0.3" />
+                                        <DoubleAnimation Storyboard.TargetName="Introduce2" Storyboard.TargetProperty="Opacity"
+                                                 From="1" To="0" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Grid.Triggers>
+                        <Image Source="/Resource/LeftArrow.png" />
+                    </Grid>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
 </UserControl>
