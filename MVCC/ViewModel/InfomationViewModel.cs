@@ -1,5 +1,9 @@
 ﻿using GalaSoft.MvvmLight;
 
+using System;
+using System.Windows;
+using System.Diagnostics;
+
 namespace MVCC.ViewModel
 {
     /// <summary>
@@ -13,6 +17,7 @@ namespace MVCC.ViewModel
         /// <summary>
         /// Initializes a new instance of the InfomationViewModel class.
         /// </summary>
+
         public InfomationViewModel()
         {
         }
