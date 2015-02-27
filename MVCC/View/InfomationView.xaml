@@ -85,49 +85,49 @@
                             </Grid>
                         </StackPanel>
                     </Grid>
-                    <Grid x:Name="NextToIntroduce2" Opacity="0" Width="100" Height="100" Cursor="Hand">
-                        <Grid.RenderTransform>
-                            <TranslateTransform X="450" Y="-390" />
-                        </Grid.RenderTransform>
-                        <Grid.Triggers>
-                            <EventTrigger RoutedEvent="Grid.MouseLeave">
-                                <BeginStoryboard>
-                                    <!-- Introduce1 Grid Slide in Animation -->
-                                    <Storyboard TargetName="NextToIntroduce2">
-                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                From="0.8" To="0" Duration="0:0:0.3" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
-                            <EventTrigger RoutedEvent="Grid.MouseEnter">
-                                <BeginStoryboard>
-                                    <!-- Introduce1 Grid Slide in Animation -->
-                                    <Storyboard TargetName="NextToIntroduce2">
-                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                From="0" To="0.8" Duration="0:0:0.3" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
-                            <EventTrigger RoutedEvent="Grid.MouseLeftButtonDown">
-                                <BeginStoryboard>
-                                    <!-- Introduce2 Grid Slide in Animation -->
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="Introduce2" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
-                                                From="1280" To="0" Duration="0:0:0.3" />
-                                        <DoubleAnimation Storyboard.TargetName="Introduce2" Storyboard.TargetProperty="Opacity"
-                                                From="0" To="1" Duration="0:0:0.8" />
-                                        <DoubleAnimation Storyboard.TargetName="Introduce1" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
-                                                 From="0" To="-1280" Duration="0:0:0.3" />
-                                        <DoubleAnimation Storyboard.TargetName="Introduce1" Storyboard.TargetProperty="Opacity"
-                                                 From="1" To="0" Duration="0:0:0.3" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
-                        </Grid.Triggers>
-                        <Image Source="/Resource/RightArrow.png" />
-                    </Grid>
                 </StackPanel>
             </ScrollViewer>
+            <Grid x:Name="NextToIntroduce2" Opacity="0" Width="100" Height="100" Cursor="Hand">
+                <Grid.RenderTransform>
+                    <TranslateTransform X="480" Y="0" />
+                </Grid.RenderTransform>
+                <Grid.Triggers>
+                    <EventTrigger RoutedEvent="Grid.MouseLeave">
+                        <BeginStoryboard>
+                            <!-- Introduce1 Grid Slide in Animation -->
+                            <Storyboard TargetName="NextToIntroduce2">
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                From="0.8" To="0" Duration="0:0:0.3" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="Grid.MouseEnter">
+                        <BeginStoryboard>
+                            <!-- Introduce1 Grid Slide in Animation -->
+                            <Storyboard TargetName="NextToIntroduce2">
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                From="0" To="0.8" Duration="0:0:0.3" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="Grid.MouseLeftButtonDown">
+                        <BeginStoryboard>
+                            <!-- Introduce2 Grid Slide in Animation -->
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="Introduce2" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                                From="1280" To="0" Duration="0:0:0.3" />
+                                <DoubleAnimation Storyboard.TargetName="Introduce2" Storyboard.TargetProperty="Opacity"
+                                                From="0" To="1" Duration="0:0:0.8" />
+                                <DoubleAnimation Storyboard.TargetName="Introduce1" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                                 From="0" To="-1280" Duration="0:0:0.3" />
+                                <DoubleAnimation Storyboard.TargetName="Introduce1" Storyboard.TargetProperty="Opacity"
+                                                 From="1" To="0" Duration="0:0:0.3" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Grid.Triggers>
+                <Image Source="/Resource/RightArrow.png" />
+            </Grid>
         </Grid>
 
         <Grid x:Name="Introduce2">
@@ -203,54 +203,54 @@
                             <TextBlock FontSize="13px" Margin="2">Role (HW)<LineBreak />
                                 <TextBlock Padding="10 0 0 0">①	Creating two - wheel vehicles that uses Atmega 128 and Bluetooth module (4 vehicles on schedule) </TextBlock><LineBreak />
                                 <TextBlock Padding="10 0 0 0">②	Establishing Bluetooth communication between 2 wheel vehicles and PC using C# </TextBlock><LineBreak />
-                                <TextBlock Padding="10 0 0 0">③	③	Creating the algorithm that can control the vehicles on both GUI and OpenCV</TextBlock>
+                                <TextBlock Padding="10 0 0 0">③	Creating the algorithm that can control the vehicles on both GUI and OpenCV</TextBlock>
                             </TextBlock>
                             <TextBlock FontSize="15px">Email : luwis93choi@hotmail.com</TextBlock>
                         </StackPanel>
                     </Grid>
-                    <Grid x:Name="NextToIntroduce1" Opacity="0" Width="100" Height="100" Cursor="Hand">
-                        <Grid.RenderTransform>
-                            <TranslateTransform X="-410" Y="-430" />
-                        </Grid.RenderTransform>
-                        <Grid.Triggers>
-                            <EventTrigger RoutedEvent="Grid.MouseLeave">
-                                <BeginStoryboard>
-                                    <!-- Introduce1 Grid Slide in Animation -->
-                                    <Storyboard TargetName="NextToIntroduce1">
-                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                From="0.8" To="0" Duration="0:0:0.3" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
-                            <EventTrigger RoutedEvent="Grid.MouseEnter">
-                                <BeginStoryboard>
-                                    <!-- Introduce1 Grid Slide in Animation -->
-                                    <Storyboard TargetName="NextToIntroduce1">
-                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                From="0" To="0.8" Duration="0:0:0.3" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
-                            <EventTrigger RoutedEvent="Grid.MouseLeftButtonDown">
-                                <BeginStoryboard>
-                                    <!-- Introduce1 Grid Slide in Animation -->
-                                    <Storyboard TargetName="Introduce1">
-                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
-                                                From="-1280" To="0" Duration="0:0:0.3" />
-                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                From="0" To="1" Duration="0:0:0.8" />
-                                        <DoubleAnimation Storyboard.TargetName="Introduce2" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
-                                                 From="0" To="1280" Duration="0:0:0.3" />
-                                        <DoubleAnimation Storyboard.TargetName="Introduce2" Storyboard.TargetProperty="Opacity"
-                                                 From="1" To="0" Duration="0:0:0.3" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
-                        </Grid.Triggers>
-                        <Image Source="/Resource/LeftArrow.png" />
-                    </Grid>
                 </StackPanel>
             </ScrollViewer>
+            <Grid x:Name="NextToIntroduce1" Opacity="0" Width="100" Height="100" Cursor="Hand">
+                <Grid.RenderTransform>
+                    <TranslateTransform X="-490" Y="0" />
+                </Grid.RenderTransform>
+                <Grid.Triggers>
+                    <EventTrigger RoutedEvent="Grid.MouseLeave">
+                        <BeginStoryboard>
+                            <!-- Introduce1 Grid Slide in Animation -->
+                            <Storyboard TargetName="NextToIntroduce1">
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                From="0.8" To="0" Duration="0:0:0.3" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="Grid.MouseEnter">
+                        <BeginStoryboard>
+                            <!-- Introduce1 Grid Slide in Animation -->
+                            <Storyboard TargetName="NextToIntroduce1">
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                From="0" To="0.8" Duration="0:0:0.3" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="Grid.MouseLeftButtonDown">
+                        <BeginStoryboard>
+                            <!-- Introduce1 Grid Slide in Animation -->
+                            <Storyboard TargetName="Introduce1">
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                                From="-1280" To="0" Duration="0:0:0.3" />
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                From="0" To="1" Duration="0:0:0.8" />
+                                <DoubleAnimation Storyboard.TargetName="Introduce2" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                                 From="0" To="1280" Duration="0:0:0.3" />
+                                <DoubleAnimation Storyboard.TargetName="Introduce2" Storyboard.TargetProperty="Opacity"
+                                                 From="1" To="0" Duration="0:0:0.3" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Grid.Triggers>
+                <Image Source="/Resource/LeftArrow.png" />
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>
