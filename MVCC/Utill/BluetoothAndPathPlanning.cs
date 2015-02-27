@@ -285,10 +285,12 @@ namespace MVCC.Utill
 
                 else
                 {
+                    /*
                     Console.WriteLine("index = " + index);
                     Console.WriteLine("globals.SerialPortList[index] = " + globals.SerialPortList[index]);
                     Console.WriteLine("write_data[0] =" + write_data[0]);
-
+                    Console.WriteLine("globals.SerialPortList[index].PortName = " + globals.SerialPortList[index].PortName);
+                    */
                     globals.SerialPortList[index].WriteLine((write_data[0]).ToString());
                 }
 

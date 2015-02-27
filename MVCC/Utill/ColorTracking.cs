@@ -265,7 +265,7 @@ namespace MVCC.Utill
                     // glo.mapObstacleLock.EnterWriteLock(); //critical section start
 
                     double ref_angle = 45;
-                    double margin = 4;
+                    double margin = 15;
 
 
 

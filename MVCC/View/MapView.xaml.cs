@@ -226,7 +226,14 @@ namespace MVCC.View
                             if (tracking_rect[i].Width != 0 && tracking_rect[i].Height != 0)
                             {
                                 //Console.WriteLine("index = " + i + " direction = " + globals.direction[i]);
+                                Dictionary<string, State> AllUGVStateMap = new Dictionary<string, State>();
 
+                                for (int m = 0; m < mapViewModel.MVCCItemStateList.Count; m++)
+                                {
+                                    State tempState = mapViewModel.MVCCItemStateList[m];
+                                    AllUGVStateMap.Add(tempState.ugv.Id, tempState);
+                                }
+                              
                                 Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
                                 {
                                     for (int j = 0; j < mapViewModel.MVCCItemList.Count; j++)
@@ -241,23 +248,32 @@ namespace MVCC.View
                                             ugv.X = tracking_rect[i].X + 30;
                                             ugv.Y = tracking_rect[i].Y + 30;
 
-                                            int temp_x, temp_y;
-                                    
+
+                                            
+
+
+                                            State tempUGVState = AllUGVStateMap[ugv.Id];
+
                                             globals.UGVStopCommandLock.EnterWriteLock();
                                             
                                             if (ugv.PathList.Count != 0)
                                             {
+                                                Console.WriteLine("ugv.Id = " + ugv.Id + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                                                //Console.WriteLine("ugv.PathList.Count = " + ugv.PathList.Count + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                                               
+
+
+
                                                 KeyValuePair<int, int> temp = new KeyValuePair<int, int>();
 
                                                 temp = ugv.PathList[ugv.PathList.Count - 1];
 
-                                                Console.WriteLine("temp.x = " + temp.Key);
-                                                Console.WriteLine("temp.y = " + temp.Value);
-                                                Console.WriteLine("ugv.X = " + ugv.X);
-                                                Console.WriteLine("ugv.Y = " + ugv.Y);
-
-
-                                                if (Math.Abs(ugv.X - temp.Key) < 16 && Math.Abs(ugv.Y - temp.Value) < 16)
+                                                Console.WriteLine("ugv.X = " + ugv.X + " ugv.Y = " + ugv.Y);
+                                                Console.WriteLine("tmp.X = " + temp.Key + " tmp.Y = " + temp.Value);
+                                                Console.WriteLine("End.X = " + tempUGVState.EndPointX + " End.Y = " + tempUGVState.EndPointY);
+                                                Console.WriteLine();
+                   
+                                                if (Math.Abs(ugv.X - temp.Key) < 15 && Math.Abs(ugv.Y - temp.Value) < 15)
                                                 //if(Math.Abs(ugv.X - temp.Key) < 10 && Math.Abs(ugv.Y - temp.Value) < 10)
                                                 {
                                                   
@@ -277,26 +293,12 @@ namespace MVCC.View
 
                                                     }
                                                 }
+                                                
 
+                                                
 
-
-
-
-
-
-
-                                                Dictionary<string, State> AllUGVStateMap = new Dictionary<string, State>();
-
-                                                for (int m = 0; m < mapViewModel.MVCCItemStateList.Count; m++)
-                                                {
-                                                    State tempState = mapViewModel.MVCCItemStateList[m];
-                                                    AllUGVStateMap.Add(tempState.ugv.Id, tempState);
-                                                }
-
-                                                State tempUGVState = AllUGVStateMap[ugv.Id];
-
-                                                int first_x = ugv.PathList[ugv.PathList.Count - 2].Key / 15;
-                                                int first_y = ugv.PathList[ugv.PathList.Count - 2].Value / 15;
+                                                int first_x = ugv.PathList[ugv.PathList.Count - 1].Key / 15;
+                                                int first_y = ugv.PathList[ugv.PathList.Count - 1].Value / 15;
 
                                                 /*
                                                 int first_x = ((tempUGVState.CurrentPointX) / 15);
@@ -317,11 +319,8 @@ namespace MVCC.View
                                                 int direction_x = ((tempUGVState.CurrentPointX) / 15);
                                                 int direction_y = ((tempUGVState.CurrentPointY) / 15);
 
-                                                Console.WriteLine("first_x {0}", first_x);
-                                                Console.WriteLine("first_y {0}", first_y);
-
-                                                Console.WriteLine("start_point_x {0}", start_x);
-                                                Console.WriteLine("start_point_y {0}", start_y);
+                                                Console.WriteLine("first_point_x = " + first_x + " first_point_y = " + first_y);
+                                                Console.WriteLine("start_point_x = " +  start_x + " start_point_y = " + start_y);
 
                                                 Console.WriteLine("Direction Value : {0}", globals.direction[i]);
                                                 
@@ -364,8 +363,7 @@ namespace MVCC.View
                                                 }
 
 
-                                                Console.WriteLine("direction_x {0}", direction_x);
-                                                Console.WriteLine("direction_y {0}", direction_y);
+                                                Console.WriteLine("direction_x = " + direction_x + " direction_y = " + direction_y);
 
 
 
@@ -402,8 +400,7 @@ namespace MVCC.View
                                                     globals.angle[i] = 7;
                                                 }
 
-                                                Console.WriteLine("globals.angle[i] = " + globals.angle[i]);
-
+                                               
 
 
                                                 if (globals.direction[i] != -1)
@@ -411,7 +408,7 @@ namespace MVCC.View
                                                     if ((globals.angle[i] - globals.direction[i] == 0))
                                                     {
                                                         rotation = "0";
-                                                        prev_rotation = rotation;
+                                                        prev_rotation = "7";
                                                     }
                                                     else if ((globals.angle[i] - globals.direction[i] == 1))
                                                     {
@@ -459,31 +456,69 @@ namespace MVCC.View
                                                     rotation = prev_rotation;
                                                 }
 
-                                                Console.WriteLine("rotation = " + rotation);
-                                                Console.WriteLine("prev_rotation = " + prev_rotation);
+                                                Console.WriteLine("globals.angle[i] = " + globals.angle[i] + " rotation = " + rotation +" prev_rotation = " + prev_rotation);
+
 
                                                 if (globals.direction[i] == globals.angle[i] )
-                                                {                                             
-                                                    tempUGVState = AllUGVStateMap[ugv.Id];
-                                                    ugv.Command = "0";
-                                                    bluetoothAndPathPlanning.connect(ugv, tempUGVState);
+                                                {
+                                                    int repeat_count = 0;
 
-                                                    Console.WriteLine("그만 돌아 이제 앞으로 가!!");
-                                                  
+                                                    if (repeat_count > 10)
+                                                    {
+                                                        if (globals.SerialPortList[i].IsOpen)
+                                                        {
+                                                            tempUGVState = AllUGVStateMap[ugv.Id];
+                                                            ugv.Command = "0";
+                                                            bluetoothAndPathPlanning.connect(ugv, tempUGVState);
+
+                                                            Console.WriteLine("그만 돌아 이제 앞으로 가!!");
+                                                        }
+                                                        repeat_count++;
+                                                    }
                                                  }
                                                 else 
                                                 {
-                                                    Console.WriteLine(globals.angle[i] + " 방향으로 계속 돌아!!");
+                                                    if(globals.SerialPortList[i].IsOpen){
+                                                        Console.WriteLine(globals.angle[i] + " 방향으로 계속 돌아!!");
 
-                                                    tempUGVState = AllUGVStateMap[ugv.Id];
-                                                    ugv.Command = rotation;
-                                                    bluetoothAndPathPlanning.connect(ugv, tempUGVState);
-
-                                                    Console.WriteLine("스탑하고 돌아!!");
+                                                        tempUGVState = AllUGVStateMap[ugv.Id];
+                                                        ugv.Command = rotation;
+                                                        bluetoothAndPathPlanning.connect(ugv, tempUGVState);
+                                                    }
                                                 }
 
 
+                                                if (ugv.PathList.Count == 1)
+                                                {
+                                                    RemoveEndPoint(ugv);
+                                                    ugv.PathList.Clear();
 
+                                                    if (globals.SerialPortList[i].IsOpen)
+                                                    {
+                                                        tempUGVState = AllUGVStateMap[ugv.Id];
+                                                        ugv.Command = "q";
+                                                        bluetoothAndPathPlanning.connect(ugv, tempUGVState);
+                                                        
+                                                        Console.WriteLine("도착 정지!");
+                                                    }
+
+                                                }
+
+                                                Console.WriteLine();
+                                                    /*
+                                                if (ugv.PathList.Count == 0)
+                                                {
+                                                    if (globals.SerialPortList[i].IsOpen)
+                                                    {
+                                                        tempUGVState = AllUGVStateMap[ugv.Id];
+                                                        ugv.Command = "0";
+                                                        bluetoothAndPathPlanning.connect(ugv, tempUGVState);
+
+                                                        Console.WriteLine("그만 돌아 이제 앞으로 가!!");
+                                                    }
+                                                    break;
+                                                }
+                                                */
                                                 /*
 
                                                 //방향 바꾸는 명령어가 생기면 스탑 명령과 방향 넘김
@@ -886,6 +921,8 @@ namespace MVCC.View
                         else
                         {
                             p++;
+                            Console.WriteLine("너 안나 오지???");
+
                         }
 
                         if (endPointCheck == true)
@@ -1611,7 +1648,9 @@ namespace MVCC.View
                         bluetoothAndPathPlanning.connect(tempUGV, tempState);
 
                         removeAllUGVPath(stopUGV);
-
+                        RemoveEndPoint(tempUGV);
+                        tempUGV.PathList.Clear();
+                        //Console.WriteLine(" tempUGV.PathList.count = " + tempUGV.PathList.Count);
                         break;
                     }
                 }
@@ -1657,6 +1696,9 @@ namespace MVCC.View
                             bluetoothAndPathPlanning.connect(tempUGV, clickedUGVStateMap[tempUGV.Id]);
 
                             removeAllUGVPath(tempUGV);
+                            RemoveEndPoint(tempUGV);
+                            tempUGV.PathList.Clear();
+                            //Console.WriteLine(" tempUGV.PathList.count = " + tempUGV.PathList.Count);
                         }
                     }
                 }
