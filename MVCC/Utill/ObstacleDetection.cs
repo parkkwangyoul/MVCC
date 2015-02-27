@@ -116,17 +116,61 @@ namespace MVCC.Utill
 
                                 int boarder_size = 18;
 
+
+                                globals.evasionInfoLock.EnterWriteLock();
+
                                 
                                 if (bottomA - topB <= boarder_size || bottomB - topA <= boarder_size || rightA - leftB <= boarder_size || rightB - leftA <= boarder_size)
                                 {
-                                    Console.WriteLine(i + " 차량과 " + j + " 차량이 충돌 위기");                  
+                                    Console.WriteLine(i + " 차량과 " + j + " 차량이 충돌 위기");
+
+                                    KeyValuePair<int, int> temp = new KeyValuePair<int, int>(i, j);
+
+                                    bool isEmpty = true; 
+                                    foreach(var evsionTempList in globals.evasionInfo)
+                                    {
+                                        if(evsionTempList.Key == i && evsionTempList.Value == j)
+                                        {
+                                            isEmpty = false;
+                                            break;
+                                        }
+                                        else if (evsionTempList.Key == j && evsionTempList.Value == i)
+                                        {
+                                            isEmpty = false;
+                                            break;
+                                        }
+                                    }
+
+                                    if (isEmpty == false)
+                                        globals.evasionInfo.Add(temp);
+
                                 }
                                  else
                                 {
                                     Console.WriteLine(i + " 차량과 " + j + " 차량이 충돌함\n");
+
+                                    KeyValuePair<int, int> temp = new KeyValuePair<int, int>(i, j);
+
+                                     bool isEmpty = true;
+                                     foreach (var evsionTempList in globals.UGVsConflictInofo)
+                                    {
+                                        if(evsionTempList.Key == i && evsionTempList.Value == j)
+                                        {
+                                            isEmpty = false;
+                                            break;
+                                        }
+                                        else if (evsionTempList.Key == j && evsionTempList.Value == i)
+                                        {
+                                            isEmpty = false;
+                                            break;
+                                        }
+                                    }
+
+                                    if (isEmpty == false)
+                                        globals.UGVsConflictInofo.Add(temp);                                                               
                                 }
 
-
+                                globals.evasionInfoLock.ExitWriteLock();
                             }
                         }
                     }

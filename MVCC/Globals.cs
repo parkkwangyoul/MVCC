@@ -17,11 +17,24 @@ namespace MVCC
         public int[,] pre_Map_obstacle;
         public int[,] EndPointMap;
 
+        public struct UGV_Info
+        {
+            public string UGV_Id;
+            public UGV ugv;
+        }
+
+        public UGV_Info sortInfo; // 차량 우선 순위 정보
+
+        public List<UGV_Info> sortInfoList = new List<UGV_Info>(); // 차량 우선 순위 정보 리스트
+
+        public List<KeyValuePair<int, int>> evasionInfo = new List<KeyValuePair<int,int>>();
+        public List<KeyValuePair<int, int>> pre_evasionInfo = new List<KeyValuePair<int,int>>(); //차량들 끼리의 충돌 위기 정보
+
+        public List<KeyValuePair<int, int>> UGVsConflictInofo = new List<KeyValuePair<int, int>>(); //차량들 끼리의 충돌한 정보
+
         public int[] MovementCommandCount = new int[4];
         public bool[] direction_check = new bool[4];
-        public List<KeyValuePair<int, int>>[] copy_pathList = new List<KeyValuePair<int,int>>[4];
-        
-
+       
         public string[] rotate = new string[4];
         public int[] angle = new int[4];
         public int[] direction = new int[4];
@@ -32,6 +45,7 @@ namespace MVCC
         public ReaderWriterLockSlim bluetoothLock = new ReaderWriterLockSlim();
         public ReaderWriterLockSlim UGVStopCommandLock = new ReaderWriterLockSlim();
         public ReaderWriterLockSlim endPointMapLock = new ReaderWriterLockSlim();
+        public ReaderWriterLockSlim evasionInfoLock = new ReaderWriterLockSlim();
         
         
         private static Globals _Instance;

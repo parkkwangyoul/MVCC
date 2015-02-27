@@ -48,6 +48,17 @@ namespace MVCC.Model
             }
         }
 
+        // 일시 정지 상태를 나타냄
+        private bool isPause = false;
+        public bool IsPause
+        {
+            get { return isPause; }
+            set
+            {
+                isPause = value;
+            }
+        }
+
         // 주행 상태를 나타내는 리소스
         public string DrivingResourcePath
         {

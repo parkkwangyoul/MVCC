@@ -1348,14 +1348,7 @@ namespace MVCC.Utill
                 ugv.PathList.Clear();
                 return false;
             }
-
-           //globals.MovementCommandCount[index] = ugv.PathList.Count;
-
-            for (int m = 0; m < ugv.PathList.Count; m++)
-            {
-                globals.copy_pathList[index].Add(new KeyValuePair<int, int>(( ugv.PathList[m].Key) * 15, (ugv.PathList[m].Value) * 15));
-            }
-            
+ 
 
 
 
