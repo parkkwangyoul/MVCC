@@ -116,10 +116,17 @@ namespace MVCC.Utill
 
                                 int boarder_size = 18;
 
+                                
                                 if (bottomA - topB <= boarder_size || bottomB - topA <= boarder_size || rightA - leftB <= boarder_size || rightB - leftA <= boarder_size)
+                                {
                                     Console.WriteLine(i + " 차량과 " + j + " 차량이 충돌 위기");                  
-                                else
+                                }
+                                 else
+                                {
                                     Console.WriteLine(i + " 차량과 " + j + " 차량이 충돌함\n");
+                                }
+
+
                             }
                         }
                     }

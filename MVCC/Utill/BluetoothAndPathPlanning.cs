@@ -90,10 +90,11 @@ namespace MVCC.Utill
                 Console.WriteLine("ugv command : " + write_data);
                 */
                 Console.Out.Flush();
-
+               
                 if (write_data.Equals("d"))
                 {
                     globals.SerialPortList[index].WriteLine((write_data[0]).ToString());
+                    //Console.WriteLine("index = " + index + " ugv command : " + write_data);
 
                     state.IsDriving = true;
 

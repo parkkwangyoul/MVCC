@@ -1225,8 +1225,9 @@ namespace MVCC.Utill
             dest_x = state.EndPointX;
             dest_y = state.EndPointY;
 
+            Console.WriteLine();
             Console.WriteLine("ugv.Id = " + ugv.Id + " start_x = " + start_x + " start_y = " + start_y + " dest_x = " + dest_x + " dest_y = " + dest_y);
-
+            Console.WriteLine();
             //Console.WriteLine("dest_x = " + dest_x + " dest_y = " + dest_y + " current_perspective =" + current_perspective);
             size_ = 5;
             size = 5;
@@ -1304,6 +1305,7 @@ namespace MVCC.Utill
                 }
             }
 
+            Console.WriteLine();
             Console.WriteLine("Graph Reconstruction Complete");
             #endregion
 
@@ -1394,11 +1396,12 @@ namespace MVCC.Utill
                 ugv.MovementCommandList.Add(movement[i].ToString());
             }
             
+            /*
             for (int i = 0; i < path_count; i++)
             {
                 Console.WriteLine("ugv.MovementCommandList[i][0] : {0}", ugv.MovementCommandList[i][0].ToString());
             }
-            
+            */
 
             Console.WriteLine("");
 

@@ -20,6 +20,7 @@ namespace MVCC
         public int[] MovementCommandCount = new int[4];
         public bool[] direction_check = new bool[4];
         public List<KeyValuePair<int, int>>[] copy_pathList = new List<KeyValuePair<int,int>>[4];
+        
 
         public string[] rotate = new string[4];
         public int[] angle = new int[4];
@@ -30,6 +31,8 @@ namespace MVCC
         public ReaderWriterLockSlim mapObstacleLock = new ReaderWriterLockSlim();
         public ReaderWriterLockSlim bluetoothLock = new ReaderWriterLockSlim();
         public ReaderWriterLockSlim UGVStopCommandLock = new ReaderWriterLockSlim();
+        public ReaderWriterLockSlim endPointMapLock = new ReaderWriterLockSlim();
+        
         
         private static Globals _Instance;
         public static Globals Instance

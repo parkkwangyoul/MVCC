@@ -268,7 +268,6 @@ namespace MVCC.Utill
                     double margin = 15;
 
 
-
                     if (ref_angle * 2 - margin <= result && result <= ref_angle * 2 + margin)
                         glo.direction[index] = 0;
                     else if (ref_angle * 3 - margin <= result && result <= ref_angle * 3 + margin)
