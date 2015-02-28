@@ -109,10 +109,7 @@ namespace MVCC.Utill
                                 rightB = tracking_rect[j].X + tracking_rect[j].Width + add_size;
                                 topB = tracking_rect[j].Y - add_size;
                                 bottomB = tracking_rect[j].Y + tracking_rect[j].Height + add_size;
-
-
-                                
-                                
+                     
                                 if (bottomA < topB) continue; //아래
                                 if (topA > bottomB) continue; //위
                                 if (rightA < leftB) continue; //오른쪽
@@ -121,9 +118,7 @@ namespace MVCC.Utill
                                 int boarder_size = 30;
 
                                 globals.evasionInfoLock.EnterWriteLock();
-
-                                
-                                
+                                                       
                                 if (bottomA - topB <= boarder_size || bottomB - topA <= boarder_size || rightA - leftB <= boarder_size || rightB - leftA <= boarder_size)
                                 {
                                     //Console.WriteLine(i + " 차량과 " + j + " 차량이 충돌 위기");
@@ -133,8 +128,7 @@ namespace MVCC.Utill
                                     globals.evasionInfo.Add(temp);
  
                                     int isEmpty = 0;
-  
-
+                                     
                                     foreach(var evsionTempList in globals.evasionInfo)
                                     {
                                         if(evsionTempList.Key == i && evsionTempList.Value == j)
@@ -146,12 +140,15 @@ namespace MVCC.Utill
                                             isEmpty++;
                                         }
                                     }
-
+                                    
                                     if(isEmpty >= 2 )
                                     {
-                                        //Console.WriteLine("있어서 삭제 됨 globals.evasionInfo[globals.evasionInfo.Count - 1] = " + globals.evasionInfo[globals.evasionInfo.Count - 1]);
                                         globals.evasionInfo.RemoveAt(globals.evasionInfo.Count - 1);
-                                        //Console.WriteLine("globals.evasionInfo.Count = " + globals.evasionInfo.Count);
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("===========================================");
+                                        Console.WriteLine(i + " 차량과 " + j + " 차량이 충돌 위기");
                                     }
                              
                                 }
@@ -180,9 +177,7 @@ namespace MVCC.Utill
 
                                     if (isEmpty >= 2)
                                     {
-                                        //Console.WriteLine("있어서 삭제 됨 globals.evasionInfo[globals.evasionInfo.Count - 1] = " + globals.evasionInfo[globals.evasionInfo.Count - 1]);
                                         globals.UGVsConflictInofo.RemoveAt(globals.evasionInfo.Count - 1);
-                                        //Console.WriteLine("globals.evasionInfo.Count = " + globals.evasionInfo.Count);
                                     }                                                             
                                 }
 
@@ -321,43 +316,13 @@ namespace MVCC.Utill
                             topB = temp_y;
                             bottomB = temp_y + temp_height;
 
-                            /*
-                            if (bottomA < topB)
-                            {
-                                //if (topB - bottomA <= 2)
-                                //    Console.WriteLine(i + " 번쨰 장애물과 충돌함 (아래) 아직 떨어져있을때 \n");
-
-                                continue; //아래
-                            }
-
-                            if (topA > bottomB)
-                            {
-                                //if (topA - bottomB <= 2)
-                                //    Console.WriteLine(i + " 번쨰 장애물과 충돌함 (위) 아직 떨어져있을때\n");
-
-                                continue; //위
-                            }
-                            if (rightA < leftB)
-                            {
-                                //if (leftB - rightA <= 2)
-                                //    Console.WriteLine(i + " 번쨰 장애물과 충돌함 (오른쪽) 아직 떨어져있을때\n");
-
-                                continue; //오른쪽
-                            }
-                            if (leftA > rightB)
-                            {
-                                //if (leftA - rightB <= 2)
-                                //    Console.WriteLine(i + " 번쨰 장애물과 충돌함 (왼쪽) 아직 떨어져있을때\n");
-
-                                continue; //왼쪽
-                            }
-                            */
+                         
                             if (bottomA < topB) continue; //아래
                             if (topA > bottomB) continue; //위
                             if (rightA < leftB) continue; //오른쪽
                             if (leftA > rightB) continue; //왼쪽
 
-
+                            /*
                             if (bottomA - topB <= 7)
                                 Console.WriteLine(i + " 번쨰 장애물과 충돌함 (아래) 차이 = " + (bottomA - topB) + "\n");
                             else if (bottomB - topA <= 7)
@@ -366,20 +331,24 @@ namespace MVCC.Utill
                                 Console.WriteLine(i + " 번쨰 장애물과 충돌함 (오른쪽) 차이 = " + (rightA - leftB) + "\n");
                             else if (rightB - leftA <= 7)
                                 Console.WriteLine(i + " 번쨰 장애물과 충돌함 (왼쪽) 차이 = " + (rightB - leftA) + "\n");
-                                                                          
-                            /*
-                            if (bottomA < topB) continue; //아래
-                            if (topA > bottomB) continue; //위
-                            if (rightA < leftB) continue; //오른쪽
-                            if (leftA > rightB) continue; //왼쪽
-
+                                 /                                      
+                            */
+                              
                             
+
+
+
+
+
+
+                            /*
                             if (bottomA - topB <= yy - 4 || bottomB - topA <= yy - 4 || rightA - leftB <= xx - 4 || rightB - leftA <= xx - 4)
                                 Console.WriteLine(i + " 번쨰 장애물과 충돌위기\n");
                             else
                                 Console.WriteLine(i + " 번쨰 장애물과 충돌함\n");
                             //[0]blue [1] green [2]orange [3]red
-                             */
+                             */ 
+                             
                         }
                     }          
                 }

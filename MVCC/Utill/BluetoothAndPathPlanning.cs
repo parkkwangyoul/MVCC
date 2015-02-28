@@ -84,11 +84,6 @@ namespace MVCC.Utill
 
             if (globals.SerialPortList[index].IsOpen)
             {
-                /*
-                Console.WriteLine("serialport index : " + index);
-                Console.WriteLine("serialport.isopen : " + globals.SerialPortList[index].IsOpen);
-                Console.WriteLine("ugv command : " + write_data);
-                */
                 Console.Out.Flush();
                
                 if (write_data.Equals("d"))
@@ -100,9 +95,9 @@ namespace MVCC.Utill
 
                     try
                     {
-/*
-                        #region Transmit_Movement_Command
 
+                        #region Transmit_Movement_Command
+                        /*
                         int first_x = globals.first_point_x[index];
                         int first_y = globals.first_point_y[index];
 
@@ -158,14 +153,14 @@ namespace MVCC.Utill
                             direction_x = direction_x - 1;
                             direction_y = direction_y + 1;
                         }
-
+                        */
                         #endregion
 
-                        Console.WriteLine("direction_x {0}", direction_x);
-                        Console.WriteLine("direction_y {0}", direction_y);
+                        //Console.WriteLine("direction_x {0}", direction_x);
+                        ///Console.WriteLine("direction_y {0}", direction_y);
 
                         #region Angle Calculation
-
+                        /*
                         if ((first_x - start_x == 0) && (first_y - start_y == -1))
                         {
                             globals.angle[index] = 0;
@@ -198,11 +193,12 @@ namespace MVCC.Utill
                         {
                             globals.angle[index] = 7;
                         }
-                        #endregion
                         */
-                        /*
+                        #endregion
+                        
+                        
                         #region Send Angle
-
+                        /*
                         if ((globals.angle[index] - globals.direction[index] == 0))
                         {
                             globals.SerialPortList[index].WriteLine("0");
@@ -248,13 +244,14 @@ namespace MVCC.Utill
                             globals.SerialPortList[index].WriteLine("8");
                             Console.WriteLine("8");
                         }
-                        #endregion
                         */
+                        #endregion
+                        
 
                         //Console.WriteLine("ugv.Id = " + ugv.Id + " direction[index] = " + globals.direction[index]);
-                        /*
+                        
                         #region Transmit Movement Commands
-
+                        /*
                         for (int i = 0; i < ugv.MovementCommandList.Count; i++)
                         {
                             globals.SerialPortList[index].WriteLine(ugv.MovementCommandList[i][0].ToString());
@@ -262,11 +259,9 @@ namespace MVCC.Utill
                         globals.SerialPortList[index].WriteLine("e");
 
                         Console.WriteLine("TX Complete");
-
-                        #endregion
-                        
-                        #endregion
                         */
+                        #endregion
+                                       
                     }
                     catch (TimeoutException)
                     {
@@ -286,18 +281,8 @@ namespace MVCC.Utill
 
                 else
                 {
-                    /*
-                    Console.WriteLine("index = " + index);
-                    Console.WriteLine("globals.SerialPortList[index] = " + globals.SerialPortList[index]);
-                    Console.WriteLine("write_data[0] =" + write_data[0]);
-                    Console.WriteLine("globals.SerialPortList[index].PortName = " + globals.SerialPortList[index].PortName);
-                    */
                     globals.SerialPortList[index].WriteLine((write_data[0]).ToString());
                 }
-
-                Console.Out.Flush();
-
-                
             }
 
         }

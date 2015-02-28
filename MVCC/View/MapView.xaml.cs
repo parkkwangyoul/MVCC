@@ -419,7 +419,8 @@ namespace MVCC.View
 
                                                 if (ugv.PathList.Count == 1)
                                                 {
-                                                    RemoveEndPoint(ugv);
+                                                    RemoveEndPoint(ugv, tempUGVState);
+                                              
                                                     ugv.PathList.Clear();
 
                                                     if (globals.SerialPortList[i].IsOpen)
@@ -578,11 +579,22 @@ namespace MVCC.View
                         }
                         */
 
-                        //차량들끼리 충돌 위기가 있을때
-                        if (globals.pre_evasionInfo.Count != 0 || globals.evasionInfo.Count != 0)
+
+
+
+
+                        //만약 현재 충돌 정보가 이전 정보에 없을때 일시 정지된 차량에게 출발 신호 보냄
+                        if (globals.pre_evasionInfo.Count != 0)
                         {
-                            Console.WriteLine("===========================================");
-                            Console.WriteLine("충돌 위기 !!!");
+
+                            //prev_evasionInfo 대한 정보를 복사 
+                            List<KeyValuePair<int, int>> remove_evasionInfo = new List<KeyValuePair<int, int>>();
+
+                            foreach (var list in globals.pre_evasionInfo)
+                            {
+                                KeyValuePair<int, int> temp = new KeyValuePair<int, int>(list.Key, list.Value);
+                                remove_evasionInfo.Add(temp);
+                            }
 
                             Dictionary<string, State> AllUGVStateMap = new Dictionary<string, State>();
 
@@ -592,20 +604,8 @@ namespace MVCC.View
                                 AllUGVStateMap.Add(tempState.ugv.Id, tempState);
                             }
 
-
-                            //pre_evasionInfo 와 현재 evasionInfo 정보의 차이를 구함(없어진걸 지우기 일시정지 풀기 위해) 
-                            List<KeyValuePair<int, int>> remove_evasionInfo = new List<KeyValuePair<int, int>>();
-
-                            foreach (var list in globals.pre_evasionInfo)
-                            {
-                                KeyValuePair<int, int> temp = new KeyValuePair<int, int>(list.Key, list.Value);
-                                remove_evasionInfo.Add(temp);
-                            }
-
-                           
-                
-               
-                            for (int k = 0; k < globals.pre_evasionInfo.Count; k++)
+                            //pre_evasionInfo 와 현재 evasionInfo 정보의 차이를 구함(없어진걸 지우기 일시정지 풀기 위해)                          
+                            for (int k = globals.pre_evasionInfo.Count - 1; k >= 0; k--)
                             {
                                 KeyValuePair<int, int> remove_evasion = new KeyValuePair<int, int>();
                                 remove_evasion = remove_evasionInfo[k];
@@ -623,7 +623,7 @@ namespace MVCC.View
                                         //Console.WriteLine("충돌 위기 사라져서 지움 remove_evasion.Key = " + remove_evasion.Key + " remove_evasion.Value = " + remove_evasion.Value);                                     
                                         remove_evasionInfo.Remove(remove_evasion);
                                         break;
-                                    }                  
+                                    }
                                 }
 
                             }
@@ -635,13 +635,8 @@ namespace MVCC.View
                                 State tempUGVState = AllUGVStateMap["A" + remove_evasion.Key];
                                 State tempUGVState2 = AllUGVStateMap["A" + remove_evasion.Value];
 
-
-
                                 if (tempUGVState.IsPause == true)
                                 {
-
-
-
                                     if (globals.SerialPortList[remove_evasion.Key].IsOpen)
                                     {
                                         //tempUGVState.ugv.Command = "d";
@@ -654,7 +649,6 @@ namespace MVCC.View
                                 }
                                 else if (tempUGVState2.IsPause == true)
                                 {
-
                                     if (globals.SerialPortList[remove_evasion.Value].IsOpen)
                                     {
                                         //tempUGVState.ugv.Command = "d";
@@ -665,8 +659,21 @@ namespace MVCC.View
                                     }
                                 }
                             }
+                        }
 
+                        //차량들끼리 충돌 위기가 있을때
+                        if (globals.evasionInfo.Count != 0)
+                        {
+                            Console.WriteLine("충돌 위기 !!!");
+                            Console.WriteLine("globals.evasionInfo.Count = " + globals.evasionInfo.Count);
 
+                            Dictionary<string, State> AllUGVStateMap = new Dictionary<string, State>();
+
+                            for (int m = 0; m < mapViewModel.MVCCItemStateList.Count; m++)
+                            {
+                                State tempState = mapViewModel.MVCCItemStateList[m];
+                                AllUGVStateMap.Add(tempState.ugv.Id, tempState);
+                            }
 
                             //충돌 위기 차량에게 일시정지 메세지 보냄
                             foreach (var evsionTempList in globals.evasionInfo)
@@ -674,12 +681,12 @@ namespace MVCC.View
                                 int n = evsionTempList.Key;
                                 int m = evsionTempList.Value;
 
-                                
+
                                 foreach (var sortTempList in globals.sortInfoList)
                                 {
                                     int index;
                                     int.TryParse(sortTempList.UGV_Id[1].ToString(), out index);
-                                   
+
                                     if (index == n)
                                     {
                                         //m에게 일시 정지 보내기
@@ -687,14 +694,14 @@ namespace MVCC.View
                                         {
                                             State tempUGVState = AllUGVStateMap["A" + m];
                                             tempUGVState.ugv.Command = "s";
-                                            
-                                          
-                                                bluetoothAndPathPlanning.connect(tempUGVState.ugv, tempUGVState);
-                                                tempUGVState.IsPause = true;
-                                                //Console.WriteLine("sortTempList index = " + index + " m = " + m);
-                                                Console.WriteLine(m + " 차량에게 일시 정지 신호 보냄");
-                                            
-                                            
+
+
+                                            bluetoothAndPathPlanning.connect(tempUGVState.ugv, tempUGVState);
+                                            tempUGVState.IsPause = true;
+                                            //Console.WriteLine("sortTempList index = " + index + " m = " + m);
+                                            Console.WriteLine(m + " 차량에게 일시 정지 신호 보냄");
+
+
                                             break;
                                         }
                                     }
@@ -707,11 +714,11 @@ namespace MVCC.View
                                             tempUGVState.ugv.Command = "s";
                                             //if (tempUGVState.IsPause == true)
                                             //{
-                                                bluetoothAndPathPlanning.connect(tempUGVState.ugv, tempUGVState);
-                                                tempUGVState.IsPause = true;
-                                                //Console.WriteLine("sortTempList index = " + index + " n = " + n);
-                                                Console.WriteLine(n + " 차량에게 일시 정지 신호 보냄");
-                                                //Console.WriteLine();
+                                            bluetoothAndPathPlanning.connect(tempUGVState.ugv, tempUGVState);
+                                            tempUGVState.IsPause = true;
+                                            //Console.WriteLine("sortTempList index = " + index + " n = " + n);
+                                            Console.WriteLine(n + " 차량에게 일시 정지 신호 보냄");
+                                            //Console.WriteLine();
                                             //}
                                             break;
                                         }
@@ -720,7 +727,7 @@ namespace MVCC.View
                             }
 
                             Console.WriteLine("===========================================");
-                            
+
                         }
 
                         globals.evasionInfoLock.ExitWriteLock();
@@ -789,13 +796,15 @@ namespace MVCC.View
                                 {
                                     State tempUGVState = AllUGVStateMap[tempUGV.Id];
                                     tempUGV.Command = "d";
-
-                                    RemoveEndPoint(tempUGV);
+                                    
+                                    RemoveEndPoint(tempUGV, tempUGVState);
 
                                     pathFinder.init();
 
                                     if (pathFinder.find_path(tempUGV, tempUGVState) == true)
                                     {
+                                        tempUGVState.IsPause = false;
+
                                         Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
                                         {
                                             AddMVCCUGVPathList(tempUGV);
@@ -835,18 +844,18 @@ namespace MVCC.View
 
                     pre_blob_count = blob_count; //현재 blob_count를 이전 blob_count에 저장
                     globals.pre_Map_obstacle = (int[,])globals.Map_obstacle.Clone(); //비교를 위해 이전 Map정보 설정
-                    
-                    
-                   globals.pre_evasionInfo.Clear();
 
-                    foreach(var list in globals.evasionInfo)
+
+                    globals.pre_evasionInfo.Clear();
+
+                    foreach (var list in globals.evasionInfo)
                     {
                         KeyValuePair<int, int> temp = new KeyValuePair<int, int>(list.Key, list.Value);
                         globals.pre_evasionInfo.Add(temp);
                     }
 
-                    globals.evasionInfo.Clear();                                
-                     
+                    globals.evasionInfo.Clear();
+
 
                     Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
                     {
@@ -900,6 +909,7 @@ namespace MVCC.View
         //path_count 우선 순위 정하기
         public void UGV_priority_sort(Dictionary<string, UGV> GroupMap, Dictionary<string, State> GroupStateMap)
         {
+            globals.sortInfoList.Clear();
 
             //정렬을 위해 list에 넣음
             foreach (var key in GroupMap.Keys)
@@ -1284,8 +1294,8 @@ namespace MVCC.View
                 individualUGVState.EndPointY = endPointY;
 
                 individualUGV.Command = "d";
-
-                RemoveEndPoint(individualUGV);
+                
+                RemoveEndPoint(individualUGV, individualUGVState);
 
                 individualUGV.PathList.Clear();
 
@@ -1293,6 +1303,8 @@ namespace MVCC.View
 
                 if (pathFinder.find_path(individualUGV, individualUGVState) == true)
                 {
+                    individualUGVState.IsPause = false;
+
                     AddMVCCUGVPathList(individualUGV);
 
                     //여기서 도착 지점 배치 함수
@@ -1378,16 +1390,18 @@ namespace MVCC.View
                     tempState.EndPointY = endPointY;
 
                     tempUGV.Command = "d";
-
-                    RemoveEndPoint(tempUGV);
+                    
+                    RemoveEndPoint(tempUGV, tempState);
 
                     tempUGV.PathList.Clear();
 
                     pathFinder.init();
 
                     if (pathFinder.find_path(tempUGV, tempState) == true)
+                    {
+                        tempState.IsPause = false;
                         AddMVCCUGVPathList(tempUGV);
-
+                    }
                     if (tempUGV.PathList.Count == 0)
                         temp_list.Add(key);
                 }
@@ -1689,7 +1703,7 @@ namespace MVCC.View
         }
 
         //길찾기를 하고 난 뒤 다른 지점을 찍었을 때 도착Map에서 지우기
-        private void RemoveEndPoint(UGV ugv)
+        private void RemoveEndPoint(UGV ugv, State UGVstate)
         {
             //도착 지점 좌표 지우기
             int startX, startY, endX, endY;
@@ -1729,6 +1743,8 @@ namespace MVCC.View
                 for (int x = startX; x <= endX; x++)
                     for (int y = startY; y <= endY; y++)
                         globals.EndPointMap[y, x] = 0; //장애물은  설정  
+
+                UGVstate.IsDriving = false;
 
                 globals.endPointMapLock.ExitWriteLock();
 
@@ -1783,7 +1799,7 @@ namespace MVCC.View
                         bluetoothAndPathPlanning.connect(tempUGV, tempState);
 
                         removeAllUGVPath(stopUGV);
-                        RemoveEndPoint(tempUGV);
+                        RemoveEndPoint(tempUGV, stopUGVState);
                         tempUGV.PathList.Clear();
                         //Console.WriteLine(" tempUGV.PathList.count = " + tempUGV.PathList.Count);
                         break;
@@ -1831,7 +1847,7 @@ namespace MVCC.View
                             bluetoothAndPathPlanning.connect(tempUGV, clickedUGVStateMap[tempUGV.Id]);
 
                             removeAllUGVPath(tempUGV);
-                            RemoveEndPoint(tempUGV);
+                            RemoveEndPoint(tempUGV, clickedUGVStateMap[tempUGV.Id]);
                             tempUGV.PathList.Clear();
                             //Console.WriteLine(" tempUGV.PathList.count = " + tempUGV.PathList.Count);
                         }
