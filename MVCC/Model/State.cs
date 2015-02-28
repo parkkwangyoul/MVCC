@@ -37,6 +37,28 @@ namespace MVCC.Model
             }
         }
 
+        // 직전 X좌표
+        private int beforeX = -1;
+        public int BeforeX
+        {
+            get { return beforeX; }
+            set
+            {
+                beforeX = value;
+            }
+        }
+
+        // 직전 Y좌표
+        private int beforeY = -1;
+        public int BeforeY
+        {
+            get { return beforeY; }
+            set
+            {
+                beforeY = value;
+            }
+        }
+
         // 주행 상태를 나타냄
         private bool isDriving = false;
         public bool IsDriving
@@ -45,6 +67,17 @@ namespace MVCC.Model
             set
             {
                 isDriving = value;
+            }
+        }
+ 
+        // 충돌 위기 상태 일때 길찾기 여부 나타냄
+        private bool isFindPath = false;
+        public bool IsFindPath
+        {
+            get { return isFindPath; }
+            set
+            {
+                isFindPath = value;
             }
         }
 

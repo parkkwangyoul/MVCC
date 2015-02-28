@@ -152,7 +152,8 @@ namespace MVCC.Utill
             //YCrCb_max = new Ycc(255, 146, 100);   //큰원yellow 색 범위
 
             YCrCb_min = new Ycc(0, 0, 0);
-            YCrCb_max = new Ycc(255, 150, 114);   //작은 원 yellow 색 범위
+            //YCrCb_max = new Ycc(255, 150, 114);   //작은 원 yellow 색 범위
+            YCrCb_max = new Ycc(255, 150, 120);   //작은 원 yellow 색 범위
 
 
             colorSetting = YCrCbFrame.InRange((Ycc)YCrCb_min, (Ycc)YCrCb_max); //색 범위 설정
@@ -265,7 +266,7 @@ namespace MVCC.Utill
                     // glo.mapObstacleLock.EnterWriteLock(); //critical section start
 
                     double ref_angle = 45;
-                    double margin = 15;
+                    double margin = 5;
 
 
                     if (ref_angle * 2 - margin <= result && result <= ref_angle * 2 + margin)

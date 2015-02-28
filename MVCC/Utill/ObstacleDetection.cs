@@ -116,72 +116,64 @@ namespace MVCC.Utill
                                 if (leftA > rightB) continue; //왼쪽
 
                                 int boarder_size = 30;
-
-                                globals.evasionInfoLock.EnterWriteLock();
-                                                       
+                                                                                       
                                 if (bottomA - topB <= boarder_size || bottomB - topA <= boarder_size || rightA - leftB <= boarder_size || rightB - leftA <= boarder_size)
                                 {
-                                    //Console.WriteLine(i + " 차량과 " + j + " 차량이 충돌 위기");
-
-                                    KeyValuePair<int, int> temp = new KeyValuePair<int, int>(i, j);
-
-                                    globals.evasionInfo.Add(temp);
+                                    Console.WriteLine("ObstacleDetection : " + i + " 차량과 " + j + " 차량이 충돌 위기");
  
-                                    int isEmpty = 0;
+                                    bool isEmpty = false;
+
+                                    if (globals.evasionInfo.Count == 0)
+                                    {
+                                        globals.evasionInfo.Add(new KeyValuePair<int, int>(i, j));
+                                        continue;
+                                    }
                                      
                                     foreach(var evsionTempList in globals.evasionInfo)
                                     {
                                         if(evsionTempList.Key == i && evsionTempList.Value == j)
                                         {
-                                            isEmpty++;
+                                            isEmpty = true;
                                         }
                                         else if (evsionTempList.Key == j && evsionTempList.Value == i)
                                         {
-                                            isEmpty++;
+                                            isEmpty = true;
                                         }
                                     }
                                     
-                                    if(isEmpty >= 2 )
+                                    if(!isEmpty)
                                     {
-                                        globals.evasionInfo.RemoveAt(globals.evasionInfo.Count - 1);
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("===========================================");
-                                        Console.WriteLine(i + " 차량과 " + j + " 차량이 충돌 위기");
-                                    }
-                             
+                                        globals.evasionInfo.Add(new KeyValuePair<int, int>(i, j));
+                                    }                             
                                 }
-                                 else
+                                
+                                else
                                 {
-                                    //Console.WriteLine(i + " 차량과 " + j + " 차량이 충돌함\n");
+                                    bool isEmpty = false;
 
-                                    KeyValuePair<int, int> temp = new KeyValuePair<int, int>(i, j);
+                                    if (globals.evasionInfo.Count == 0)
+                                    {
+                                        globals.evasionInfo.Add(new KeyValuePair<int, int>(i, j));
+                                        continue;
+                                    }
 
-                                    globals.evasionInfo.Add(temp);
-
-                                    int isEmpty = 0;
-
-
-                                    foreach (var evsionTempList in globals.UGVsConflictInofo)
+                                    foreach (var evsionTempList in globals.evasionInfo)
                                     {
                                         if (evsionTempList.Key == i && evsionTempList.Value == j)
                                         {
-                                            isEmpty++;
+                                            isEmpty = true;
                                         }
                                         else if (evsionTempList.Key == j && evsionTempList.Value == i)
                                         {
-                                            isEmpty++;
+                                            isEmpty = true;
                                         }
                                     }
 
-                                    if (isEmpty >= 2)
+                                    if (!isEmpty)
                                     {
-                                        globals.UGVsConflictInofo.RemoveAt(globals.evasionInfo.Count - 1);
-                                    }                                                             
+                                        globals.evasionInfo.Add(new KeyValuePair<int, int>(i, j));
+                                    }                                                              
                                 }
-
-                                globals.evasionInfoLock.ExitWriteLock();
                             }
                         }
                     }

@@ -13,9 +13,10 @@ namespace MVCC
 {
     public class Globals
     {
-        public int[,] Map_obstacle;
-        public int[,] pre_Map_obstacle;
-        public int[,] EndPointMap;
+        public int[,] Map_obstacle; //모든 맵의 정보
+        public int[,] pre_Map_obstacle; //장애물 정보
+        public int[,] EndPointMap; //도착지점 정보
+        public int[,] obstacleInCollision; //충돌 위기 일때 장애물 정보
 
         public struct UGV_Info
         {
@@ -34,7 +35,13 @@ namespace MVCC
 
         public int[] MovementCommandCount = new int[4];
         public bool[] direction_check = new bool[4];
-       
+
+        public int[] directionForceCountX = { 10, 10, 10, 10 };
+        public bool[] directionForceCheckX = new bool[4];
+        public int[] directionForceCountY = { 10, 10, 10, 10 };
+        public bool[] directionForceCheckY = new bool[4];
+
+
         public string[] rotate = new string[4];
         public int[] angle = new int[4];
         public int[] direction = new int[4];
@@ -46,6 +53,7 @@ namespace MVCC
         public ReaderWriterLockSlim UGVStopCommandLock = new ReaderWriterLockSlim();
         public ReaderWriterLockSlim endPointMapLock = new ReaderWriterLockSlim();
         public ReaderWriterLockSlim evasionInfoLock = new ReaderWriterLockSlim();
+        public ReaderWriterLockSlim bluetoothConnectLock = new ReaderWriterLockSlim();
         
         
         private static Globals _Instance;

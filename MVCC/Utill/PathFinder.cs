@@ -1412,6 +1412,7 @@ namespace MVCC.Utill
                 }
             }
              */
+
             return true;
         }
 
@@ -1472,6 +1473,7 @@ namespace MVCC.Utill
 
             if (endPointCheck == false)
             {
+                Console.WriteLine("길을 못찾은 ugv.id = " + ugv.Id);
                 Console.WriteLine("chu !! 찍은 도착 지점은 갈 수가 없습니다");
                 return false;
             }
