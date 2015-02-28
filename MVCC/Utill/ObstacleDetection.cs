@@ -97,7 +97,8 @@ namespace MVCC.Utill
                         {
                             if (!(tracking_rect[j].Width == 0 && tracking_rect[j].Height == 0))
                             {
-                                int add_size = 23;
+                                //int add_size = 23;
+                                int add_size = 30;
                                 
                                 leftA = tracking_rect[i].X - add_size;
                                 rightA = tracking_rect[i].X + tracking_rect[i].Width + add_size;
@@ -109,65 +110,80 @@ namespace MVCC.Utill
                                 topB = tracking_rect[j].Y - add_size;
                                 bottomB = tracking_rect[j].Y + tracking_rect[j].Height + add_size;
 
+
+                                
+                                
                                 if (bottomA < topB) continue; //아래
                                 if (topA > bottomB) continue; //위
                                 if (rightA < leftB) continue; //오른쪽
                                 if (leftA > rightB) continue; //왼쪽
 
-                                int boarder_size = 18;
-
+                                int boarder_size = 30;
 
                                 globals.evasionInfoLock.EnterWriteLock();
 
                                 
+                                
                                 if (bottomA - topB <= boarder_size || bottomB - topA <= boarder_size || rightA - leftB <= boarder_size || rightB - leftA <= boarder_size)
                                 {
-                                    Console.WriteLine(i + " 차량과 " + j + " 차량이 충돌 위기");
+                                    //Console.WriteLine(i + " 차량과 " + j + " 차량이 충돌 위기");
 
                                     KeyValuePair<int, int> temp = new KeyValuePair<int, int>(i, j);
 
-                                    bool isEmpty = true; 
+                                    globals.evasionInfo.Add(temp);
+ 
+                                    int isEmpty = 0;
+  
+
                                     foreach(var evsionTempList in globals.evasionInfo)
                                     {
                                         if(evsionTempList.Key == i && evsionTempList.Value == j)
                                         {
-                                            isEmpty = false;
-                                            break;
+                                            isEmpty++;
                                         }
                                         else if (evsionTempList.Key == j && evsionTempList.Value == i)
                                         {
-                                            isEmpty = false;
-                                            break;
+                                            isEmpty++;
                                         }
                                     }
 
-                                    if (isEmpty == false)
-                                        globals.evasionInfo.Add(temp);
-
+                                    if(isEmpty >= 2 )
+                                    {
+                                        //Console.WriteLine("있어서 삭제 됨 globals.evasionInfo[globals.evasionInfo.Count - 1] = " + globals.evasionInfo[globals.evasionInfo.Count - 1]);
+                                        globals.evasionInfo.RemoveAt(globals.evasionInfo.Count - 1);
+                                        //Console.WriteLine("globals.evasionInfo.Count = " + globals.evasionInfo.Count);
+                                    }
+                             
                                 }
                                  else
                                 {
-                                    Console.WriteLine(i + " 차량과 " + j + " 차량이 충돌함\n");
+                                    //Console.WriteLine(i + " 차량과 " + j + " 차량이 충돌함\n");
 
                                     KeyValuePair<int, int> temp = new KeyValuePair<int, int>(i, j);
 
-                                     bool isEmpty = true;
-                                     foreach (var evsionTempList in globals.UGVsConflictInofo)
+                                    globals.evasionInfo.Add(temp);
+
+                                    int isEmpty = 0;
+
+
+                                    foreach (var evsionTempList in globals.UGVsConflictInofo)
                                     {
-                                        if(evsionTempList.Key == i && evsionTempList.Value == j)
+                                        if (evsionTempList.Key == i && evsionTempList.Value == j)
                                         {
-                                            isEmpty = false;
-                                            break;
+                                            isEmpty++;
                                         }
                                         else if (evsionTempList.Key == j && evsionTempList.Value == i)
                                         {
-                                            isEmpty = false;
-                                            break;
+                                            isEmpty++;
                                         }
                                     }
 
-                                    if (isEmpty == false)
-                                        globals.UGVsConflictInofo.Add(temp);                                                               
+                                    if (isEmpty >= 2)
+                                    {
+                                        //Console.WriteLine("있어서 삭제 됨 globals.evasionInfo[globals.evasionInfo.Count - 1] = " + globals.evasionInfo[globals.evasionInfo.Count - 1]);
+                                        globals.UGVsConflictInofo.RemoveAt(globals.evasionInfo.Count - 1);
+                                        //Console.WriteLine("globals.evasionInfo.Count = " + globals.evasionInfo.Count);
+                                    }                                                             
                                 }
 
                                 globals.evasionInfoLock.ExitWriteLock();
