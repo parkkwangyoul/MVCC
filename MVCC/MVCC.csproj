@@ -104,6 +104,7 @@
     <Compile Include="CustomControl\UGVPathControl.xaml.cs">
       <DependentUpon>UGVPathControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\AlertMessage.cs" />
     <Compile Include="Model\UGVPath.cs" />
     <Compile Include="Utill\BluetoothAndPathPlanning.cs" />
     <Compile Include="Utill\ColorTracking.cs" />

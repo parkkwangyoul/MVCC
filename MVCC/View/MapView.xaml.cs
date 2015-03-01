@@ -803,7 +803,8 @@ namespace MVCC.View
                                                     globals.mapObstacleLock.ExitWriteLock(); //critical section end
 
                                                     globals.bluetoothConnectLock.EnterWriteLock();
-                                                    if (pathFinder.find_path(tempUGVState2.ugv, tempUGVState2) == true)
+                                                    int result = pathFinder.find_path(tempUGVState2.ugv, tempUGVState2);
+                                                    if (result == 1)
                                                     {
                                                         tempUGVState2.IsFindPath = true;
 
@@ -841,6 +842,11 @@ namespace MVCC.View
                                                     {
                                                         //만약 길이 없어졌을때 일어나는 버그 있을 수도 있으니 생각하기 =====================================================================================
                                                         tempUGVState2.IsDriving = false;
+
+                                                        if (result == 2)
+                                                            mapViewModel.MVCCAlertMessageList.Add(new AlertMessage("이미 도착지점으로 설정 된 곳입니다.", tempUGVState2.ugv.UGVColor));
+                                                        else if (result == 3)
+                                                            mapViewModel.MVCCAlertMessageList.Add(new AlertMessage("갈 수 없는 도착 지점입니다.", tempUGVState2.ugv.UGVColor));
                                                     }
 
                                                     globals.bluetoothConnectLock.ExitWriteLock();
@@ -916,7 +922,8 @@ namespace MVCC.View
                                                     globals.mapObstacleLock.ExitWriteLock(); //critical section end
 
                                                     globals.bluetoothConnectLock.EnterWriteLock();
-                                                    if (pathFinder.find_path(tempUGVState2.ugv, tempUGVState2) == true)
+                                                    int result = pathFinder.find_path(tempUGVState2.ugv, tempUGVState2);
+                                                    if (result == 1)
                                                     {
                                                         tempUGVState2.IsFindPath = true;
 
@@ -951,6 +958,11 @@ namespace MVCC.View
                                                     {
                                                         //만약 길이 없어졌을때 일어나는 버그 있을 수도 있으니 생각하기 =====================================================================================
                                                         tempUGVState2.IsDriving = false;
+
+                                                        if (result == 2)
+                                                            mapViewModel.MVCCAlertMessageList.Add(new AlertMessage("이미 도착지점으로 설정 된 곳입니다.", tempUGVState2.ugv.UGVColor));
+                                                        else if(result == 3)
+                                                            mapViewModel.MVCCAlertMessageList.Add(new AlertMessage("갈 수 없는 도착 지점입니다.", tempUGVState2.ugv.UGVColor));
                                                     }
 
                                                     globals.bluetoothConnectLock.ExitWriteLock();
@@ -1171,7 +1183,8 @@ namespace MVCC.View
                                 globals.bluetoothConnectLock.EnterWriteLock();
                                 pathFinder.init();
 
-                                if (pathFinder.find_path(individualUGV, individualUGVState) == true)
+                                int result = pathFinder.find_path(individualUGV, individualUGVState);
+                                if (result == 1)
                                 {
                                     individualUGVState.IsPause = false;
 
@@ -1190,6 +1203,11 @@ namespace MVCC.View
                                 else
                                 {
                                     removeAllUGVPath(individualUGV);
+
+                                    if (result == 2)
+                                        mapViewModel.MVCCAlertMessageList.Add(new AlertMessage("이미 도착지점으로 설정 된 곳입니다.", individualUGV.UGVColor));
+                                    else if (result == 3)
+                                        mapViewModel.MVCCAlertMessageList.Add(new AlertMessage("갈 수 없는 도착 지점입니다.", individualUGV.UGVColor));
                                 }
 
                                 Console.WriteLine("장애물수 변화 되어 중지 되었던 차량을 다시 길 찾기");
@@ -1275,7 +1293,8 @@ namespace MVCC.View
                                     globals.bluetoothConnectLock.EnterWriteLock();
                                     pathFinder.init();
 
-                                    if (pathFinder.find_path(tempUGV, tempState) == true)
+                                    int result = pathFinder.find_path(tempUGV, tempState);
+                                    if (result == 1)
                                     {
                                         tempState.IsPause = false;
 
@@ -1287,6 +1306,11 @@ namespace MVCC.View
                                     else
                                     {
                                         tempState.IsDriving = false;
+
+                                        if (result == 2)
+                                            mapViewModel.MVCCAlertMessageList.Add(new AlertMessage("이미 도착지점으로 설정 된 곳입니다.", tempUGV.UGVColor));
+                                        else if (result == 3)
+                                            mapViewModel.MVCCAlertMessageList.Add(new AlertMessage("갈 수 없는 도착 지점입니다.", tempUGV.UGVColor));
                                     }
                                     globals.bluetoothConnectLock.ExitWriteLock();
 
@@ -1490,7 +1514,8 @@ namespace MVCC.View
                                     globals.bluetoothConnectLock.EnterWriteLock();
                                     pathFinder.init();
 
-                                    if (pathFinder.find_path(individualUGV, individualUGVState) == true)
+                                    int result = pathFinder.find_path(individualUGV, individualUGVState);
+                                    if (result == 1)
                                     {
                                         individualUGVState.IsPause = false;
 
@@ -1509,6 +1534,11 @@ namespace MVCC.View
                                     else
                                     {
                                         removeAllUGVPath(individualUGV);
+
+                                        if (result == 2)
+                                            mapViewModel.MVCCAlertMessageList.Add(new AlertMessage("이미 도착지점으로 설정 된 곳입니다.", individualUGV.UGVColor));
+                                        else if (result == 3)
+                                            mapViewModel.MVCCAlertMessageList.Add(new AlertMessage("갈 수 없는 도착 지점입니다.", individualUGV.UGVColor));
                                     }
 
                                     Console.WriteLine("장애물이 옮겨지는중으로 중지 되었던 차량을 다시 길 찾기");
@@ -1594,7 +1624,8 @@ namespace MVCC.View
                                         globals.bluetoothConnectLock.EnterWriteLock();
                                         pathFinder.init();
 
-                                        if (pathFinder.find_path(tempUGV, tempState) == true)
+                                        int result = pathFinder.find_path(tempUGV, tempState);
+                                        if (result == 1)
                                         {
                                             tempState.IsPause = false;
 
@@ -1606,6 +1637,11 @@ namespace MVCC.View
                                         else
                                         {
                                             tempState.IsDriving = false;
+
+                                            if (result == 2)
+                                                mapViewModel.MVCCAlertMessageList.Add(new AlertMessage("이미 도착지점으로 설정 된 곳입니다.", tempUGV.UGVColor));
+                                            else if (result == 3)
+                                                mapViewModel.MVCCAlertMessageList.Add(new AlertMessage("갈 수 없는 도착 지점입니다.", tempUGV.UGVColor));
                                         }
                                         globals.bluetoothConnectLock.ExitWriteLock();
 
@@ -2377,7 +2413,8 @@ namespace MVCC.View
                 globals.bluetoothConnectLock.EnterWriteLock();
                 pathFinder.init();
 
-                if (pathFinder.find_path(individualUGV, individualUGVState) == true)
+                int result = pathFinder.find_path(individualUGV, individualUGVState);
+                if (result == 1)
                 {
                     individualUGVState.IsPause = false;
 
@@ -2393,6 +2430,11 @@ namespace MVCC.View
                 else
                 {
                     removeAllUGVPath(individualUGV);
+
+                    if (result == 2)
+                        mapViewModel.MVCCAlertMessageList.Add(new AlertMessage("이미 도착지점으로 설정 된 곳입니다.", individualUGV.UGVColor));
+                    else if (result == 3)
+                        mapViewModel.MVCCAlertMessageList.Add(new AlertMessage("갈 수 없는 도착 지점입니다.", individualUGV.UGVColor));
                 }
                 globals.bluetoothConnectLock.ExitWriteLock();
             }
@@ -2475,7 +2517,8 @@ namespace MVCC.View
                     globals.bluetoothConnectLock.EnterWriteLock();
                     pathFinder.init();
 
-                    if (pathFinder.find_path(tempUGV, tempState) == true)
+                    int result = pathFinder.find_path(tempUGV, tempState);
+                    if (result == 1)
                     {
                         tempState.IsPause = false;
                         AddMVCCUGVPathList(tempUGV);
@@ -2483,6 +2526,11 @@ namespace MVCC.View
                     else
                     {
                         tempState.IsDriving = false;
+
+                        if (result == 2)
+                            mapViewModel.MVCCAlertMessageList.Add(new AlertMessage("이미 도착지점으로 설정 된 곳입니다.", tempUGV.UGVColor));
+                        else if (result == 3)
+                            mapViewModel.MVCCAlertMessageList.Add(new AlertMessage("갈 수 없는 도착 지점입니다.", tempUGV.UGVColor));
                     }
                     globals.bluetoothConnectLock.ExitWriteLock();
 
@@ -2655,7 +2703,7 @@ namespace MVCC.View
                         }
                         else
                         {
-                            MessageBox.Show("이미 다른 그룹에 속한 UGV 입니다.");
+                            mapViewModel.MVCCAlertMessageList.Add(new AlertMessage("이미 다른 그룹에 속한 UGV 입니다.", "orange"));                            
                         }
                     }
                 }
@@ -2901,7 +2949,8 @@ namespace MVCC.View
                 }
                 else
                 {
-                    MessageBox.Show("그룹 대기열에 포함된 UGV가 없습니다.");
+                    mapViewModel.MVCCAlertMessageList.Add(new AlertMessage("그룹 대기열에 포함된 UGV가 없습니다."));
+                    //MessageBox.Show("그룹 대기열에 포함된 UGV가 없습니다.");
                 }
             }
 
@@ -3086,7 +3135,7 @@ namespace MVCC.View
             }
             else
             {
-                MessageBox.Show("이미 " + GroupName + "이 존재합니다.");
+                mapViewModel.MVCCAlertMessageList.Add(new AlertMessage("이미 " + GroupName + "이 존재합니다.", "orange"));
             }
         }
 
