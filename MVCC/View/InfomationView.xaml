@@ -210,7 +210,7 @@
                     </Grid>
                 </StackPanel>
             </ScrollViewer>
-            <Grid x:Name="NextToIntroduce1" Opacity="0" Width="100" Height="100" Cursor="Hand">
+            <Grid x:Name="BeforeToIntroduce1" Opacity="0" Width="100" Height="100" Cursor="Hand">
                 <Grid.RenderTransform>
                     <TranslateTransform X="-490" Y="0" />
                 </Grid.RenderTransform>
@@ -218,7 +218,7 @@
                     <EventTrigger RoutedEvent="Grid.MouseLeave">
                         <BeginStoryboard>
                             <!-- Introduce1 Grid Slide in Animation -->
-                            <Storyboard TargetName="NextToIntroduce1">
+                            <Storyboard TargetName="BeforeToIntroduce1">
                                 <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                                 From="0.8" To="0" Duration="0:0:0.3" />
                             </Storyboard>
@@ -227,7 +227,7 @@
                     <EventTrigger RoutedEvent="Grid.MouseEnter">
                         <BeginStoryboard>
                             <!-- Introduce1 Grid Slide in Animation -->
-                            <Storyboard TargetName="NextToIntroduce1">
+                            <Storyboard TargetName="BeforeToIntroduce1">
                                 <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                                 From="0" To="0.8" Duration="0:0:0.3" />
                             </Storyboard>
@@ -244,6 +244,169 @@
                                 <DoubleAnimation Storyboard.TargetName="Introduce2" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
                                                  From="0" To="1280" Duration="0:0:0.3" />
                                 <DoubleAnimation Storyboard.TargetName="Introduce2" Storyboard.TargetProperty="Opacity"
+                                                 From="1" To="0" Duration="0:0:0.3" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Grid.Triggers>
+                <Image Source="/Resource/LeftArrow.png" />
+            </Grid>
+            <Grid x:Name="NextToIntroduce3" Opacity="0" Width="100" Height="100" Cursor="Hand">
+                <Grid.RenderTransform>
+                    <TranslateTransform X="480" Y="0" />
+                </Grid.RenderTransform>
+                <Grid.Triggers>
+                    <EventTrigger RoutedEvent="Grid.MouseLeave">
+                        <BeginStoryboard>
+                            <!-- Introduce1 Grid Slide in Animation -->
+                            <Storyboard TargetName="NextToIntroduce3">
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                From="0.8" To="0" Duration="0:0:0.3" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="Grid.MouseEnter">
+                        <BeginStoryboard>
+                            <!-- Introduce1 Grid Slide in Animation -->
+                            <Storyboard TargetName="NextToIntroduce3">
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                From="0" To="0.8" Duration="0:0:0.3" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="Grid.MouseLeftButtonDown">
+                        <BeginStoryboard>
+                            <!-- Introduce1 Grid Slide in Animation -->
+                            <Storyboard TargetName="Introduce3">
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                                From="1280" To="0" Duration="0:0:0.3" />
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                From="0" To="1" Duration="0:0:0.8" />
+                                <DoubleAnimation Storyboard.TargetName="Introduce2" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                                 From="0" To="-1280" Duration="0:0:0.3" />
+                                <DoubleAnimation Storyboard.TargetName="Introduce2" Storyboard.TargetProperty="Opacity"
+                                                 From="1" To="0" Duration="0:0:0.3" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Grid.Triggers>
+                <Image Source="/Resource/RightArrow.png" />
+            </Grid>
+        </Grid>
+        <Grid x:Name="Introduce3">
+            <Grid.RenderTransform>
+                <TranslateTransform X="1280" Y="0" />
+            </Grid.RenderTransform>
+            <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
+                <StackPanel HorizontalAlignment="Left">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontSize="35px">Team</TextBlock>
+                    </StackPanel>
+
+                    <Grid Margin="100 0 0 0" Width="800px">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20*" />
+                            <ColumnDefinition Width="80*" />
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Source="/Resource/PKY.png" >
+                            <Image.RenderTransform>
+                                <ScaleTransform ScaleX="0.8" ScaleY="0.8" />
+                            </Image.RenderTransform>
+                        </Image>
+                        <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10 0 0 0 ">
+                            <TextBlock FontSize="15px">Name : Park Kwang Youl</TextBlock>
+                            <TextBlock FontSize="15px">University : Kyonggi University</TextBlock>
+                            <TextBlock FontSize="15px">Major : Computer Science</TextBlock>
+                            <TextBlock FontSize="13px" Margin="2">Role (<TextBlock Foreground="#737AFF"><Underline>Team Leader</Underline></TextBlock>)<LineBreak />
+                                <TextBlock Padding="10 0 0 0">①	Creating the application using WPF (Window Presentation Foundation) </TextBlock><LineBreak />
+                                <TextBlock Padding="10 0 0 0">②	Creating the grid map </TextBlock><LineBreak />
+                                <TextBlock Padding="10 0 0 0">③	Applying the results of image processing onto GUI</TextBlock>
+                            </TextBlock>
+                            <TextBlock FontSize="15px">Email : rhkdduf63@gmail.com</TextBlock>
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid Margin="100 0 0 0" Width="800px">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20*" />
+                            <ColumnDefinition Width="80*" />
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Source="/Resource/CDY.png">
+                            <Image.RenderTransform>
+                                <ScaleTransform ScaleX="0.8" ScaleY="0.8" />
+                            </Image.RenderTransform>
+                        </Image>
+                        <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10 0 0 0 ">
+                            <TextBlock FontSize="15px">Name : Chu Dae Youn</TextBlock>
+                            <TextBlock FontSize="15px">University : Hankuk University of Foreign Studies</TextBlock>
+                            <TextBlock FontSize="15px">Major : Information &amp; Communication Engineering</TextBlock>
+                            <TextBlock FontSize="13px" Margin="2">Role (SW)<LineBreak />
+                                <TextBlock Padding="10 0 0 0">①	Creating 2WD vehicle tracking algorithm using OpenCV and C# </TextBlock><LineBreak />
+                                <TextBlock Padding="10 0 0 0">②	Creating obstacle detection algorithm using OpenCV and C# </TextBlock><LineBreak />
+                                <TextBlock Padding="10 0 0 0">③	Creating the algorithm that can find the shortest path between the starting point and destination point</TextBlock>
+                            </TextBlock>
+                            <TextBlock FontSize="15px">Email : chudaeyoun@naver.com</TextBlock>
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid Margin="100 0 0 0" Width="800px">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20*" />
+                            <ColumnDefinition Width="80*" />
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Source="/Resource/CBC.png" >
+                            <Image.RenderTransform>
+                                <ScaleTransform ScaleX="0.8" ScaleY="0.8" />
+                            </Image.RenderTransform>
+                        </Image>
+                        <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10 0 0 0 ">
+                            <TextBlock FontSize="15px">Name : Choi Byung Chan</TextBlock>
+                            <TextBlock FontSize="15px">University : Hanyang University</TextBlock>
+                            <TextBlock FontSize="15px">Major : Electronics &amp; Communication Engineering</TextBlock>
+                            <TextBlock FontSize="13px" Margin="2">Role (HW)<LineBreak />
+                                <TextBlock Padding="10 0 0 0">①	Creating two - wheel vehicles that uses Atmega 128 and Bluetooth module (4 vehicles on schedule) </TextBlock><LineBreak />
+                                <TextBlock Padding="10 0 0 0">②	Establishing Bluetooth communication between 2 wheel vehicles and PC using C# </TextBlock><LineBreak />
+                                <TextBlock Padding="10 0 0 0">③	Creating the algorithm that can control the vehicles on both GUI and OpenCV</TextBlock>
+                            </TextBlock>
+                            <TextBlock FontSize="15px">Email : luwis93choi@hotmail.com</TextBlock>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </ScrollViewer>
+            <Grid x:Name="BeforeToIntroduce2" Opacity="0" Width="100" Height="100" Cursor="Hand">
+                <Grid.RenderTransform>
+                    <TranslateTransform X="-490" Y="0" />
+                </Grid.RenderTransform>
+                <Grid.Triggers>
+                    <EventTrigger RoutedEvent="Grid.MouseLeave">
+                        <BeginStoryboard>
+                            <!-- Introduce1 Grid Slide in Animation -->
+                            <Storyboard TargetName="BeforeToIntroduce2">
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                From="0.8" To="0" Duration="0:0:0.3" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="Grid.MouseEnter">
+                        <BeginStoryboard>
+                            <!-- Introduce1 Grid Slide in Animation -->
+                            <Storyboard TargetName="BeforeToIntroduce2">
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                From="0" To="0.8" Duration="0:0:0.3" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="Grid.MouseLeftButtonDown">
+                        <BeginStoryboard>
+                            <!-- Introduce1 Grid Slide in Animation -->
+                            <Storyboard TargetName="Introduce2">
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                                From="-1280" To="0" Duration="0:0:0.3" />
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                From="0" To="1" Duration="0:0:0.8" />
+                                <DoubleAnimation Storyboard.TargetName="Introduce3" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                                 From="0" To="1280" Duration="0:0:0.3" />
+                                <DoubleAnimation Storyboard.TargetName="Introduce3" Storyboard.TargetProperty="Opacity"
                                                  From="1" To="0" Duration="0:0:0.3" />
                             </Storyboard>
                         </BeginStoryboard>
