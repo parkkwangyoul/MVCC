@@ -13,13 +13,37 @@ namespace MVCC
 {
     public class Globals
     {
-        public int[,] Map_obstacle;
-        public int[,] pre_Map_obstacle;
-        public int[,] EndPointMap;
+        public int[,] Map_obstacle; //모든 맵의 정보
+        public int[,] onlyObstacle; //건물 장애물만의 정보
+        public int[,] pre_onlyObstacle; //onlyPbstacle의 이전 정보
+        public int[,] EndPointMap; //도착지점 정보
+        public int[,] obstacleInCollision; //충돌 위기 일때 장애물 정보
+
+        public struct UGV_Info
+        {
+            public string UGV_Id;
+            public UGV ugv;
+        }
+
+        public UGV_Info sortInfo; // 차량 우선 순위 정보
+
+        public List<UGV_Info> sortInfoList = new List<UGV_Info>(); // 차량 우선 순위 정보 리스트
+
+        public List<KeyValuePair<int, int>> evasionInfo = new List<KeyValuePair<int,int>>();
+        public List<KeyValuePair<int, int>> pre_evasionInfo = new List<KeyValuePair<int,int>>(); //차량들 끼리의 충돌 위기 정보
+
+        public List<KeyValuePair<int, int>> UGVsConflictInofo = new List<KeyValuePair<int, int>>(); //차량들 끼리의 충돌한 정보
+        public List<int> UGVandObstacleCollisionInofo = new List<int>(); //차량과 장애물 충돌한 정보
+
 
         public int[] MovementCommandCount = new int[4];
         public bool[] direction_check = new bool[4];
-        public List<KeyValuePair<int, int>>[] copy_pathList = new List<KeyValuePair<int,int>>[4];
+
+        public int[] directionForceCountX = { 10, 10, 10, 10 };
+        public bool[] directionForceCheckX = new bool[4];
+        public int[] directionForceCountY = { 10, 10, 10, 10 };
+        public bool[] directionForceCheckY = new bool[4];
+
 
         public string[] rotate = new string[4];
         public int[] angle = new int[4];
@@ -30,6 +54,10 @@ namespace MVCC
         public ReaderWriterLockSlim mapObstacleLock = new ReaderWriterLockSlim();
         public ReaderWriterLockSlim bluetoothLock = new ReaderWriterLockSlim();
         public ReaderWriterLockSlim UGVStopCommandLock = new ReaderWriterLockSlim();
+        public ReaderWriterLockSlim endPointMapLock = new ReaderWriterLockSlim();
+        public ReaderWriterLockSlim evasionInfoLock = new ReaderWriterLockSlim(); //obstacleInCollision Map을 위한
+        public ReaderWriterLockSlim bluetoothConnectLock = new ReaderWriterLockSlim();
+        
         
         private static Globals _Instance;
         public static Globals Instance
