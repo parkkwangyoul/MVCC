@@ -655,8 +655,8 @@ namespace MVCC.Utill
                     {
                         dest_x = pop.outer_1.x + node_1.size / 2;
                         dest_y = pop.outer_1.y + node_1.size / 2;
-                        Console.WriteLine("x : {0} y : {1}", pop.outer_1.x + node_1.size / 2, pop.outer_1.y + node_1.size / 2);
-                        Console.WriteLine("Vehicle has arrived at the destination");
+                        //Console.WriteLine("x : {0} y : {1}", pop.outer_1.x + node_1.size / 2, pop.outer_1.y + node_1.size / 2);
+                        //Console.WriteLine("Vehicle has arrived at the destination");
                         break;
                     }
                 }
@@ -667,8 +667,8 @@ namespace MVCC.Utill
                     {
                         dest_x = pop.outer_1.x + node_1.size / 2;
                         dest_y = pop.outer_1.y + node_1.size / 2;
-                        Console.WriteLine("x : {0} y : {1}", pop.outer_1.x + node_1.size / 2, pop.outer_1.y + node_1.size / 2);
-                        Console.WriteLine("Vehicle has arrived at the destination");
+                        //Console.WriteLine("x : {0} y : {1}", pop.outer_1.x + node_1.size / 2, pop.outer_1.y + node_1.size / 2);
+                        //Console.WriteLine("Vehicle has arrived at the destination");
                         break;
                     }
                 }
@@ -678,8 +678,8 @@ namespace MVCC.Utill
                     if ((pop.outer_1.x + node_1.size / 2 == dest_x) && (pop.outer_1.y + node_1.size / 2 == dest_y))
                     {
 
-                        Console.WriteLine("x : {0} y : {1}", pop.outer_1.x + node_1.size / 2, pop.outer_1.y + node_1.size / 2);
-                        Console.WriteLine("Vehicle has arrived at the destination");
+                        //Console.WriteLine("x : {0} y : {1}", pop.outer_1.x + node_1.size / 2, pop.outer_1.y + node_1.size / 2);
+                        //Console.WriteLine("Vehicle has arrived at the destination");
                         break;
                     }
 
@@ -747,7 +747,7 @@ namespace MVCC.Utill
             int dir_6 = 0;
             int dir_7 = 0;
 
-            Console.Write("{0} ", current_weight);
+            //Console.Write("{0} ", current_weight);
             grid[start_point_y, start_point_x] = '5';
 
             ugv.PathList.Add(new KeyValuePair<int, int>((start_point_x) * 15, (start_point_y) * 15));
@@ -1227,9 +1227,9 @@ namespace MVCC.Utill
             dest_x = state.EndPointX;
             dest_y = state.EndPointY;
 
-            Console.WriteLine();
-            Console.WriteLine("ugv.Id = " + ugv.Id + " start_x = " + start_x + " start_y = " + start_y + " dest_x = " + dest_x + " dest_y = " + dest_y);
-            Console.WriteLine();
+            //Console.WriteLine();
+            Console.WriteLine("find_path 함수에 들어옴 ugv.Id = " + ugv.Id + " start_x = " + start_x + " start_y = " + start_y + " dest_x = " + dest_x + " dest_y = " + dest_y);
+            //Console.WriteLine();
             //Console.WriteLine("dest_x = " + dest_x + " dest_y = " + dest_y + " current_perspective =" + current_perspective);
             size_ = 5;
             size = 5;
@@ -1274,6 +1274,7 @@ namespace MVCC.Utill
                 }
             }
 
+            /*
             for (int i = 0; i < row; i++)
             {
                 for (int j = 0; j < column; j++)
@@ -1282,7 +1283,7 @@ namespace MVCC.Utill
                 }
                 Console.WriteLine();
             }
-
+            */
 
             //vehicle_1 = vehicle_compare;
 
@@ -1307,8 +1308,8 @@ namespace MVCC.Utill
                 }
             }
 
-            Console.WriteLine();
-            Console.WriteLine("Graph Reconstruction Complete");
+            //Console.WriteLine();
+            //Console.WriteLine("Graph Reconstruction Complete");
             #endregion
 
             #region BFS Path Planning
@@ -1353,9 +1354,6 @@ namespace MVCC.Utill
                 return false;
             }
  
-
-
-
             globals.first_point_x[index] = ugv.PathList[ugv.PathList.Count - 2].Key / 15;
             globals.first_point_y[index] = ugv.PathList[ugv.PathList.Count - 2].Value / 15;
 
@@ -1373,7 +1371,7 @@ namespace MVCC.Utill
                 Movement_Command();
             }
 
-            Console.WriteLine("");
+            //Console.WriteLine("");
             /*
             for (int i = 0; i < path_count; i++)
             {
@@ -1386,7 +1384,7 @@ namespace MVCC.Utill
                 Console.Write("{0}", movement[i].ToString());
             }
              */
-            Console.WriteLine("");
+            //Console.WriteLine("");
 
             for (int i = 0; i < path_count; i++)
             {
@@ -1400,7 +1398,7 @@ namespace MVCC.Utill
             }
             */
 
-            Console.WriteLine("");
+            //Console.WriteLine("");
 
             #endregion
 

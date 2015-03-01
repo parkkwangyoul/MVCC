@@ -508,7 +508,8 @@ namespace MVCC.View
         {
             ObstacleDetection obstacleDetection = new ObstacleDetection();
             globals.Map_obstacle = new int[globals.rect_height / globals.y_grid, globals.rect_width / globals.x_grid]; //Map의 장애물의 정보 
-            globals.pre_Map_obstacle = new int[globals.rect_height / globals.y_grid, globals.rect_width / globals.x_grid]; //이전 Map의 장애물의 정보 
+            globals.onlyObstacle = new int[globals.rect_height / globals.y_grid, globals.rect_width / globals.x_grid]; //only 건물 장애물 정보
+            globals.pre_onlyObstacle = new int[globals.rect_height / globals.y_grid, globals.rect_width / globals.x_grid]; //onlyObstacle의 이전 장애물의 정보 
             globals.EndPointMap = new int[globals.rect_height / globals.y_grid, globals.rect_width / globals.x_grid]; //UGV 차량의 도착 정보 저장 
             globals.obstacleInCollision = new int[globals.rect_height / globals.y_grid, globals.rect_width / globals.x_grid]; //충돌 위기 일때 저장하는 장애물 정보
 
@@ -524,6 +525,11 @@ namespace MVCC.View
 
                     Array.Clear(globals.Map_obstacle, 0, globals.rect_height / globals.y_grid * globals.rect_width / globals.x_grid);
                     blob_count = obstacleDetection.detectBlob(obstacle_image, globals.Map_obstacle, tracking_rect); //장애물 검출
+
+                    for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
+                        for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
+                            if (globals.Map_obstacle[j, i] == '*')
+                                globals.onlyObstacle[j, i] = globals.Map_obstacle[j, i];
 
                     /*
                     Console.WriteLine("====================================================");
@@ -541,6 +547,7 @@ namespace MVCC.View
 
                     */
                     globals.mapObstacleLock.ExitWriteLock(); //critical section end
+
 
                     if (frist_change_check == true) //제일 처음 변화감지는 건너 뜀
                     {
@@ -754,7 +761,7 @@ namespace MVCC.View
                                                 bluetoothAndPathPlanning.connect(tempUGVState.ugv, tempUGVState);
                                                 tempUGVState.IsPause = true;
 
-                                                Console.WriteLine(m + " 차량에게 일시 정지 신호 보냄");
+                                                //Console.WriteLine(m + " 차량에게 일시 정지 신호 보냄");
 
 
                                                 if (tempUGVState2.IsFindPath == false)
@@ -820,6 +827,7 @@ namespace MVCC.View
                                                             refreshViewPath();
                                                         }));
 
+                                                        /*
                                                         Console.WriteLine("====================================================");
 
                                                         for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
@@ -832,7 +840,7 @@ namespace MVCC.View
                                                         Console.WriteLine("====================================================");
 
                                                         Console.WriteLine();
-
+                                                        */
 
 
                                                         globals.mapObstacleLock.EnterWriteLock(); //critical section end
@@ -867,7 +875,7 @@ namespace MVCC.View
                                                 bluetoothAndPathPlanning.connect(tempUGVState.ugv, tempUGVState);
                                                 tempUGVState.IsPause = true;
 
-                                                Console.WriteLine(n + " 차량에게 일시 정지 신호 보냄");
+                                                //Console.WriteLine(n + " 차량에게 일시 정지 신호 보냄");
 
                                                 if (tempUGVState2.IsFindPath == false)
                                                 {
@@ -931,7 +939,7 @@ namespace MVCC.View
                                                             tempUGVState2.IsDriving = true;
                                                             refreshViewPath();
                                                         }));
-
+                                                        /*
                                                         Console.WriteLine("====================================================");
 
                                                         for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
@@ -944,7 +952,7 @@ namespace MVCC.View
                                                         Console.WriteLine("====================================================");
 
                                                         Console.WriteLine();
-
+                                                        */
                                                         globals.mapObstacleLock.EnterWriteLock();
 
                                                         globals.Map_obstacle = (int[,])copy_map.Clone();
@@ -1001,14 +1009,14 @@ namespace MVCC.View
 
                                         Console.WriteLine("ugv.Id = " + ugv_state.Value.ugv.Id + " 이 장애물과 충돌하여 정지 신호 보냄");
 
-                                        RemoveEndPoint(ugv_state.Value.ugv, ugv_state.Value);                                     
+                                        RemoveEndPoint(ugv_state.Value.ugv, ugv_state.Value);
                                         ugv_state.Value.ugv.PathList.Clear();
 
-                                         Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
-                                        {
-                                            removeAllUGVPath(ugv_state.Value.ugv);
-                                        }));
-                                            
+                                        Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
+                                       {
+                                           removeAllUGVPath(ugv_state.Value.ugv);
+                                       }));
+
                                         ugv_state.Value.ugv.Command = "s";
                                         bluetoothAndPathPlanning.connect(ugv_state.Value.ugv, ugv_state.Value);
 
@@ -1056,7 +1064,7 @@ namespace MVCC.View
                                 //if (!(tempUGVState.EndPointX == -1 && tempUGVState.EndPointY == -1))
                                 if (tempUGVState.IsDriving == true)
                                 {
-                                    Console.WriteLine("s 보낼 id = " + tempUGV.Id + " tempUGV.MovementCommandList.Count = " + tempUGV.MovementCommandList.Count);
+                                    Console.WriteLine("장애물수 변화 되어 ugv.Id = " + tempUGV.Id + " 에 s 보내서 일시 중지 시킴");
 
                                     int index;
                                     int.TryParse(tempUGV.Id[1].ToString(), out index);
@@ -1100,18 +1108,21 @@ namespace MVCC.View
                                             AddMVCCUGVPathList(tempUGV);
 
                                             refreshViewPath();
-
-
-                                            Console.WriteLine("tempUGV.PathList.Count " + tempUGV.PathList.Count);
-
-
+                                            Console.WriteLine("장애물수 변화 되어 일시 중지 되었던 ugv.Id = " + tempUGV.Id + "를 다시 길찾기 시작");
                                         }));
                                         if (tempUGV.PathList.Count != 0)
                                             bluetoothAndPathPlanning.connect(tempUGV, tempUGVState);
                                     }
                                     else
                                     {
+                                        RemoveEndPoint(tempUGV, tempUGVState);
+                                        tempUGV.PathList.Clear();
+                                        Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
+                                        {
+                                            removeAllUGVPath(tempUGV);
+                                        }));
                                         tempUGVState.IsDriving = false;
+                                        Console.WriteLine("장애물수 변화 되어 일시 중지 되었던 ugv.Id = " + tempUGV.Id + "가 길이 없어서 중지함");
                                     }
                                     globals.bluetoothConnectLock.ExitWriteLock();
                                 }
@@ -1124,15 +1135,148 @@ namespace MVCC.View
                             //장애물이 옮겨짐을 검사. 옮겨지고 있어도 차량은 정지 해야함
                             int moving_check_count = 0;
 
+                            globals.mapObstacleLock.EnterReadLock();
+                            
                             for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
                                 for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
-                                    if (globals.Map_obstacle[j, i] == '*' || globals.pre_Map_obstacle[j, i] == '*')
-                                        if (!(globals.Map_obstacle[j, i] == '*' && globals.pre_Map_obstacle[j, i] == '*'))
+                                    if (globals.onlyObstacle[j, i] == '*' || globals.pre_onlyObstacle[j, i] == '*')
+                                        if (!(globals.onlyObstacle[j, i] == '*' && globals.pre_onlyObstacle[j, i] == '*'))
                                             moving_check_count++;
+                            
+                            /*
+                            if (moving_check_count != 0)
+                            {
+                                Console.WriteLine("====================================================");
+                                Console.WriteLine("moving_check_count = " + moving_check_count);
+                                Console.WriteLine("globals.onlyObstacl");
 
-                            if (moving_check_count >= 7) //배열이 5개 이상 차이날 경우 장애물이 옮겨지고 있음
+                                for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
+                                {
+                                    for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
+                                        Console.Write("{0, 3} ", globals.onlyObstacle[j, i]);
+
+                                    Console.WriteLine();
+                                }
+                                Console.WriteLine();
+                                Console.WriteLine("globals.pre_onlyObstacle");
+
+                                for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
+                                {
+                                    for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
+                                        Console.Write("{0, 3} ", globals.pre_onlyObstacle[j, i]);
+
+                                    Console.WriteLine();
+                                }
+                                Console.WriteLine("====================================================");
+                                Console.WriteLine();
+                            }              
+                            */
+
+                            globals.mapObstacleLock.ExitReadLock();
+
+                            if (moving_check_count >= 4) //배열이 몇개 이상 차이날 경우 장애물이 옮겨지고 있음
+                            {
+                                Console.WriteLine("====================================================");                  
                                 Console.WriteLine("장애물 옮기는 중! moving_check_count = " + moving_check_count);
+
+                                bool[] stop_check = new bool[4];
+
+                                Dictionary<string, State> AllUGVStateMap = new Dictionary<string, State>();
+
+                                for (int i = 0; i < mapViewModel.MVCCItemStateList.Count; i++)
+                                {
+                                    State tempState = mapViewModel.MVCCItemStateList[i];
+                                    AllUGVStateMap.Add(tempState.ugv.Id, tempState);
+                                }
+
+                                  
+                                 //차량 전체에 정지신호
+                            for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
+                            {
+                                if (!(mapViewModel.MVCCItemList[i] is UGV))
+                                    continue;
+
+                                UGV tempUGV = mapViewModel.MVCCItemList[i] as UGV;
+
+                                if (!AllUGVStateMap.ContainsKey(tempUGV.Id))
+                                    continue;
+
+                                State tempUGVState = AllUGVStateMap[tempUGV.Id];
+
+
+                                //if (tempUGV.MovementCommandList.Count != 0)
+                                //if (!(tempUGVState.EndPointX == -1 && tempUGVState.EndPointY == -1))
+                                if (tempUGVState.IsDriving == true)
+                                {
+                                    Console.WriteLine("장애물이 움직여서 ugv.Id = " + tempUGV.Id + " 에 s 보내서 일시 중지 시킴");
+
+                                    int index;
+                                    int.TryParse(tempUGV.Id[1].ToString(), out index);
+
+                                    stop_check[index] = true;
+
+                                    tempUGVState = AllUGVStateMap[tempUGV.Id];
+                                    tempUGV.Command = "s";
+
+                                    bluetoothAndPathPlanning.connect(tempUGV, tempUGVState);
+                                }
+                            }
+
+                            //전체차량 다시 길 찾고 보냄
+                            for (int i = 0; i < mapViewModel.MVCCItemList.Count; i++)
+                            {
+                                if (!(mapViewModel.MVCCItemList[i] is UGV))
+                                    continue;
+
+                                UGV tempUGV = mapViewModel.MVCCItemList[i] as UGV;
+
+                                int index;
+                                int.TryParse(tempUGV.Id[1].ToString(), out index);
+
+                                if (stop_check[index] == true)
+                                {
+                                    State tempUGVState = AllUGVStateMap[tempUGV.Id];
+                                    tempUGV.Command = "d";
+
+                                    RemoveEndPoint(tempUGV, tempUGVState);
+
+                                    globals.bluetoothConnectLock.EnterWriteLock();
+                                    pathFinder.init();
+
+                                    if (pathFinder.find_path(tempUGV, tempUGVState) == true)
+                                    {
+                                        tempUGVState.IsPause = false;
+
+                                        Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
+                                        {
+                                            AddMVCCUGVPathList(tempUGV);
+
+                                            refreshViewPath();
+                                            Console.WriteLine("장애물이 움직여서 일시 중지 되었던 ugv.Id = " + tempUGV.Id + "를 다시 길찾기 시작");
+                                        }));
+                                        if (tempUGV.PathList.Count != 0)
+                                            bluetoothAndPathPlanning.connect(tempUGV, tempUGVState);
+                                    }
+                                    else
+                                    {
+                                        RemoveEndPoint(tempUGV, tempUGVState);
+                                        tempUGV.PathList.Clear();
+                                        Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
+                                        {
+                                            removeAllUGVPath(tempUGV);
+                                        }));
+                                        tempUGVState.IsDriving = false;
+                                        Console.WriteLine("장애물이 움직여서 일시 중지 되었던 ugv.Id = " + tempUGV.Id + "가 길이 없어서 중지함");
+                                    }
+                                    globals.bluetoothConnectLock.ExitWriteLock();
+                                }
+
+                            }
+                                Console.WriteLine("====================================================");
+                            }
+
                         }
+                        
 
                         #endregion 장애물 갯수 변화 및 움직임 감지
                     }
@@ -1143,7 +1287,7 @@ namespace MVCC.View
                     #region 이전 정보 저장 및 초기화 부분
 
                     pre_blob_count = blob_count; //현재 blob_count를 이전 blob_count에 저장
-                    globals.pre_Map_obstacle = (int[,])globals.Map_obstacle.Clone(); //비교를 위해 이전 Map정보 설정
+                    globals.pre_onlyObstacle = (int[,])globals.onlyObstacle.Clone(); //비교를 위해 이전 Map정보 설정
 
                     globals.pre_evasionInfo.Clear();
 
@@ -1226,15 +1370,14 @@ namespace MVCC.View
             }
 
 
-
-
             globals.sortInfoList = globals.sortInfoList.OrderBy(o => o.ugv.PathList.Count).ToList(); //path_count를 오름차순 정렬
 
-
+            Console.Write("ugv 순위 = " );
             foreach (var list in globals.sortInfoList)
             {
-                Console.WriteLine("ugv 순위 = " + list.UGV_Id);
+                Console.Write( list.UGV_Id + " ");
             }
+            Console.WriteLine();
 
             //map에 도착 자리 배치
             foreach (var list in globals.sortInfoList)
@@ -1345,8 +1488,7 @@ namespace MVCC.View
                                 endY = globals.rect_height;
                             }
                             endPointCheck = true;
-
-                            Console.WriteLine();
+                       
                             for (int x = startX; x <= endX; x++)
                             {
                                 for (int y = startY; y <= endY; y++)
@@ -1421,7 +1563,7 @@ namespace MVCC.View
 
 
 
-
+            /*
             for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
             {
                 for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
@@ -1431,7 +1573,7 @@ namespace MVCC.View
             }
 
             Console.WriteLine();
-
+            */
 
             globals.endPointMapLock.ExitWriteLock();
             //globals.mapObstacleLock.ExitReadLock(); //critical section end

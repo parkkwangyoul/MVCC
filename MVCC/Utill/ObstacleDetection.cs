@@ -386,27 +386,7 @@ namespace MVCC.Utill
                                        globals.UGVandObstacleCollisionInofo.Add(i);
                                    }
                                }
-                           }
-
-                            /*
-                            if (bottomA - topB <= 7)
-                                Console.WriteLine(i + " 번쨰 장애물과 충돌함 (아래) 차이 = " + (bottomA - topB) + "\n");
-                            else if (bottomB - topA <= 7)
-                                Console.WriteLine(i + " 번쨰 장애물과 충돌함 (위) 차이 = " + (bottomB - topA) + "\n");
-                            else if (rightA - leftB <= 7)
-                                Console.WriteLine(i + " 번쨰 장애물과 충돌함 (오른쪽) 차이 = " + (rightA - leftB) + "\n");
-                            else if (rightB - leftA <= 7)
-                                Console.WriteLine(i + " 번쨰 장애물과 충돌함 (왼쪽) 차이 = " + (rightB - leftA) + "\n");
-                            */  
-                                                   
-                            /*
-                            if (bottomA - topB <= yy - 4 || bottomB - topA <= yy - 4 || rightA - leftB <= xx - 4 || rightB - leftA <= xx - 4)
-                                Console.WriteLine(i + " 번쨰 장애물과 충돌위기\n");
-                            else
-                                Console.WriteLine(i + " 번쨰 장애물과 충돌함\n");
-                            //[0]blue [1] green [2]orange [3]red
-                             */ 
-                             
+                           }                        
                         }
                     }          
                 }

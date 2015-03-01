@@ -14,7 +14,8 @@ namespace MVCC
     public class Globals
     {
         public int[,] Map_obstacle; //모든 맵의 정보
-        public int[,] pre_Map_obstacle; //장애물 정보
+        public int[,] onlyObstacle; //건물 장애물만의 정보
+        public int[,] pre_onlyObstacle; //onlyPbstacle의 이전 정보
         public int[,] EndPointMap; //도착지점 정보
         public int[,] obstacleInCollision; //충돌 위기 일때 장애물 정보
 
