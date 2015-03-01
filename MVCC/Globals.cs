@@ -19,16 +19,20 @@ namespace MVCC
         public int[,] EndPointMap; //도착지점 정보
         public int[,] obstacleInCollision; //충돌 위기 일때 장애물 정보
 
+        public char[,] UGVsCollisionPath; //Ugv들의 충돌 path 범위정보 
+
         public struct UGV_Info
         {
             public string UGV_Id;
             public UGV ugv;
         }
 
-        public UGV_Info sortInfo; // 차량 우선 순위 정보
+        public UGV_Info sortInfo; // Group 차량 우선 순위 정보
+        public List<UGV_Info> sortInfoList = new List<UGV_Info>(); // Group 차량 우선 순위 정보 리스트
 
-        public List<UGV_Info> sortInfoList = new List<UGV_Info>(); // 차량 우선 순위 정보 리스트
-
+        public List<State> individualsortInfo = new List<State>(); // 개인 차량 우선 순위 정보 리스트
+        
+       
         public List<KeyValuePair<int, int>> evasionInfo = new List<KeyValuePair<int,int>>();
         public List<KeyValuePair<int, int>> pre_evasionInfo = new List<KeyValuePair<int,int>>(); //차량들 끼리의 충돌 위기 정보
 
@@ -56,7 +60,8 @@ namespace MVCC
         public ReaderWriterLockSlim UGVStopCommandLock = new ReaderWriterLockSlim();
         public ReaderWriterLockSlim endPointMapLock = new ReaderWriterLockSlim();
         public ReaderWriterLockSlim evasionInfoLock = new ReaderWriterLockSlim(); //obstacleInCollision Map을 위한
-        public ReaderWriterLockSlim bluetoothConnectLock = new ReaderWriterLockSlim();
+        public ReaderWriterLockSlim bluetoothConnectLock = new ReaderWriterLockSlim(); //pathFinder의 Lock을 위한
+        public ReaderWriterLockSlim UGVsCollisionPathLock = new ReaderWriterLockSlim(); //충돌 path 구하는 곳의 lock을 위한
         
         
         private static Globals _Instance;

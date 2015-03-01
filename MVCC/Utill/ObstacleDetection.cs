@@ -197,7 +197,7 @@ namespace MVCC.Utill
             //blob 검출
             foreach (CvBlob targetBlob in resultingImgBlobs.Values)
             {
-                if (targetBlob.Area > 30  && targetBlob.Area < 700)
+                if (targetBlob.Area > 100  && targetBlob.Area < 700)
                 {
                     string color_str;
                     int color_index = -1;
@@ -373,8 +373,8 @@ namespace MVCC.Utill
                                else
                                {
                                    foreach (var list in globals.UGVandObstacleCollisionInofo)
-                                   {
-                                       if(list.CompareTo(i) == 1)
+                                   {                                    
+                                       if(list == i)
                                        {
                                            isEmpty = true;
                                            break;

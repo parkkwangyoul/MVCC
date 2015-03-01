@@ -22,8 +22,6 @@ namespace MVCC.Utill
         int grid_x;
         int grid_y;
 
-
-
         #region Path_Planning_Part
 
         public void init()
