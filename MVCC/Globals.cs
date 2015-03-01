@@ -32,6 +32,8 @@ namespace MVCC
         public List<KeyValuePair<int, int>> pre_evasionInfo = new List<KeyValuePair<int,int>>(); //차량들 끼리의 충돌 위기 정보
 
         public List<KeyValuePair<int, int>> UGVsConflictInofo = new List<KeyValuePair<int, int>>(); //차량들 끼리의 충돌한 정보
+        public List<int> UGVandObstacleCollisionInofo = new List<int>(); //차량과 장애물 충돌한 정보
+
 
         public int[] MovementCommandCount = new int[4];
         public bool[] direction_check = new bool[4];

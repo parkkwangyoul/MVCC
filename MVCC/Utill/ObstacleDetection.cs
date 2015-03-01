@@ -197,7 +197,7 @@ namespace MVCC.Utill
             //blob 검출
             foreach (CvBlob targetBlob in resultingImgBlobs.Values)
             {
-                if (targetBlob.Area > 100 && targetBlob.Area < 700)
+                if (targetBlob.Area > 30  && targetBlob.Area < 700)
                 {
                     string color_str;
                     int color_index = -1;
@@ -213,6 +213,7 @@ namespace MVCC.Utill
                     temp_height = targetBlob.BoundingBox.Height;
                     */
                     
+                    /*
                     //장애물의 충돌 검사를 위해 범위 설정
                     int xx = 10, yy = 10;
                     int temp_x, temp_y, temp_width, temp_height;
@@ -234,6 +235,8 @@ namespace MVCC.Utill
 
                     }
                     //여기 장애물이 화면 크기 벗어 났을때 에러 처리 안해놓은듯함!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    */
+
 
                     //검출된 색이 장애물인지
                     if ((color_str = obstacle_colorCheck(blob_image, targetBlob.Area, targetBlob.BoundingBox.X, targetBlob.BoundingBox.Y, targetBlob.BoundingBox.Width, targetBlob.BoundingBox.Height)) == "null")
@@ -244,9 +247,32 @@ namespace MVCC.Utill
                         continue; //장애물색상이 아니면 검정으로 색칠
                     }
 
-                    for (int x = targetBlob.BoundingBox.X; x < targetBlob.BoundingBox.X + targetBlob.BoundingBox.Width; x++)
-                        for (int y = targetBlob.BoundingBox.Y; y < targetBlob.BoundingBox.Y + targetBlob.BoundingBox.Height; y++)
+                    //장애물 정보를 Map에만 +3씩해서 만듬
+                    int overplus = 5;
+                    int temp_x, temp_y, temp_width, temp_height;
+
+                    temp_x = targetBlob.BoundingBox.X - overplus;
+                    temp_y = targetBlob.BoundingBox.Y - overplus;
+
+                    temp_width = targetBlob.BoundingBox.Width + overplus * 2;
+                    temp_height = targetBlob.BoundingBox.Height + overplus * 2;
+
+                    if (temp_x < 0)
+                        temp_x = 0;
+
+                    if (temp_y < 0)
+                        temp_y = 0;
+
+                    if (temp_x + temp_width > globals.rect_width)
+                        temp_width -= (temp_x + temp_width - globals.rect_width);
+
+                    if (temp_y + temp_height > globals.rect_height)
+                        temp_height -= (temp_y + temp_height - globals.rect_height);
+
+                    for (int x = temp_x; x < temp_x + temp_width; x++)
+                        for (int y = temp_y; y < temp_y + temp_height; y++)
                             temp_img[y, x] = new Bgr(255, 255, 255); //검출된 부분은 다 하얀색으로 색칠
+
 
                     if (color_str == "purple")
                         color_index = 0;
@@ -257,7 +283,7 @@ namespace MVCC.Utill
                            
                     //GUI상 장애물 그림을 줄이기 위해
                     int boundingBox_width, boundingBox_height, boundingBoxX, boundingBoxY;
-                    int margin = 3;
+                    int margin = 0;
 
                     boundingBoxX = targetBlob.BoundingBox.X + margin;
                     boundingBoxY = targetBlob.BoundingBox.Y + margin;
@@ -311,21 +337,56 @@ namespace MVCC.Utill
 
                         if (!(tracking_rect[i].Width == 0 && tracking_rect[i].Height == 0))
                         {
+                            int add_size = -3;
+
                             leftA = tracking_rect[i].X;
                             rightA = tracking_rect[i].X + tracking_rect[i].Width;
                             topA = tracking_rect[i].Y;
                             bottomA = tracking_rect[i].Y + tracking_rect[i].Height;
-
+                            /*
                             leftB = temp_x;
                             rightB = temp_x + temp_width;
                             topB = temp_y;
                             bottomB = temp_y + temp_height;
-
+                            */
+                            leftB = boundingBoxX - add_size;
+                            rightB = boundingBoxX + boundingBox_width + add_size;
+                            topB = boundingBoxY - add_size;
+                            bottomB = boundingBoxY + boundingBox_height + add_size;
                          
                             if (bottomA < topB) continue; //아래
                             if (topA > bottomB) continue; //위
                             if (rightA < leftB) continue; //오른쪽
                             if (leftA > rightB) continue; //왼쪽
+                  
+
+                           int boarder_size = 0;
+
+                           if (bottomA - topB <= boarder_size || bottomB - topA <= boarder_size || rightA - leftB <= boarder_size || rightB - leftA <= boarder_size)
+                           {
+                               Console.WriteLine(i + " 번쨰 차량이 장애물과 충돌함" );
+
+                                bool isEmpty = false;
+
+                                if (globals.UGVandObstacleCollisionInofo.Count == 0)
+                                    globals.UGVandObstacleCollisionInofo.Add(i);
+                               else
+                               {
+                                   foreach (var list in globals.UGVandObstacleCollisionInofo)
+                                   {
+                                       if(list.CompareTo(i) == 1)
+                                       {
+                                           isEmpty = true;
+                                           break;
+                                       }
+                                   }
+
+                                   if (!isEmpty)
+                                   {
+                                       globals.UGVandObstacleCollisionInofo.Add(i);
+                                   }
+                               }
+                           }
 
                             /*
                             if (bottomA - topB <= 7)
@@ -336,10 +397,8 @@ namespace MVCC.Utill
                                 Console.WriteLine(i + " 번쨰 장애물과 충돌함 (오른쪽) 차이 = " + (rightA - leftB) + "\n");
                             else if (rightB - leftA <= 7)
                                 Console.WriteLine(i + " 번쨰 장애물과 충돌함 (왼쪽) 차이 = " + (rightB - leftA) + "\n");
-                                 /                                      
-                            */
-                              
-                            
+                            */  
+                                                   
                             /*
                             if (bottomA - topB <= yy - 4 || bottomB - topA <= yy - 4 || rightA - leftB <= xx - 4 || rightB - leftA <= xx - 4)
                                 Console.WriteLine(i + " 번쨰 장애물과 충돌위기\n");

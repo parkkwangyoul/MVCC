@@ -525,13 +525,30 @@ namespace MVCC.View
                     Array.Clear(globals.Map_obstacle, 0, globals.rect_height / globals.y_grid * globals.rect_width / globals.x_grid);
                     blob_count = obstacleDetection.detectBlob(obstacle_image, globals.Map_obstacle, tracking_rect); //장애물 검출
 
+                    /*
+                    Console.WriteLine("====================================================");
+
+                    for (int j = 0; j < globals.rect_height / globals.y_grid; j++)
+                    {
+                        for (int i = 0; i < globals.rect_width / globals.x_grid; i++)
+                            Console.Write("{0, 3} ", globals.Map_obstacle[j, i]);
+
+                        Console.WriteLine();
+                    }
+                    Console.WriteLine("====================================================");
+
+                    Console.WriteLine();
+
+                    */
                     globals.mapObstacleLock.ExitWriteLock(); //critical section end
 
                     if (frist_change_check == true) //제일 처음 변화감지는 건너 뜀
                     {
-                        globals.evasionInfoLock.EnterWriteLock();
 
                         #region 차량 끼리 충돌
+
+                        globals.evasionInfoLock.EnterWriteLock();
+
                         /*
                         //차량끼리의 충돌이 되었을때
                         if (globals.UGVsConflictInofo.Count != 0)
@@ -777,16 +794,16 @@ namespace MVCC.View
 
                                                                 if (temp.Value.IsDriving == false && globals.Map_obstacle[y, x] == int.Parse(temp.Value.ugv.Id[1].ToString()) + 1)
                                                                 {
-                                                                      if (temp.Value.ugv.PathList.Count == 0)
+                                                                    if (temp.Value.ugv.PathList.Count == 0)
                                                                         globals.Map_obstacle[y, x] = 0;
                                                                     else
-                                                                        globals.Map_obstacle[y, x] = '*';  
-                                                                 }
+                                                                        globals.Map_obstacle[y, x] = '*';
+                                                                }
                                                                 else if (temp.Value.IsDriving && globals.Map_obstacle[y, x] == int.Parse(temp.Value.ugv.Id[1].ToString()) + 1)
-                                                                {   
+                                                                {
                                                                     globals.Map_obstacle[y, x] = 0;
                                                                 }
-                                                            }                                                        
+                                                            }
                                                         }
                                                     }
                                                     globals.mapObstacleLock.ExitWriteLock(); //critical section end
@@ -892,13 +909,13 @@ namespace MVCC.View
                                                                     if (temp.Value.ugv.PathList.Count == 0)
                                                                         globals.Map_obstacle[y, x] = 0;
                                                                     else
-                                                                        globals.Map_obstacle[y, x] = '*';                                                                    
+                                                                        globals.Map_obstacle[y, x] = '*';
                                                                 }
                                                                 else if (temp.Value.IsDriving && globals.Map_obstacle[y, x] == int.Parse(temp.Value.ugv.Id[1].ToString()) + 1)
                                                                 {
                                                                     globals.Map_obstacle[y, x] = 0;
                                                                 }
-                                                             }
+                                                            }
                                                         }
                                                     }
                                                     globals.mapObstacleLock.ExitWriteLock(); //critical section end
@@ -951,13 +968,59 @@ namespace MVCC.View
                                 }
                             }
                         }
+                        globals.evasionInfoLock.ExitWriteLock();
 
                         #endregion 차량 끼리 충돌 위기
 
+
+
+                        #region 차량과 장애물 충돌
+
+                        //충돌한 차량에게 정지 신호를 보냄
+                        if (globals.UGVandObstacleCollisionInofo.Count != 0)
+                        {
+                            Dictionary<string, State> AllUGVStateMap = new Dictionary<string, State>();
+
+                            for (int i = 0; i < mapViewModel.MVCCItemStateList.Count; i++)
+                            {
+                                State tempState = mapViewModel.MVCCItemStateList[i];
+                                AllUGVStateMap.Add(tempState.ugv.Id, tempState);
+                            }
+
+
+                            for (int i = globals.UGVandObstacleCollisionInofo.Count - 1; i >= 0; i--)
+                            {
+                                foreach (var ugv_state in AllUGVStateMap)
+                                {
+                                    int index;
+                                    int.TryParse(ugv_state.Value.ugv.Id[1].ToString(), out index);
+
+                                    if (globals.UGVandObstacleCollisionInofo[i] == index && ugv_state.Value.IsDriving == true)
+                                    {
+                                        globals.UGVandObstacleCollisionInofo.Remove(index);
+
+                                        Console.WriteLine("ugv.Id = " + ugv_state.Value.ugv.Id + " 이 장애물과 충돌하여 정지 신호 보냄");
+
+                                        RemoveEndPoint(ugv_state.Value.ugv, ugv_state.Value);                                     
+                                        ugv_state.Value.ugv.PathList.Clear();
+
+                                         Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate()
+                                        {
+                                            removeAllUGVPath(ugv_state.Value.ugv);
+                                        }));
+                                            
+                                        ugv_state.Value.ugv.Command = "s";
+                                        bluetoothAndPathPlanning.connect(ugv_state.Value.ugv, ugv_state.Value);
+
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        #endregion 차량과 장애물 충돌
+
                         #region 장애물 갯수 변화 및 움직임 감지
-
-                        globals.evasionInfoLock.ExitWriteLock();
-
 
                         if (pre_blob_count != blob_count) //이전 blob과 현재 blob의 카운터가 다르면 Map에 장애물 수 생김 
                         {
@@ -1162,7 +1225,7 @@ namespace MVCC.View
                 globals.sortInfoList.Add(globals.sortInfo);
             }
 
-           
+
 
 
             globals.sortInfoList = globals.sortInfoList.OrderBy(o => o.ugv.PathList.Count).ToList(); //path_count를 오름차순 정렬
