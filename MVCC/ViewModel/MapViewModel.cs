@@ -139,6 +139,27 @@ namespace MVCC.ViewModel
         }
         #endregion MVCCUGVPathList
 
+        #region MVCCAlertMessageList
+
+        private ObservableCollection<AlertMessage> _MVCCAlertMessageList;
+
+        public ObservableCollection<AlertMessage> MVCCAlertMessageList
+        {
+            get
+            {
+                if (_MVCCAlertMessageList == null)
+                    _MVCCAlertMessageList = new ObservableCollection<AlertMessage>();
+
+                return _MVCCAlertMessageList;
+            }
+
+            set
+            {
+                Set<ObservableCollection<AlertMessage>>(ref _MVCCAlertMessageList, value);
+            }
+        }
+        #endregion MVCCAlertMessageList
+
         //private List<Point> mainTouchPoint = new List<Point>();
 
         #region UGVCommand

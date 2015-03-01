@@ -1214,7 +1214,7 @@ namespace MVCC.Utill
 
         #endregion
 
-        public bool find_path(UGV ugv, State state)
+        public int find_path(UGV ugv, State state)
         {
             this.ugv = ugv;
             this.state = state;
@@ -1236,7 +1236,7 @@ namespace MVCC.Utill
             ugv.PathList.Clear();
 
             if ((map_classification() == false))//차량 구별한 장애물 맵 세팅, 도착지점에 잘못찍으면 return
-                return false;
+                return 2;
 
             #region Graph_Node_Initialization
 
@@ -1346,10 +1346,10 @@ namespace MVCC.Utill
             {
                 Console.WriteLine();
                 Console.WriteLine("ugv.Id = " + ugv.Id + " path_count = 0 길 찾기결과 길 없음!!!!!!!!!!!!!!");
-                MessageBox.Show("ugv.Id = " + ugv.Id + " 갈 수 없는 도착 지점입니다.");
+                //MessageBox.Show("ugv.Id = " + ugv.Id + " 갈 수 없는 도착 지점입니다.");
                 ugv.MovementCommandList.Clear();
                 ugv.PathList.Clear();
-                return false;
+                return 3;
             }
  
             globals.first_point_x[index] = ugv.PathList[ugv.PathList.Count - 2].Key / 15;
@@ -1413,7 +1413,7 @@ namespace MVCC.Utill
             }
              */
 
-            return true;
+            return 1;
         }
 
 
@@ -1475,7 +1475,7 @@ namespace MVCC.Utill
             {
                 Console.WriteLine("ugv.id = " + ugv.Id +" 찍은 도착 지점은 갈 수가 없습니다!!");
 
-                MessageBox.Show("ugv.id = " + ugv.Id + " 이미 도착지점으로 설정 된 곳입니다.");
+                //MessageBox.Show("ugv.id = " + ugv.Id + " 이미 도착지점으로 설정 된 곳입니다.");
                 return false;
             }
 
