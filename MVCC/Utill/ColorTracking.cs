@@ -96,7 +96,9 @@ namespace MVCC.Utill
                             color_ROI[index].Y = y;
                             color_count++;
                             change_check[index] = false;
-                            ugvList.Add(new UGV("A" + index, glo.TemplateWidth, glo.TemplateHeight, x + 30, y + 30, colorStr[index]));
+
+                            int margin = 0;
+                            ugvList.Add(new UGV("A" + index, glo.TemplateWidth - margin, glo.TemplateHeight - margin, x + 30, y + 30, colorStr[index]));
                             return;
                         }
                     }
@@ -266,7 +268,7 @@ namespace MVCC.Utill
                     // glo.mapObstacleLock.EnterWriteLock(); //critical section start
 
                     double ref_angle = 45;
-                    double margin = 5;
+                    double margin = 13;
 
 
                     if (ref_angle * 2 - margin <= result && result <= ref_angle * 2 + margin)

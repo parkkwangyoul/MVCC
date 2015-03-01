@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 
+using System.Windows;
+
 using MVCC.ViewModel;
 using MVCC.Model;
 
@@ -1343,7 +1345,9 @@ namespace MVCC.Utill
 
             if (path_count == 0)
             {
-                Console.WriteLine("path_count = 0 길 찾기결과 길 없음!!!!!!!!!!!!!!");
+                Console.WriteLine();
+                Console.WriteLine("ugv.Id = " + ugv.Id + " path_count = 0 길 찾기결과 길 없음!!!!!!!!!!!!!!");
+                MessageBox.Show("ugv.Id = " + ugv.Id + " 갈 수 없는 도착 지점입니다.");
                 ugv.MovementCommandList.Clear();
                 ugv.PathList.Clear();
                 return false;
@@ -1473,8 +1477,9 @@ namespace MVCC.Utill
 
             if (endPointCheck == false)
             {
-                Console.WriteLine("길을 못찾은 ugv.id = " + ugv.Id);
-                Console.WriteLine("chu !! 찍은 도착 지점은 갈 수가 없습니다");
+                Console.WriteLine("ugv.id = " + ugv.Id +" 찍은 도착 지점은 갈 수가 없습니다!!");
+
+                MessageBox.Show("ugv.id = " + ugv.Id + " 이미 도착지점으로 설정 된 곳입니다.");
                 return false;
             }
 

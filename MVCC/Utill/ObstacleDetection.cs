@@ -33,7 +33,8 @@ namespace MVCC.Utill
             //Image<Gray, Byte> bin = gray.ThresholdBinary(new Gray(85), new Gray(255));
 
             gray = gray.AddWeighted(graySoft, 1.3, -0.6, 0);
-            Image<Gray, Byte> bin = gray.ThresholdBinary(new Gray(60), new Gray(255));
+            //Image<Gray, Byte> bin = gray.ThresholdBinary(new Gray(60), new Gray(255));
+            Image<Gray, Byte> bin = gray.ThresholdBinary(new Gray(57), new Gray(255));
 
             Gray cannyThreshold = new Gray(149);
             Gray cannyThresholdLinking = new Gray(149);
@@ -44,6 +45,8 @@ namespace MVCC.Utill
             bDetect.Detect(greyThreshImg, resultingImgBlobs);
 
             Image<Bgr, Byte> temp_img = greyThreshImg.Convert<Bgr, Byte>();
+
+            #region 차량 충돌 및 위기 검사
 
             //영상에서 차량 범위를 빼고 ROI만들기
             for (int i = 0; i < 4; i++)
@@ -98,7 +101,7 @@ namespace MVCC.Utill
                             if (!(tracking_rect[j].Width == 0 && tracking_rect[j].Height == 0))
                             {
                                 //int add_size = 23;
-                                int add_size = 30;
+                                int add_size = 15;
                                 
                                 leftA = tracking_rect[i].X - add_size;
                                 rightA = tracking_rect[i].X + tracking_rect[i].Width + add_size;
@@ -115,11 +118,11 @@ namespace MVCC.Utill
                                 if (rightA < leftB) continue; //오른쪽
                                 if (leftA > rightB) continue; //왼쪽
 
-                                int boarder_size = 30;
+                                int boarder_size = 15;
                                                                                        
                                 if (bottomA - topB <= boarder_size || bottomB - topA <= boarder_size || rightA - leftB <= boarder_size || rightB - leftA <= boarder_size)
                                 {
-                                    Console.WriteLine("ObstacleDetection : " + i + " 차량과 " + j + " 차량이 충돌 위기");
+                                    //Console.WriteLine("ObstacleDetection : " + i + " 차량과 " + j + " 차량이 충돌 위기");
  
                                     bool isEmpty = false;
 
@@ -181,7 +184,7 @@ namespace MVCC.Utill
                 }
             }
 
-
+            #endregion 차량 충돌 및 위기 검사
 
             int[] temp_color_count = new int[4]; //[0]purple [1] black [2] yellow [3]
             temp_color_count = (int[])obstacle_color_count.Clone();
@@ -230,7 +233,7 @@ namespace MVCC.Utill
                         temp_height = targetBlob.BoundingBox.Height + yy;
 
                     }
-                    
+                    //여기 장애물이 화면 크기 벗어 났을때 에러 처리 안해놓은듯함!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
                     //검출된 색이 장애물인지
                     if ((color_str = obstacle_colorCheck(blob_image, targetBlob.Area, targetBlob.BoundingBox.X, targetBlob.BoundingBox.Y, targetBlob.BoundingBox.Width, targetBlob.BoundingBox.Height)) == "null")
@@ -251,10 +254,20 @@ namespace MVCC.Utill
                         color_index = 1;
                     //else if (color_str == "yellow")
                     //    color_index = 2;
+                           
+                    //GUI상 장애물 그림을 줄이기 위해
+                    int boundingBox_width, boundingBox_height, boundingBoxX, boundingBoxY;
+                    int margin = 3;
+
+                    boundingBoxX = targetBlob.BoundingBox.X + margin;
+                    boundingBoxY = targetBlob.BoundingBox.Y + margin;
+
+                    boundingBox_width = targetBlob.BoundingBox.Width - margin * 2;
+                    boundingBox_height = targetBlob.BoundingBox.Height - margin * 2;
 
                     if (temp_color_count[color_index] == 0) //검출된 색의 color_count가 0 일땐 list에 추가함
-                    {
-                        building_list.Add(new Building("B" + blob_indenti_count++, (double)targetBlob.BoundingBox.Width, (double)targetBlob.BoundingBox.Height, targetBlob.BoundingBox.X, targetBlob.BoundingBox.Y, color_str, true));
+                    {                    
+                        building_list.Add(new Building("B" + blob_indenti_count++, (double)boundingBox_width, (double)boundingBox_height, boundingBoxX, boundingBoxY, color_str, true));
                         obstacle_color_count[color_index]++; //obstacle_color_count 증가
                         //Console.WriteLine("blob_indenti_count = " + blob_indenti_count + " color_str = " + color_str + " x  = " + targetBlob.BoundingBox.X + " y = " + targetBlob.BoundingBox.Y);
                     }
@@ -273,10 +286,10 @@ namespace MVCC.Utill
                                 {
                                     if (building.BuildingColor == color_str && building.DisapperCheck == false) //building.DisapperCheck가 false인 경우 정보 갱신
                                     {
-                                        building.X = targetBlob.BoundingBox.X;
-                                        building.Y = targetBlob.BoundingBox.Y;
-                                        building.Width = targetBlob.BoundingBox.Width;
-                                        building.Height = targetBlob.BoundingBox.Height;
+                                        building.X = targetBlob.BoundingBox.X + margin;
+                                        building.Y = targetBlob.BoundingBox.Y + margin;
+                                        building.Width = targetBlob.BoundingBox.Width - margin * 2;
+                                        building.Height = targetBlob.BoundingBox.Height - margin * 2; 
                                         building.DisapperCheck = true; //갱신했으면 building.DisapperChecf를 true로 
                                         break;
                                     }
@@ -327,12 +340,6 @@ namespace MVCC.Utill
                             */
                               
                             
-
-
-
-
-
-
                             /*
                             if (bottomA - topB <= yy - 4 || bottomB - topA <= yy - 4 || rightA - leftB <= xx - 4 || rightB - leftA <= xx - 4)
                                 Console.WriteLine(i + " 번쨰 장애물과 충돌위기\n");

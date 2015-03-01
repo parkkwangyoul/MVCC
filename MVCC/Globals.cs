@@ -52,7 +52,7 @@ namespace MVCC
         public ReaderWriterLockSlim bluetoothLock = new ReaderWriterLockSlim();
         public ReaderWriterLockSlim UGVStopCommandLock = new ReaderWriterLockSlim();
         public ReaderWriterLockSlim endPointMapLock = new ReaderWriterLockSlim();
-        public ReaderWriterLockSlim evasionInfoLock = new ReaderWriterLockSlim();
+        public ReaderWriterLockSlim evasionInfoLock = new ReaderWriterLockSlim(); //obstacleInCollision Map을 위한
         public ReaderWriterLockSlim bluetoothConnectLock = new ReaderWriterLockSlim();
         
         

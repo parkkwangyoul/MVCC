@@ -12,7 +12,7 @@
 
     <Grid>
         <TextBlock TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Id}" />
-        <Ellipse Width="{Binding Width}" Height="{Binding Height}" StrokeDashArray="5 5" Stroke="{Binding UGVStroke}" StrokeThickness="{Binding UGVStrokeThickness}" Cursor="Hand" Canvas.ZIndex="1"> 
+        <Ellipse Margin="5" Width="{Binding Width}" Height="{Binding Height}" StrokeDashArray="5 5" Stroke="{Binding UGVStroke}" StrokeThickness="{Binding UGVStrokeThickness}" Cursor="Hand" Canvas.ZIndex="1"> 
             <Ellipse.Fill>
                 <ImageBrush ImageSource="{Binding UGVResource}" />
             </Ellipse.Fill>
