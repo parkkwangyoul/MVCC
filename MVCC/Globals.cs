@@ -60,8 +60,9 @@ namespace MVCC
         public ReaderWriterLockSlim UGVStopCommandLock = new ReaderWriterLockSlim();
         public ReaderWriterLockSlim endPointMapLock = new ReaderWriterLockSlim();
         public ReaderWriterLockSlim evasionInfoLock = new ReaderWriterLockSlim(); //obstacleInCollision Map을 위한
-        public ReaderWriterLockSlim bluetoothConnectLock = new ReaderWriterLockSlim(); //pathFinder의 Lock을 위한
+        public ReaderWriterLockSlim FathfinderLock = new ReaderWriterLockSlim(); //pathFinder의 Lock을 위한
         public ReaderWriterLockSlim UGVsCollisionPathLock = new ReaderWriterLockSlim(); //충돌 path 구하는 곳의 lock을 위한
+        public ReaderWriterLockSlim UGVPauseLock = new ReaderWriterLockSlim(); // 정지 신호를 줄떄 필요한 Lock
         
         
         private static Globals _Instance;

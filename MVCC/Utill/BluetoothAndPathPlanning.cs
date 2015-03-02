@@ -45,7 +45,6 @@ namespace MVCC.Utill
             if (!globals.UGVSettingDictionary.ContainsKey(convertId(ugv.Id)))
             {
                 MessageBox.Show("블루투스 설정이 되어있지 않습니다.");
-                state.IsDriving = true;
 
                 return;
             }
@@ -281,6 +280,8 @@ namespace MVCC.Utill
 
                 else
                 {
+                    //Console.WriteLine("UGV ID : " + ugv.Id);
+                    //Console.WriteLine("State UGV ID : " + state.ugv.Id);
                     globals.SerialPortList[index].WriteLine((write_data[0]).ToString());
                 }
             }

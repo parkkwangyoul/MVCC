@@ -327,6 +327,8 @@ namespace MVCC.Utill
                     color[index] = false;
                     change_check[index] = true;
                     color_count--;
+
+                    //color_ROI[index].X
                 }
             }
             else
