@@ -70,7 +70,7 @@ namespace MVCC.Model
             }
         }
  
-        // 충돌 위기 상태 일때 길찾기 여부 나타냄
+        // 충돌 위기 상태 일때 길찾기 여부 나타냄(충돌위기일때 계속 하면 안되니깐 위기 빠져나갔을때 길찾기를 함)
         private bool isFindPath = false;
         public bool IsFindPath
         {

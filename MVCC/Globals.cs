@@ -55,7 +55,10 @@ namespace MVCC
         public int[] first_point_x = new int[4];
         public int[] first_point_y = new int[4];
 
-        public ReaderWriterLockSlim mapObstacleLock = new ReaderWriterLockSlim();
+
+        //LockRecursionPolicy.SupportsRecursion 재귀적 호출 인자
+
+        public ReaderWriterLockSlim mapObstacleLock = new ReaderWriterLockSlim(); //Map_obstacle 막기 위해 
         public ReaderWriterLockSlim bluetoothLock = new ReaderWriterLockSlim();
         public ReaderWriterLockSlim UGVStopCommandLock = new ReaderWriterLockSlim();
         public ReaderWriterLockSlim endPointMapLock = new ReaderWriterLockSlim();
@@ -63,6 +66,9 @@ namespace MVCC
         public ReaderWriterLockSlim FathfinderLock = new ReaderWriterLockSlim(); //pathFinder의 Lock을 위한
         public ReaderWriterLockSlim UGVsCollisionPathLock = new ReaderWriterLockSlim(); //충돌 path 구하는 곳의 lock을 위한
         public ReaderWriterLockSlim UGVPauseLock = new ReaderWriterLockSlim(); // 정지 신호를 줄떄 필요한 Lock
+
+        public ReaderWriterLockSlim UGVPathListLock = new ReaderWriterLockSlim(); // PathList 지우는것과, 길위에 있는 장애물 탐지를위한 Lock
+        //public ReaderWriterLockSlim onlyObstacleLock = new ReaderWriterLockSlim(); // obstacle만 저장 하는 Map lock
         
         
         private static Globals _Instance;

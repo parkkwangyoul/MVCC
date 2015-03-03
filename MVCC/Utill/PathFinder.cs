@@ -632,7 +632,7 @@ namespace MVCC.Utill
 
             while (q_level != -1)
             {
-
+                //Console.WriteLine("pathfinder 재귀 ");
                 l++;
 
                 pop = q[0];
@@ -1425,8 +1425,8 @@ namespace MVCC.Utill
 
             direct = globals.direction[index];
 
-            globals.mapObstacleLock.EnterReadLock(); //critical section start
-
+            globals.mapObstacleLock.EnterWriteLock(); //critical section start
+            //globals.mapObstacleLock.EnterWriteLock(); //critical section start
 
             bool endPointCheck = false;
 
@@ -1469,8 +1469,9 @@ namespace MVCC.Utill
                 }                    
             }
 
-            globals.mapObstacleLock.ExitReadLock(); //critical section end
-
+            globals.mapObstacleLock.ExitWriteLock(); //critical section end
+            //globals.mapObstacleLock.ExitWriteLock(); //critical section end
+            
             if (endPointCheck == false)
             {
                 Console.WriteLine("ugv.id = " + ugv.Id +" 찍은 도착 지점은 갈 수가 없습니다!!");

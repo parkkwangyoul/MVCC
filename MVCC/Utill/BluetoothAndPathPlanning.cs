@@ -45,7 +45,6 @@ namespace MVCC.Utill
             if (!globals.UGVSettingDictionary.ContainsKey(convertId(ugv.Id)))
             {
                 MessageBox.Show("블루투스 설정이 되어있지 않습니다.");
-
                 return;
             }
 

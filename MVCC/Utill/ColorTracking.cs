@@ -89,7 +89,7 @@ namespace MVCC.Utill
                     {
                         pixCount++;
 
-                        if (totalPicxel / 5 <= pixCount) //일정 픽섹 이상시 색상배열 변경후 종료
+                        if (totalPicxel / 3 <= pixCount) //일정 픽섹 이상시 색상배열 변경후 종료
                         {
                             color[index] = true;
                             color_ROI[index].X = x;
@@ -328,7 +328,10 @@ namespace MVCC.Utill
                     change_check[index] = true;
                     color_count--;
 
-                    //color_ROI[index].X
+                    color_ROI[index].X = 0;
+                    color_ROI[index].Y = 0;
+                    Console.WriteLine("노랑 사라짐");
+
                 }
             }
             else
@@ -337,6 +340,9 @@ namespace MVCC.Utill
                 color[index] = false;
                 change_check[index] = true;
                 color_count--;
+                color_ROI[index].X = 0;
+                color_ROI[index].Y = 0;
+                Console.WriteLine("차량 사라짐");
             }
         }
 
