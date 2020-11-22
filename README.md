@@ -4,4 +4,4 @@
 
 ![image](https://user-images.githubusercontent.com/10843389/99901769-8209e780-2cfc-11eb-9860-9497e2bc3915.png)
 
-![Alt Text](Demo 1.gif)
+![Alt Text](https://github.com/parkkwangyoul/MVCC/blob/master/Demo%201.gif)
